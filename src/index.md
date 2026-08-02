@@ -40,7 +40,6 @@ npm run build
 npm run serve
 ```
 
-{% arrow %}
 
 ---
 
@@ -52,7 +51,6 @@ Yolo uses themes for colors and fonts. Each theme has a matching syntax theme fo
 > * `src/_sass/yolo/brand/theme/` - color and font themes
 > * `src/_sass/yolo/brand/syntax/` - syntax highlighting themes
 
-{% arrow %}
 
 ---
 
@@ -103,7 +101,6 @@ Container colors fill nested elements within primary or secondary sections.
 
 Links get their own color. Pick something distinct and use it everywhere.
 
-{% arrow %}
 
 ---
 
@@ -120,7 +117,6 @@ Links get their own color. Pick something distinct and use it everywhere.
 
 {% include "demo/general-color-swatches.njk" %}
 
-{% arrow %}
 
 ---
 
@@ -134,7 +130,6 @@ Yolo highlights code with custom syntax themes. Each color theme includes a matc
 
 Syntax themes map colors to code tokens like keywords, strings, and comments.
 
-{% arrow %}
 
 ---
 
@@ -155,7 +150,6 @@ brand:
   syntax: reveal
 ```
 
-{% arrow %}
 
 ---
 
@@ -166,7 +160,6 @@ These swatches show the current syntax theme colors. Each shows the token name a
 
 {% include "demo/syntax-theme-swatches.njk" %}
 
-{% arrow %}
 
 ---
 
@@ -190,7 +183,6 @@ fi
 say_howdy $1
 ```
 
-{% arrow %}
 
 {% code "JavaScript" %}
 ```javascript
@@ -206,7 +198,6 @@ if(process.argv.length != 3) {
 sayHowdy(process.argv[2]);
 ```
 
-{% arrow %}
 
 ---
 
@@ -216,7 +207,6 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 
 {% include "demo/typography-swatches.njk" %}
 
-{% arrow %}
 
 ---
 
@@ -239,7 +229,6 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 ###### H6 Heading
 {:.no-toc}
 
-{% arrow %}
 
 ---
 
@@ -247,7 +236,6 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 
 [Baseball](https://en.wikipedia.org/wiki/Baseball) is a bat-and-ball game. Two teams of nine take turns batting and fielding. The pitcher throws. The batter swings. Hit the ball, run the bases, score runs. The team with more runs wins.
 
-{% arrow %}
 
 ---
 
@@ -297,7 +285,6 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 >
 > ![Moonie Moonpie](assets/images/moonpie.png "Sweet Moonpie")
 
-{% arrow %}
 
 ---
 
@@ -314,7 +301,6 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 - Sub<sub>script</sub>
 - Inline `code`
 
-{% arrow %}
 
 ---
 
@@ -340,7 +326,6 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 3. Dale Murphy
 4. Mookie Wilson
 
-{% arrow %}
 
 ---
 
@@ -364,7 +349,6 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 | Babe Ruth    | Outfielder     |  .342 |
 | Mookie Wilson| Center-fielder |  .274 |
 
-{% arrow %}
 
 ---
 
@@ -384,7 +368,6 @@ Standard markdown images use default `<img>` styling.
 
 ![BIG yawn Bucky](assets/images/bucky.png "Sleepy Bucky")
 
-{% arrow %}
 
 ---
 
@@ -403,7 +386,6 @@ Yolo has classes for common aspect ratios.
 
 {% image { classes: "thumbnail", src: "https://storage.googleapis.com/corbs-foto/broken-bow-we-go/big-tongue-bucky.jpg" } %}
 
-{% arrow %}
 
 ---
 
@@ -414,7 +396,6 @@ Classes: `is-16` through `is-640`.
 
 {% image { classes: "image is-256", src: "https://storage.googleapis.com/corbs-foto/bigd/granada-theater-greenville-1150.jpg" } %}
 
-{% arrow %}
 
 ---
 
@@ -425,7 +406,6 @@ Classes: `is-circle-16` through `is-circle-640`.
 
 {% image { classes: "is-circle-256", src: "https://storage.googleapis.com/corbs-foto/broken-bow-we-go/big-tongue-bucky.jpg" } %}
 
-{% arrow %}
 
 ---
 
@@ -436,7 +416,6 @@ Classes: `is-100-by-75` through `is-640-by-480`.
 
 {% image { classes: "image is-256-by-192", src: "https://storage.googleapis.com/corbs-foto/flowerhood/bluebonnet.jpg" } %}
 
-{% arrow %}
 
 ---
 
@@ -447,7 +426,6 @@ Classes: `is-75-by-100` through `is-480-by-640`.
 
 {% image { classes: "image is-240-by-320", src: "https://storage.googleapis.com/corbs-foto/flowerhood/bluebonnet.jpg" } %}
 
-{% arrow %}
 
 ---
 
@@ -458,7 +436,6 @@ Classes: `is-112-by-63` through `is-640-by-360`.
 
 {% image { classes: "image is-256-by-144", src: "https://storage.googleapis.com/corbs-foto/flowerhood/bluebonnet.jpg" } %}
 
-{% arrow %}
 
 ---
 
@@ -469,7 +446,6 @@ Classes: `is-63-by-112` through `is-360-by-640`.
 
 {% image { classes: "image is-225-by-400", src: "https://storage.googleapis.com/corbs-foto/flowerhood/bluebonnet.jpg" } %}
 
-{% arrow %}
 
 ---
 
@@ -508,7 +484,6 @@ Create a file in `src/_data/` with an `ig-` prefix:
 
 {% imageGrid "ig-pets", 2 %}
 
-{% arrow %}
 
 ---
 
@@ -547,7 +522,6 @@ Create a file in `src/_data/` with an `lb-` prefix:
 
 {% lightbox "lb-marfa" %}
 
-{% arrow %}
 
 ---
 
@@ -555,7 +529,6 @@ Create a file in `src/_data/` with an `lb-` prefix:
 
 {% video %}
 
-{% arrow %}
 
 ---
 
@@ -604,7 +577,6 @@ Default aspect ratio is 16:9. Options: `is-16-by-9`, `is-4-by-3`, `is-1-by-1`.
 
 {% prezo "yolo-on", "prezos", "is-1-by-1" %}
 
-{% arrow %}
 
 ---
 
@@ -648,7 +620,6 @@ Styled with `fancy-list.css`:
 
 {% include "demo/fancy-list.njk" %}
 
-{% arrow %}
 
 ---
 
@@ -678,7 +649,6 @@ This loads `/assets/ext/js/custom.js` before the closing `</body>` tag.
     Site Info (Fetch)
 </button>
 
-{% arrow %}
 
 ---
 
@@ -718,7 +688,6 @@ make yolo-pod
 
 Opens at [http://localhost:9696](http://localhost:9696).
 
-{% arrow %}
 
 ---
 
@@ -742,7 +711,6 @@ fi
 say_howdy $1
 ```
 
-{% arrow %}
 
 ---
 
@@ -763,7 +731,6 @@ int main(int argc, char **argv) {
 }
 ```
 
-{% arrow %}
 
 ---
 
@@ -785,7 +752,6 @@ int main(int argc, char** argv) {
 }
 ```
 
-{% arrow %}
 
 ---
 
@@ -807,7 +773,6 @@ void main(List<String> args) {
 }
 ```
 
-{% arrow %}
 
 ---
 
@@ -832,7 +797,6 @@ func main() {
 }
 ```
 
-{% arrow %}
 
 ---
 
@@ -853,7 +817,6 @@ func main() {
 </html>
 ```
 
-{% arrow %}
 
 ---
 
@@ -879,7 +842,6 @@ func main() {
 }
 ```
 
-{% arrow %}
 
 ---
 
@@ -899,7 +861,6 @@ public class Howdy {
 }
 ```
 
-{% arrow %}
 
 ---
 
@@ -920,7 +881,6 @@ if(process.argv.length != 3) {
 sayHowdy(process.argv[2]);
 ```
 
-{% arrow %}
 
 ---
 
@@ -939,7 +899,6 @@ fun main(args: Array<String>): Int {
 }
 ```
 
-{% arrow %}
 
 ---
 
@@ -956,7 +915,6 @@ fun main(args: Array<String>): Int {
 * `code`
 ```
 
-{% arrow %}
 
 ---
 
@@ -977,7 +935,6 @@ if len(sys.argv) != 2:
 say_howdy(sys.argv[1])
 ```
 
-{% arrow %}
 
 ---
 
@@ -1000,7 +957,6 @@ say_howdy(sys.argv[1])
 }
 ```
 
-{% arrow %}
 
 ---
 
@@ -1016,7 +972,6 @@ AND price > 5000
 AND price <= 10000
 ```
 
-{% arrow %}
 
 ---
 
@@ -1036,7 +991,6 @@ sidebar:
   logo: assets/images/logo.png
 ```
 
-{% arrow %}
 
 ---
 
@@ -1066,4 +1020,3 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-{% arrow %}

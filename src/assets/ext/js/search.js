@@ -2,14 +2,6 @@
 (function() {
     'use strict';
 
-    function domReady(fn) {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', fn);
-        } else {
-            fn();
-        }
-    }
-
     var sections = [];
     var searchInput;
     var searchResultsContainer;
@@ -216,5 +208,5 @@
         searchResultsContainer.addEventListener('click', handleResultClick);
     }
 
-    domReady(init);
+    YoloUtils.domReady(init);
 })();

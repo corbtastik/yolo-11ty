@@ -5,6 +5,7 @@
   {% if settings.sidebar %}
   {% include "components/sidebar.njk" %}
   {% endif %}
+  {% include "components/sticky-controls.njk" %}
   <div id="yolo-container" class="container {{ settings.align | default('left') }}">
     <header>
       {% include "components/header.njk" %}
