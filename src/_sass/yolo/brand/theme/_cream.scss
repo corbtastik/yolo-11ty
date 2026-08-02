@@ -1,42 +1,34 @@
 // ----------------------------------------------------------------------------
 // cream font-families
 // ----------------------------------------------------------------------------
-$font-family-primary: "Aleo", serif;
-$font-family-secondary: "Raleway", sans-serif;
-$font-family-monospace: "Space Mono", monospace;
+$font-family-primary: "Space Mono", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", monospace;
+$font-family-secondary: "Montserrat", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+$font-family-monospace: "Source Code Pro", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", monospace;
 // ----------------------------------------------------------------------------
 // cream light-mode
 // ----------------------------------------------------------------------------
-// primary colors
-$light-primary-color: #f0f7f6;
-$light-on-primary-color: #117e96;
-$light-primary-container-color: #b3f7ef;
-$light-on-primary-container-color: #0b5f6f;
-// secondary colors  
-$light-secondary-color: #22c8e9;
-$light-on-secondary-color: #f0f7f6;
-$light-secondary-container-color: #e5f1f0;
-$light-on-secondary-container-color: #062f38;
-// tertiary colors
-$light-tertiary-color: #1bdec7;
-$light-on-tertiary-color: #f0f7f6;
-// link colors
-$light-link-color: #1abddf;
+$light-primary-color: #fdf6e3;
+$light-on-primary-color: #5c4f3a;
+$light-primary-container-color: #fffef9;
+$light-on-primary-container-color: #8b7355;
+$light-secondary-color: #8b7355;
+$light-on-secondary-color: #fdf6e3;
+$light-secondary-container-color: #eee8d5;
+$light-on-secondary-container-color: #5c4f3a;
+$light-tertiary-color: #b58900;
+$light-on-tertiary-color: #fdf6e3;
+$light-link-color: #b58900;
 // ----------------------------------------------------------------------------
 // cream dark-mode
 // ----------------------------------------------------------------------------
-// primary colors
-$dark-primary-color: #f0f7f6;
-$dark-on-primary-color: #8b1852;
-$dark-primary-container-color: #f2b6d4;
-$dark-on-primary-container-color: #791547;
-// secondary colors  
-$dark-secondary-color: #da2f85;
-$dark-on-secondary-color: #f0f7f6;
-$dark-secondary-container-color: #e5f1f0;
-$dark-on-secondary-container-color: #da4572;
-// tertiary colors
-$dark-tertiary-color: #d73364;
-$dark-on-tertiary-color: #f0f7f6;
-// link colors
-$dark-link-color: #ff016e;
+$dark-primary-color: #2c2416;
+$dark-on-primary-color: #f5e6d3;
+$dark-primary-container-color: #3d3425;
+$dark-on-primary-container-color: #d4a574;
+$dark-secondary-color: #d4a574;
+$dark-on-secondary-color: #2c2416;
+$dark-secondary-container-color: #5c4f3a;
+$dark-on-secondary-container-color: #f5e6d3;
+$dark-tertiary-color: #d4a574;
+$dark-on-tertiary-color: #2c2416;
+$dark-link-color: #c9a227;

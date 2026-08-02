@@ -14,22 +14,22 @@ ext_css:
 
 ## Howdy
 
-Yolo builds single page sites. It works for writers, developers, and photographers.
+Yolo builds single page sites. It works for writers, developers, and photographers. 👋
 
 > _I don't always use single-pages, but when I do, I [yolo](https://github.com/corbtastik/yolo)._
 
 ### Goals
 {:.no-toc}
 
-1. Live the single page life.
-2. Keep it simple. No bloat.
-3. Make it yours. Bring your own [brand](#branding).
+1. Live the single page life. 🎯
+2. Keep it simple. No bloat. ✨
+3. Make it yours. Bring your own [brand](#branding). 🎨
 
 ---
 
 ## Getting Started
 
-You need [Node.js](https://nodejs.org/) and npm.
+You need [Node.js](https://nodejs.org/) and npm. 🚀
 
 {% code "Get Yolo" %}
 ```bash
@@ -56,7 +56,7 @@ Yolo uses themes for colors and fonts. Each theme has a matching syntax theme fo
 
 ## Themes
 
-Click a pill to preview any theme. The site updates instantly.
+Click a pill to preview any theme. The site updates instantly. 🎭
 
 {% include "demo/theme-sampler.njk" %}
 
@@ -82,7 +82,7 @@ Three main colors define a theme:
 
 Pick these first. The other colors should complement them.
 
-> Set values for both **light** and **dark** modes.
+> Set values for both **light** ☀️ and **dark** 🌙 modes.
 
 #### On Colors
 {:.no-toc}
@@ -166,7 +166,7 @@ These swatches show the current syntax theme colors. Each shows the token name a
 ### Snippets
 {:.no-toc}
 
-> Click the header to copy code.
+> Click the header to copy code. 📋
 
 {% code "Bash" %}
 ```bash
@@ -234,7 +234,7 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 
 ## Paragraph Text
 
-[Baseball](https://en.wikipedia.org/wiki/Baseball) is a bat-and-ball game. Two teams of nine take turns batting and fielding. The pitcher throws. The batter swings. Hit the ball, run the bases, score runs. The team with more runs wins.
+[Baseball](https://en.wikipedia.org/wiki/Baseball) is a bat-and-ball game. ⚾ Two teams of nine take turns batting and fielding. The pitcher throws. The batter swings. Hit the ball, run the bases, score runs. The team with more runs wins.
 
 
 ---
@@ -331,6 +331,8 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 
 ## Tables
 
+Click any column header to sort. Click again to reverse.
+
 ### Basic
 {:.no-toc}
 
@@ -375,7 +377,7 @@ Standard markdown images use default `<img>` styling.
 
 Yolo has classes for common aspect ratios.
 
-> Click an image to enlarge.
+> Click an image to enlarge. 🔎
 
 ---
 
@@ -451,7 +453,7 @@ Classes: `is-63-by-112` through `is-360-by-640`.
 
 ## Image Grid
 
-Shows images inline. Click to enlarge. Click again to shrink.
+Shows images inline. Click to enlarge. Click again to shrink. 📷
 
 1. Add images to `src/_data/ig-images.yml`.
 2. Use the `imageGrid` shortcode.
@@ -489,7 +491,7 @@ Create a file in `src/_data/` with an `ig-` prefix:
 
 ## Image Lightbox
 
-Opens images in a modal. Navigate with arrows or `<` and `>` keys.
+Opens images in a modal. Navigate with arrows or `<` and `>` keys. 🔍
 
 1. Add images to `src/_data/lb-images.yml`.
 2. Use the `lightbox` shortcode.
@@ -534,7 +536,7 @@ Create a file in `src/_data/` with an `lb-` prefix:
 
 ## Presentations
 
-Embed Google Slides.
+Embed Google Slides. 📽️
 
 1. Add data to `src/_data/prezos.yml`.
 2. Use the `prezo` shortcode with the title.
@@ -590,7 +592,7 @@ ext_css:
   - custom
 ```
 
-This loads `/assets/ext/css/custom.css` after `main.css`.
+This loads `/assets/ext/css/custom.css` after `main.css`. 🎨
 
 ### Rubik Cube
 {:.no-toc}
@@ -633,7 +635,7 @@ ext_js:
   - custom
 ```
 
-This loads `/assets/ext/js/custom.js` before the closing `</body>` tag.
+This loads `/assets/ext/js/custom.js` before the closing `</body>` tag. ⚡
 
 ### XMLHttpRequest
 {:.no-toc}
@@ -654,7 +656,7 @@ This loads `/assets/ext/js/custom.js` before the closing `</body>` tag.
 
 ## Containers
 
-Run Yolo in a container with [Podman](https://podman.io/).
+Run Yolo in a container with [Podman](https://podman.io/). 📦
 
 ### Images
 {:.no-toc}

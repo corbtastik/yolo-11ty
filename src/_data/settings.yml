@@ -12,6 +12,7 @@ description: Loveable single pages
 brand:
   theme: matrix-blue
   syntax: matrix-blue
+  emoji: true
 align: left
 sidebar:
   position: left

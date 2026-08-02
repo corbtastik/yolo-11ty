@@ -60,6 +60,10 @@ Type-ahead search that filters page sections. Press:
 - **Enter** - Jump to section
 - **Escape** - Close search
 
+### Sortable Tables
+
+Click any column header to sort. Click again to reverse. Numbers sort numerically, text sorts alphabetically.
+
 ### Shortcodes
 
 #### Code Header

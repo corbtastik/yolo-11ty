@@ -30,6 +30,9 @@
     class ImageGrid {
         constructor(name) {
             this.name = name;
+            this.isOpen = false;
+            this.currentIndex = 0;
+            this.totalImages = 0;
         }
 
         static create(name) {
@@ -57,11 +60,13 @@
         // Show the ig-target, hide all images, show the one passed in.
         const imageTarget = ImageGrid.domTarget(this.name);
         const images = imageTarget.getElementsByTagName('img');
+        this.totalImages = images.length;
         for(let i = 0; i < images.length; i++) {
             const caption = document.getElementById(this.name + "-caption-" + i);
             if(images[i].id === imageId) {
                 images[i].style.display = "block";
                 caption.style.display = "block";
+                this.currentIndex = i;
             } else {
                 images[i].style.display = "none";
                 caption.style.display = "none";
@@ -69,6 +74,7 @@
         }
         imageTarget.classList.toggle("no-display");
         imageTarget.style.display = "block";
+        this.isOpen = true;
     };
 
     ImageGrid.prototype.closeImage = function() {
@@ -85,6 +91,38 @@
         imageTarget.classList.toggle("no-display");
         // Show the grid
         ImageGrid.dom(this.name).style.display = "block";
+        this.isOpen = false;
+    };
+
+    ImageGrid.prototype.showImage = function(index) {
+        const imageTarget = ImageGrid.domTarget(this.name);
+        const images = imageTarget.getElementsByTagName('img');
+        // Wrap around: cycle through images
+        if (index >= this.totalImages) {
+            index = 0;
+        } else if (index < 0) {
+            index = this.totalImages - 1;
+        }
+        this.currentIndex = index;
+        Console.log("ImageGrid.showImage: " + this.name + " index=" + index);
+        for (let i = 0; i < images.length; i++) {
+            const caption = document.getElementById(this.name + "-caption-" + i);
+            if (i === index) {
+                images[i].style.display = "block";
+                caption.style.display = "block";
+            } else {
+                images[i].style.display = "none";
+                caption.style.display = "none";
+            }
+        }
+    };
+
+    ImageGrid.prototype.nextImage = function() {
+        this.showImage(this.currentIndex + 1);
+    };
+
+    ImageGrid.prototype.prevImage = function() {
+        this.showImage(this.currentIndex - 1);
     };
     // ------------------------------------------------------------------------
     // Lightbox class for lightbox logic
@@ -247,6 +285,8 @@
             yolo.initToc();
             // Initialize tabs on the page
             yolo.initTabs();
+            // Initialize sortable tables
+            yolo.initSortableTables();
             return yolo;
         }
     }
@@ -326,6 +366,21 @@
         // Create new image-grid instance
         const imageGrid = ImageGrid.create(name);
         Console.log("Yolo.imageGrid, created new instance named: " + name);
+        // Setup keyboard event listener for arrow key navigation
+        window.document.addEventListener("keydown", event => {
+            if(imageGrid.isOpen) {
+                if (event.key === "ArrowLeft" || (event.key === "<" && event.shiftKey)) {
+                    Console.log("Yolo.imageGrid keydown ArrowLeft.");
+                    imageGrid.prevImage();
+                } else if (event.key === "ArrowRight" || (event.key === ">" && event.shiftKey)) {
+                    Console.log("Yolo.imageGrid keydown ArrowRight.");
+                    imageGrid.nextImage();
+                } else if (event.key === "Escape") {
+                    Console.log("Yolo.imageGrid keydown Escape.");
+                    imageGrid.closeImage();
+                }
+            }
+        });
         this.imageGrids.set(name, imageGrid);
         return this.imageGrids.get(name);
     };
@@ -372,6 +427,45 @@
         // Show active tab and add "active" class to tabButton
         tabElement.style.display = "block";
         tabButton.classList.add("active");
+    };
+
+    Yolo.prototype.initSortableTables = function() {
+        const tables = document.querySelectorAll('.yolo-themed table');
+        tables.forEach(function(table) {
+            const headers = table.querySelectorAll('th');
+            headers.forEach(function(header, columnIndex) {
+                header.style.cursor = 'pointer';
+                header.addEventListener('click', function() {
+                    const tbody = table.querySelector('tbody') || table;
+                    const rows = Array.from(tbody.querySelectorAll('tr')).filter(function(row) {
+                        return row.querySelector('td');
+                    });
+                    const isAscending = header.dataset.sortDir !== 'asc';
+                    header.dataset.sortDir = isAscending ? 'asc' : 'desc';
+                    // Clear sort direction on other headers
+                    headers.forEach(function(h) {
+                        if (h !== header) h.dataset.sortDir = '';
+                    });
+                    rows.sort(function(a, b) {
+                        const aCell = a.querySelectorAll('td')[columnIndex];
+                        const bCell = b.querySelectorAll('td')[columnIndex];
+                        const aVal = aCell ? aCell.textContent.trim() : '';
+                        const bVal = bCell ? bCell.textContent.trim() : '';
+                        // Try numeric sort first
+                        const aNum = parseFloat(aVal);
+                        const bNum = parseFloat(bVal);
+                        if (!isNaN(aNum) && !isNaN(bNum)) {
+                            return isAscending ? aNum - bNum : bNum - aNum;
+                        }
+                        // Fall back to string sort
+                        return isAscending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                    });
+                    rows.forEach(function(row) {
+                        tbody.appendChild(row);
+                    });
+                });
+            });
+        });
     };
 
     // ------------------------------------------------------------------------
