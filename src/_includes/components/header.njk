@@ -1,0 +1,29 @@
+<div class="yolo-header">
+    <div class="yolo-header-toggles">
+        <div class="yolo-theme-toggle">
+            <span id="theme-toggle" class="material-icons md-36">light_mode</span>
+        </div>
+        {% if settings.sidebar %}
+        <div class="yolo-sidebar-toggle">
+            <span id="sidebar-toggle" class="material-icons md-36">menu</span>
+        </div>
+        {% endif %}
+    </div>
+    <div class="yolo-site-info">
+        {% if settings.header.logo %}
+        <a href="./">
+            <img class="logo" alt="site-logo" src="{{ settings.header.logo }}" title="Site Logo"/>
+        </a>
+        {% endif %}
+        <h1 class="tag no-toc"><a href="./">{{ settings.name }}</a></h1>
+        <h4 class="description no-toc">{{ settings.description }}</h4>
+        <p>
+            <span>
+            {% for link in links %}
+            {% set linkref = link | split(",") %}
+                <a href="{{ linkref[1] }}" class="yolo-pill">{{ linkref[0] }}</a>
+            {% endfor %}
+            </span>
+        </p>
+    </div>
+</div>

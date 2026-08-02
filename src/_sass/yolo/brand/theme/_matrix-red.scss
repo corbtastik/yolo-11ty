@@ -1,0 +1,34 @@
+// ----------------------------------------------------------------------------
+// matrix-red font-families
+// ----------------------------------------------------------------------------
+$font-family-primary: "Space Mono", monospace;
+$font-family-secondary: "Montserrat", sans-serif;
+$font-family-monospace: "Source Code Pro", monospace;
+// ----------------------------------------------------------------------------
+// matrix-red light-mode
+// ----------------------------------------------------------------------------
+$light-primary-color: #fff5f5;
+$light-on-primary-color: #800000;
+$light-primary-container-color: #ffffff;
+$light-on-primary-container-color: #000000;
+$light-secondary-color: #000000;
+$light-on-secondary-color: #fff5f5;
+$light-secondary-container-color: #ffb3b3;
+$light-on-secondary-container-color: #800000;
+$light-tertiary-color: #d00000;
+$light-on-tertiary-color: #fff5f5;
+$light-link-color: #d00000;
+// ----------------------------------------------------------------------------
+// matrix-red dark-mode
+// ----------------------------------------------------------------------------
+$dark-primary-color: #000000;
+$dark-on-primary-color: #ff0000;
+$dark-primary-container-color: #0d0000;
+$dark-on-primary-container-color: #ffffff;
+$dark-secondary-color: #ffffff;
+$dark-on-secondary-color: #000000;
+$dark-secondary-container-color: #8b0000;
+$dark-on-secondary-container-color: #ff0000;
+$dark-tertiary-color: #ff0000;
+$dark-on-tertiary-color: #000000;
+$dark-link-color: #ff5555;

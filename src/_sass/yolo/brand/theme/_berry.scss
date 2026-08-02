@@ -1,0 +1,34 @@
+// ----------------------------------------------------------------------------
+// berry font-families
+// ----------------------------------------------------------------------------
+$font-family-primary: "Space Mono", monospace;
+$font-family-secondary: "Montserrat", sans-serif;
+$font-family-monospace: "Source Code Pro", monospace;
+// ----------------------------------------------------------------------------
+// berry light-mode
+// ----------------------------------------------------------------------------
+$light-primary-color: #fff0f5;
+$light-on-primary-color: #800040;
+$light-primary-container-color: #ffffff;
+$light-on-primary-container-color: #c71585;
+$light-secondary-color: #c71585;
+$light-on-secondary-color: #fff0f5;
+$light-secondary-container-color: #ffb6c1;
+$light-on-secondary-container-color: #800040;
+$light-tertiary-color: #663399;
+$light-on-tertiary-color: #fff0f5;
+$light-link-color: #663399;
+// ----------------------------------------------------------------------------
+// berry dark-mode
+// ----------------------------------------------------------------------------
+$dark-primary-color: #150024;
+$dark-on-primary-color: #ff4da6;
+$dark-primary-container-color: #24003d;
+$dark-on-primary-container-color: #d187ff;
+$dark-secondary-color: #d187ff;
+$dark-on-secondary-color: #150024;
+$dark-secondary-container-color: #4b0082;
+$dark-on-secondary-container-color: #ff4da6;
+$dark-tertiary-color: #ff4da6;
+$dark-on-tertiary-color: #150024;
+$dark-link-color: #6a5acd;

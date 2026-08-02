@@ -1,0 +1,18 @@
+{% if ext_js | size > 0 %}
+{% for js_name in ext_js %}
+<script src="{{ settings.baseurl }}/assets/ext/js/{{ js_name }}.js"></script>
+{% endfor %}
+{% endif %}
+<script src="{{ settings.baseurl }}{{ '/assets/js/yolo.js' | relative_url }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.highlight code').forEach(function(block) {
+    var parent = block.closest('.highlighter-rouge');
+    if (parent && (parent.classList.contains('language-text') || parent.classList.contains('language-plaintext'))) {
+      return;
+    }
+    hljs.highlightElement(block);
+  });
+});
+</script>

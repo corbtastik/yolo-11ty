@@ -1,0 +1,18 @@
+---
+permalink: /css/main.scss
+---
+@charset "utf-8";
+// ----------------------------------------------------------------------------
+// Main scss modules:
+// 1. base
+// 2. utilities
+// 3. core
+// 4. components
+// ----------------------------------------------------------------------------
+@import "yolo/base/all";
+@import "yolo/utilities/all";
+@import "yolo/core/all";
+@import "yolo/components/all";
+{% if settings.sidebar %}
+@import "yolo/components/sidebar";
+{% endif %}

@@ -1,0 +1,34 @@
+// ----------------------------------------------------------------------------
+// material-indigo font-families
+// ----------------------------------------------------------------------------
+$font-family-primary: "Space Mono", monospace;
+$font-family-secondary: "Montserrat", sans-serif;
+$font-family-monospace: "Source Code Pro", monospace;
+// ----------------------------------------------------------------------------
+// material-indigo light-mode
+// ----------------------------------------------------------------------------
+$light-primary-color: #E8EAF6;
+$light-on-primary-color: #1A237E;
+$light-primary-container-color: #ffffff;
+$light-on-primary-container-color: #283593;
+$light-secondary-color: #283593;
+$light-on-secondary-color: #E8EAF6;
+$light-secondary-container-color: #C5CAE9;
+$light-on-secondary-container-color: #1A237E;
+$light-tertiary-color: #3F51B5;
+$light-on-tertiary-color: #E8EAF6;
+$light-link-color: #303F9F;
+// ----------------------------------------------------------------------------
+// material-indigo dark-mode
+// ----------------------------------------------------------------------------
+$dark-primary-color: #1A237E;
+$dark-on-primary-color: #E8EAF6;
+$dark-primary-container-color: #283593;
+$dark-on-primary-container-color: #C5CAE9;
+$dark-secondary-color: #C5CAE9;
+$dark-on-secondary-color: #1A237E;
+$dark-secondary-container-color: #303F9F;
+$dark-on-secondary-container-color: #E8EAF6;
+$dark-tertiary-color: #7986CB;
+$dark-on-tertiary-color: #1A237E;
+$dark-link-color: #8C9EFF;

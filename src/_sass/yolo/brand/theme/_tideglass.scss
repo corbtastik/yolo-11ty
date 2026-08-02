@@ -1,0 +1,34 @@
+// ----------------------------------------------------------------------------
+// tideglass font-families
+// ----------------------------------------------------------------------------
+$font-family-primary: "Space Mono", monospace;
+$font-family-secondary: "Montserrat", sans-serif;
+$font-family-monospace: "Source Code Pro", monospace;
+// ----------------------------------------------------------------------------
+// tideglass light-mode
+// ----------------------------------------------------------------------------
+$light-primary-color: #F2F7FA;
+$light-on-primary-color: #1B2A36;
+$light-primary-container-color: #FFFFFF;
+$light-on-primary-container-color: #2E4A40;
+$light-secondary-color: #2E4A40;
+$light-on-secondary-color: #F2F7FA;
+$light-secondary-container-color: #C7D6DF;
+$light-on-secondary-container-color: #1B2A36;
+$light-tertiary-color: #65A082;
+$light-on-tertiary-color: #F2F7FA;
+$light-link-color: #3B6B59;
+// ----------------------------------------------------------------------------
+// tideglass dark-mode
+// ----------------------------------------------------------------------------
+$dark-primary-color: #141B24;
+$dark-on-primary-color: #D7E6F0;
+$dark-primary-container-color: #1E2733;
+$dark-on-primary-container-color: #A8E0C8;
+$dark-secondary-color: #A8E0C8;
+$dark-on-secondary-color: #141B24;
+$dark-secondary-container-color: #2F4452;
+$dark-on-secondary-container-color: #D7E6F0;
+$dark-tertiary-color: #65A082;
+$dark-on-tertiary-color: #141B24;
+$dark-link-color: #65A082;

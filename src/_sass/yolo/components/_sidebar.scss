@@ -1,0 +1,111 @@
+// ----------------------------------------------------------------------------
+// Sidebar support
+// ----------------------------------------------------------------------------
+@import "../core/responsiveness";
+
+.sidebar {
+  padding-top: 1rem;
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: width 0.3s ease, transform 0.3s ease;
+  border-style: none;
+  > .close {
+    position: absolute;
+    top: 0;
+    font-size: 36px;
+    &:is(:hover) {
+      cursor: pointer;
+    }
+  }
+  .sidebar-logo {
+    padding: 0.5rem 1.5rem 1.5rem;
+  }
+  #toc-sidebar {
+    padding-bottom: 4rem;
+  }
+}
+
+
+// Default: sidebar on left
+.sidebar-left .sidebar {
+  left: 0;
+  right: auto;
+}
+
+
+.sidebar-left .sidebar > .close {
+  right: 25px;
+  margin-left: 50px;
+}
+
+// Sidebar on right
+.sidebar-right .sidebar {
+  right: 0;
+  left: auto;
+}
+
+
+.sidebar-right .sidebar > .close {
+  left: 25px;
+  margin-right: 50px;
+}
+
+// Hidden state - left sidebar
+.sidebar-left.sidebar-hidden .sidebar {
+  transform: translateX(-100%);
+}
+
+
+.sidebar-left.sidebar-hidden .container {
+  margin-left: auto;
+}
+
+// Hidden state - right sidebar
+.sidebar-right.sidebar-hidden .sidebar {
+  transform: translateX(100%);
+}
+
+
+.sidebar-right.sidebar-hidden .container {
+  margin-right: auto;
+}
+
+@include mobile {
+  .container {
+    max-width: 48rem;
+  }
+  .sidebar {
+    width: 1rem;
+  }
+  .yolo-sidebar-toggle {
+    display: none;
+  }
+}
+
+@include tablet {
+  // Left sidebar
+  .sidebar-left .container {
+    max-width: 38rem;
+    margin-left: 18rem;
+    margin-right: auto;
+    transition: margin-left 0.3s ease;
+  }
+  .sidebar-left .sidebar {
+    width: 18rem;
+  }
+
+  // Right sidebar
+  .sidebar-right .container {
+    max-width: 38rem;
+    margin-right: 18rem;
+    margin-left: auto;
+    transition: margin-right 0.3s ease;
+  }
+  .sidebar-right .sidebar {
+    width: 18rem;
+  }
+}

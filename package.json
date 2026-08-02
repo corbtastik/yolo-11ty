@@ -1,0 +1,29 @@
+{
+  "name": "yolo-11ty",
+  "version": "1.5.0",
+  "description": "Loveable single pages - Eleventy edition",
+  "main": ".eleventy.js",
+  "scripts": {
+    "build:11ty": "eleventy",
+    "build:scss": "node scripts/build-scss.js",
+    "build": "npm run build:11ty && npm run build:scss",
+    "serve": "npm run build && eleventy --serve",
+    "clean": "rm -rf _site",
+    "generate:themes": "node scripts/generate-themes.js"
+  },
+  "keywords": [
+    "eleventy",
+    "11ty",
+    "static-site",
+    "single-page"
+  ],
+  "author": "Corbs",
+  "license": "MIT",
+  "dependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "js-yaml": "^4.1.0",
+    "markdown-it": "^14.0.0",
+    "markdown-it-attrs": "^4.1.6",
+    "sass": "^1.69.0"
+  }
+}

@@ -1,0 +1,34 @@
+// ----------------------------------------------------------------------------
+// amethyst font-families
+// ----------------------------------------------------------------------------
+$font-family-primary: "Space Mono", monospace;
+$font-family-secondary: "Montserrat", sans-serif;
+$font-family-monospace: "Source Code Pro", monospace;
+// ----------------------------------------------------------------------------
+// amethyst light-mode
+// ----------------------------------------------------------------------------
+$light-primary-color: #f7f5fb;
+$light-on-primary-color: #1a1129;
+$light-primary-container-color: #ffffff;
+$light-on-primary-container-color: #4b0082;
+$light-secondary-color: #4b0082;
+$light-on-secondary-color: #f7f5fb;
+$light-secondary-container-color: #e6e0f0;
+$light-on-secondary-container-color: #1a1129;
+$light-tertiary-color: #6a0dad;
+$light-on-tertiary-color: #f7f5fb;
+$light-link-color: #6a0dad;
+// ----------------------------------------------------------------------------
+// amethyst dark-mode
+// ----------------------------------------------------------------------------
+$dark-primary-color: #0f0a1a;
+$dark-on-primary-color: #e0d7f2;
+$dark-primary-container-color: #1a1129;
+$dark-on-primary-container-color: #bf80ff;
+$dark-secondary-color: #bf80ff;
+$dark-on-secondary-color: #0f0a1a;
+$dark-secondary-container-color: #3b2566;
+$dark-on-secondary-container-color: #e0d7f2;
+$dark-tertiary-color: #bf80ff;
+$dark-on-tertiary-color: #0f0a1a;
+$dark-link-color: #ffd700;

@@ -1,0 +1,18 @@
+# -----------------------------------------------------------------------------
+# Yolo site settings. see: .eleventy.js for 11ty settings
+# -----------------------------------------------------------------------------
+# baseurl: The sub-path your site is hosted from, for example: /blog
+# -----------------------------------------------------------------------------
+baseurl: ""
+# -----------------------------------------------------------------------------
+name: Yolo
+version: v1.5
+title: Yolo on my friend
+description: Loveable single pages
+brand:
+  theme: matrix-blue
+  syntax: matrix-blue
+align: left
+sidebar:
+  position: left
+  logo: assets/images/logo.png

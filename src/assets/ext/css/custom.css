@@ -1,0 +1,202 @@
+.flex-item {
+    background-color: #00b3ff;
+    width: 3em;
+    height: 3em;
+    margin: 0.2em;
+    border-radius: 0.2em;
+}
+
+.flex-item.red {
+    background-color: #C12123;
+}
+
+.flex-item.blue {
+    background-color: #254AB9;
+}
+
+.flex-item.yellow {
+    background-color: #FEFF20;
+}
+
+.flex-item.green {
+    background-color: #23C649;
+}
+
+.flex-item.white {
+    background-color: #CDCDCD;
+}
+
+.flex-item.orange {
+    background-color: #CE4B23;
+}
+
+.rubik-cube-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#site-button-ajax {
+    background-color: var(--secondary-color);
+    color: var(--on-secondary-color);
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border: none;
+    padding: 0.5em;
+    border-radius: 0.25em;
+    width: 8em;
+    cursor: pointer;
+}
+
+#site-button-ajax:hover {
+    background-color: var(--tertiary-color);
+    color: var(--on-tertiary-color);
+}
+
+#site-button-fetch {
+    background-color: var(--secondary-color);
+    color: var(--on-secondary-color);
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border: none;
+    padding: 0.5em;
+    border-radius: 0.25em;
+    width: 8em;
+    cursor: pointer;
+}
+
+#site-button-fetch:hover {
+    background-color: var(--tertiary-color);
+    color: var(--on-tertiary-color);
+}
+
+/* Theme Sampler */
+.theme-sampler {
+    margin-bottom: 2rem;
+}
+
+.theme-sampler h4 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.theme-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.theme-pill {
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    outline: none;
+    border: none;
+}
+
+.theme-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.theme-pill:focus {
+    outline: none;
+}
+
+.theme-pill.active {
+    background-color: var(--tertiary-color);
+    color: var(--on-tertiary-color);
+}
+
+/* Typeahead Search */
+.yolo-search {
+    margin-bottom: 2rem;
+}
+
+.search-input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-family: var(--font-family-monospace);
+    color: var(--on-primary-color);
+    background-color: var(--secondary-container-color);
+    border: none;
+    border-radius: 0.25rem;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: var(--on-primary-color);
+    opacity: 0.5;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+/* Search results - replaces page content */
+.search-results-container {
+    display: none;
+}
+
+.search-results-container.visible {
+    display: block;
+}
+
+.search-result-item {
+    display: block;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    background-color: var(--primary-container-color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.search-result-item:hover {
+    background-color: var(--secondary-container-color);
+}
+
+.search-result-item.selected {
+    background-color: var(--secondary-container-color);
+    border-top: 4px solid var(--tertiary-color);
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.search-result-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.25rem;
+}
+
+.search-result-preview {
+    font-size: 0.9rem;
+    color: var(--on-primary-color);
+    opacity: 0.7;
+}
+
+.search-result-item mark {
+    background-color: var(--tertiary-color);
+    color: var(--on-tertiary-color);
+    padding: 0 0.15rem;
+    border-radius: 0.15rem;
+}
+
+.search-no-results {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--on-primary-color);
+    opacity: 0.6;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+/* Hide page content when searching */
+.yolo-search-active .page-content {
+    display: none;
+}

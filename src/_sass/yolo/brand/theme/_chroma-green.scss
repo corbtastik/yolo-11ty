@@ -1,0 +1,34 @@
+// ----------------------------------------------------------------------------
+// chroma-green font-families
+// ----------------------------------------------------------------------------
+$font-family-primary: "Space Mono", monospace;
+$font-family-secondary: "Montserrat", sans-serif;
+$font-family-monospace: "Source Code Pro", monospace;
+// ----------------------------------------------------------------------------
+// chroma-green light-mode
+// ----------------------------------------------------------------------------
+$light-primary-color: #ffffff;
+$light-on-primary-color: #003300;
+$light-primary-container-color: #f5fff7;
+$light-on-primary-container-color: #004d00;
+$light-secondary-color: #004d00;
+$light-on-secondary-color: #ffffff;
+$light-secondary-container-color: #b3ffc1;
+$light-on-secondary-container-color: #003300;
+$light-tertiary-color: #008000;
+$light-on-tertiary-color: #ffffff;
+$light-link-color: #008000;
+// ----------------------------------------------------------------------------
+// chroma-green dark-mode
+// ----------------------------------------------------------------------------
+$dark-primary-color: #002200;
+$dark-on-primary-color: #ccffcc;
+$dark-primary-container-color: #003300;
+$dark-on-primary-container-color: #ffffff;
+$dark-secondary-color: #ffffff;
+$dark-on-secondary-color: #002200;
+$dark-secondary-container-color: #008000;
+$dark-on-secondary-container-color: #ccffcc;
+$dark-tertiary-color: #33ff33;
+$dark-on-tertiary-color: #002200;
+$dark-link-color: #33ff33;
