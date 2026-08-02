@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "corbs-cloud"
+  },
+  "targets": {
+    "corbs-cloud": {
+      "hosting": {
+        "yolo-11ty": [
+          "yolo-11ty"
+        ]
+      }
+    }
+  }
+}

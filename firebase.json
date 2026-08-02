@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "yolo-11ty",
+    "public": "_site",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

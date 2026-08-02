@@ -107,12 +107,12 @@ Links get their own color. Pick something distinct and use it everywhere.
 ### Color Swatches
 {:.no-toc}
 
-#### Theme Colors:
+#### Theme Colors
 {:.no-toc}
 
 {% include "demo/theme-swatches.njk" %}
 
-#### General Colors:
+#### General Colors
 {:.no-toc}
 
 {% include "demo/general-color-swatches.njk" %}
