@@ -10,8 +10,8 @@ version: v1.5
 title: Yolo on my friend
 description: Loveable single pages
 brand:
-  theme: matrix-blue
-  syntax: matrix-blue
+  theme: star-lord
+  syntax: star-lord
   emoji: true
 align: left
 sidebar:
