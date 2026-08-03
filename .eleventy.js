@@ -234,7 +234,7 @@ module.exports = function(eleventyConfig) {
         const igImage = igImages[idx];
         if (igImage) {
           html += `\n            <img class="image square"
-                 onclick="Yolo.imageGrid('${igData}').openImage('${igData}-image-${idx}');"
+                 data-gallery="${igData}" data-gallery-type="ig" data-action="open" data-index="${idx}"
                  alt="${igImage.description || ''}"
                  src="${igImage.src}">`;
         }
@@ -252,7 +252,7 @@ module.exports = function(eleventyConfig) {
       const igImage = igImages[i];
       if (igImage) {
         html += `\n            <img id="${igData}-image-${i}" class="image square"
-                 onclick="Yolo.imageGrid('${igData}').closeImage('${igData}-image-${i}');"
+                 data-gallery="${igData}" data-gallery-type="ig" data-action="close"
                  alt="${igImage.description || ''}"
                  src="${igImage.src}">
             <div id="${igData}-caption-${i}" class="yolo-caption">
@@ -263,8 +263,8 @@ module.exports = function(eleventyConfig) {
 
     html += `\n        </div>
         <!-- Next/previous controls -->
-        <a class="ig-nav ig-prev" onclick="Yolo.imageGrid('${igData}').prevImage();">&#10094;</a>
-        <a class="ig-nav ig-next" onclick="Yolo.imageGrid('${igData}').nextImage();">&#10095;</a>
+        <a class="ig-nav ig-prev" data-gallery="${igData}" data-gallery-type="ig" data-action="prev">&#10094;</a>
+        <a class="ig-nav ig-next" data-gallery="${igData}" data-gallery-type="ig" data-action="next">&#10095;</a>
     </div>
 </div>`;
 
@@ -288,7 +288,7 @@ module.exports = function(eleventyConfig) {
         const lbImage = lbImages[idx];
         if (lbImage) {
           html += `\n        <img class="lb-square lb-hover-shadow"
-             onclick="Yolo.lightbox('${lbData}').openModal();Yolo.lightbox('${lbData}').currentSlide(${idx});"
+             data-gallery="${lbData}" data-gallery-type="lb" data-action="open" data-index="${idx}"
              alt="${lbImage.description || ''}"
              src="${lbImage.src}">`;
         }
@@ -299,7 +299,7 @@ module.exports = function(eleventyConfig) {
     html += `\n</div>
 <!-- The lb-modal -->
 <div id="lb-modal-${lbData}" class="lb-modal">
-    <span class="lb-close" onclick="Yolo.lightbox('${lbData}').closeModal();">&times;</span>
+    <span class="lb-close" data-gallery="${lbData}" data-gallery-type="lb" data-action="close">&times;</span>
     <div class="lb-container is-mobile">
         <div class="lb-modal-content">`;
 
@@ -312,8 +312,8 @@ module.exports = function(eleventyConfig) {
     }
 
     html += `\n            <!-- Next/previous controls -->
-            <a class="lb-nav lb-prev" onclick="Yolo.lightbox('${lbData}').plusSlides(-1);">&#10094;</a>
-            <a class="lb-nav lb-next" onclick="Yolo.lightbox('${lbData}').plusSlides(1);">&#10095;</a>
+            <a class="lb-nav lb-prev" data-gallery="${lbData}" data-gallery-type="lb" data-action="prev">&#10094;</a>
+            <a class="lb-nav lb-next" data-gallery="${lbData}" data-gallery-type="lb" data-action="next">&#10095;</a>
         </div>
         <!-- Caption text -->
         <div class="yolo-caption">

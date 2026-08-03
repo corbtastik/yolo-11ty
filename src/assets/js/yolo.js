@@ -3,36 +3,65 @@
 // https://github.com/corbtastik/yolo
 // MIT License
 // ============================================================================
-(function (window){
+(function (window) {
+    'use strict';
+
     // ------------------------------------------------------------------------
-    // Hack wrapper around console.log for debugging, off by default.
+    // Console wrapper for debugging
     // ------------------------------------------------------------------------
     class Console {
-        static println(text) {
-            if(Console.enabled()) {
-                console.log(text);
+        static enabled = true;
+
+        static log(text) {
+            if (Console.enabled) {
+                console.log("YOLO LOG " + new Date().toUTCString() + ": " + text);
             }
         }
-        static log(text) {
-            Console.println("YOLO LOG " + new Date().toUTCString() + ": " + text);
-        }
+
         static error(text) {
-            Console.println("YOLO ERR " + new Date().toUTCString() + ": " + text);
-        }
-        static enabled() {
-            return true;
+            if (Console.enabled) {
+                console.log("YOLO ERR " + new Date().toUTCString() + ": " + text);
+            }
         }
     }
 
     // ------------------------------------------------------------------------
-    // ImageGrid class for image-grid logic
+    // Gallery base class - shared logic for ImageGrid and Lightbox
     // ------------------------------------------------------------------------
-    class ImageGrid {
+    class Gallery {
         constructor(name) {
             this.name = name;
             this.isOpen = false;
             this.currentIndex = 0;
-            this.totalImages = 0;
+            this.totalItems = 0;
+        }
+
+        next() {
+            this.showItem(this.currentIndex + 1);
+        }
+
+        prev() {
+            this.showItem(this.currentIndex - 1);
+        }
+
+        wrapIndex(index) {
+            if (index >= this.totalItems) return 0;
+            if (index < 0) return this.totalItems - 1;
+            return index;
+        }
+
+        // Abstract methods - subclasses must implement
+        open(index) { throw new Error('Subclass must implement open()'); }
+        close() { throw new Error('Subclass must implement close()'); }
+        showItem(index) { throw new Error('Subclass must implement showItem()'); }
+    }
+
+    // ------------------------------------------------------------------------
+    // ImageGrid class
+    // ------------------------------------------------------------------------
+    class ImageGrid extends Gallery {
+        constructor(name) {
+            super(name);
         }
 
         static create(name) {
@@ -40,99 +69,97 @@
             return new ImageGrid(name);
         }
 
-        static dom(name) {
-            return document.getElementById("ig-" + name);
+        getGridElement() {
+            return document.getElementById("ig-" + this.name);
         }
 
-        static domTarget(name) {
-            return document.getElementById("ig-target-" + name);
+        getTargetElement() {
+            return document.getElementById("ig-target-" + this.name);
         }
-    }
 
-    ImageGrid.prototype.name = function() {
-        return this.name;
-    }
+        getImages() {
+            return this.getTargetElement().getElementsByTagName('img');
+        }
 
-    ImageGrid.prototype.openImage = function(imageId) {
-        Console.log("ImageGrid.openImage: " + this.name);
-        // Hide the grid
-        ImageGrid.dom(this.name).style.display = "none";
-        // Show the ig-target, hide all images, show the one passed in.
-        const imageTarget = ImageGrid.domTarget(this.name);
-        const images = imageTarget.getElementsByTagName('img');
-        this.totalImages = images.length;
-        for(let i = 0; i < images.length; i++) {
-            const caption = document.getElementById(this.name + "-caption-" + i);
-            if(images[i].id === imageId) {
-                images[i].style.display = "block";
-                caption.style.display = "block";
-                this.currentIndex = i;
-            } else {
-                images[i].style.display = "none";
-                caption.style.display = "none";
+        getCaption(index) {
+            return document.getElementById(this.name + "-caption-" + index);
+        }
+
+        open(index) {
+            Console.log("ImageGrid.open: " + this.name + " index=" + index);
+            this.getGridElement().style.display = "none";
+
+            const target = this.getTargetElement();
+            const images = this.getImages();
+            this.totalItems = images.length;
+            this.currentIndex = index;
+
+            for (let i = 0; i < images.length; i++) {
+                const caption = this.getCaption(i);
+                const show = (i === index);
+                images[i].style.display = show ? "block" : "none";
+                if (caption) caption.style.display = show ? "block" : "none";
             }
-        }
-        imageTarget.classList.toggle("no-display");
-        imageTarget.style.display = "block";
-        this.isOpen = true;
-    };
 
-    ImageGrid.prototype.closeImage = function() {
-        Console.log("ImageGrid.closeImage: " + this.name);
-        // Hide images and ig-target
-        const imageTarget = ImageGrid.domTarget(this.name);
-        const images = imageTarget.getElementsByTagName('img');
-        for(let i = 0; i < images.length; i++) {
-            const caption = document.getElementById(this.name + "-caption-" + i);
-            caption.style.display = "none";
-            images[i].style.display = "none";
+            target.classList.remove("no-display");
+            target.style.display = "block";
+            this.isOpen = true;
         }
-        imageTarget.style.display = "none";
-        imageTarget.classList.toggle("no-display");
-        // Show the grid
-        ImageGrid.dom(this.name).style.display = "block";
-        this.isOpen = false;
-    };
 
-    ImageGrid.prototype.showImage = function(index) {
-        const imageTarget = ImageGrid.domTarget(this.name);
-        const images = imageTarget.getElementsByTagName('img');
-        // Wrap around: cycle through images
-        if (index >= this.totalImages) {
-            index = 0;
-        } else if (index < 0) {
-            index = this.totalImages - 1;
-        }
-        this.currentIndex = index;
-        Console.log("ImageGrid.showImage: " + this.name + " index=" + index);
-        for (let i = 0; i < images.length; i++) {
-            const caption = document.getElementById(this.name + "-caption-" + i);
-            if (i === index) {
-                images[i].style.display = "block";
-                caption.style.display = "block";
-            } else {
+        close() {
+            Console.log("ImageGrid.close: " + this.name);
+            const target = this.getTargetElement();
+            const images = this.getImages();
+
+            for (let i = 0; i < images.length; i++) {
+                const caption = this.getCaption(i);
                 images[i].style.display = "none";
-                caption.style.display = "none";
+                if (caption) caption.style.display = "none";
             }
-        }
-    };
 
-    ImageGrid.prototype.nextImage = function() {
-        this.showImage(this.currentIndex + 1);
-    };
-
-    ImageGrid.prototype.prevImage = function() {
-        this.showImage(this.currentIndex - 1);
-    };
-    // ------------------------------------------------------------------------
-    // Lightbox class for lightbox logic
-    // ------------------------------------------------------------------------
-    class Lightbox {
-        constructor(name) {
-            this.name = name;
+            target.style.display = "none";
+            target.classList.add("no-display");
+            this.getGridElement().style.display = "block";
             this.isOpen = false;
-            this.slideIndex = 0;
-            this.showSlides(this.slideIndex);
+        }
+
+        showItem(index) {
+            index = this.wrapIndex(index);
+            this.currentIndex = index;
+            Console.log("ImageGrid.showItem: " + this.name + " index=" + index);
+
+            const images = this.getImages();
+            for (let i = 0; i < images.length; i++) {
+                const caption = this.getCaption(i);
+                const show = (i === index);
+                images[i].style.display = show ? "block" : "none";
+                if (caption) caption.style.display = show ? "block" : "none";
+            }
+        }
+
+        // Legacy method names for backwards compatibility
+        openImage(imageId) {
+            const images = this.getImages();
+            for (let i = 0; i < images.length; i++) {
+                if (images[i].id === imageId) {
+                    this.open(i);
+                    return;
+                }
+            }
+        }
+
+        closeImage() { this.close(); }
+        nextImage() { this.next(); }
+        prevImage() { this.prev(); }
+    }
+
+    // ------------------------------------------------------------------------
+    // Lightbox class
+    // ------------------------------------------------------------------------
+    class Lightbox extends Gallery {
+        constructor(name) {
+            super(name);
+            this.initSlides();
         }
 
         static create(name) {
@@ -140,93 +167,93 @@
             return new Lightbox(name);
         }
 
-        static dom(name) {
-            return document.getElementById("lb-modal-" + name);
+        getModalElement() {
+            return document.getElementById("lb-modal-" + this.name);
         }
 
-        static domSlides(name) {
-            const modal = Lightbox.dom(name);
-            return modal.getElementsByClassName("lb-slides");
+        getSlides() {
+            return this.getModalElement().getElementsByClassName("lb-slides");
         }
 
-        static domCaption(name) {
-            return document.getElementById("lb-caption-" + name);
+        getCaptionElement() {
+            return document.getElementById("lb-caption-" + this.name);
         }
+
+        initSlides() {
+            const slides = this.getSlides();
+            this.totalItems = slides.length;
+            if (this.totalItems > 0) {
+                this.showItem(0);
+            }
+        }
+
+        open(index = 0) {
+            Console.log("Lightbox.open: " + this.name);
+            this.getModalElement().style.display = "block";
+            this.isOpen = true;
+            this.showItem(index);
+        }
+
+        close() {
+            Console.log("Lightbox.close: " + this.name);
+            this.getModalElement().style.display = "none";
+            this.isOpen = false;
+        }
+
+        showItem(index) {
+            index = this.wrapIndex(index);
+            this.currentIndex = index;
+            Console.log("Lightbox.showItem: " + this.name + " index=" + index);
+
+            const slides = this.getSlides();
+            const caption = this.getCaptionElement();
+
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = (i === index) ? "block" : "none";
+            }
+
+            if (caption && slides[index] && slides[index].children[0]) {
+                caption.innerHTML = slides[index].children[0].alt || '';
+            }
+        }
+
+        // Legacy method names for backwards compatibility
+        openModal() { this.open(); }
+        closeModal() { this.close(); }
+        currentSlide(n) { this.showItem(n); }
+        plusSlides(n) { this.showItem(this.currentIndex + n); }
+        showSlides(n) { this.showItem(n); }
     }
 
-    Lightbox.prototype.name = function() {
-        return this.name;
-    };
-
-    Lightbox.prototype.openModal = function() {
-        Console.log("Lightbox.openModal: " + this.name);
-        Lightbox.dom(this.name).style.display = "block";
-        this.isOpen = true;
-    };
-
-    Lightbox.prototype.closeModal = function() {
-        Console.log("Lightbox.closeModal: " + this.name);
-        Lightbox.dom(this.name).style.display = "none";
-        this.isOpen = false;
-    };
-
-    Lightbox.prototype.plusSlides = function(n) {
-        Console.log("Lightbox.plusSlides: name=" + this.name + " slide=" + n);
-        this.showSlides(this.slideIndex += n);
-    };
-
-    Lightbox.prototype.currentSlide = function(n) {
-        Console.log("Lightbox.currentSlide: name=" + this.name + " slide=" + n);
-        this.showSlides(this.slideIndex = n);
-    };
-
-    Lightbox.prototype.showSlides = function(n) {
-        let i;
-        const slides = Lightbox.domSlides(this.name);
-        const caption = Lightbox.domCaption(this.name);
-        if(n >= slides.length) {
-            this.slideIndex = 0;
-        }
-        if(n < 0) {
-            this.slideIndex = slides.length - 1;
-        }
-        for(i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        Console.log("Lightbox.showSlides: name=" + this.name + " slide=" + this.slideIndex);
-        slides[this.slideIndex].style.display = "block";
-        caption.innerHTML = slides[this.slideIndex].children[0].alt;
-    };
-
     // ------------------------------------------------------------------------
-    // Table of Contents class for adding toc to a Yolo post/page and sidebar
+    // Table of Contents
     // ------------------------------------------------------------------------
     class Toc {
         static create() {
-            if(document.getElementById("toc")) {
-                const headers = Toc.getHeaders();
-                document.getElementById("toc").classList.add("nav-menu");
-                document.getElementById("toc").innerHTML = Toc.buildTree(headers);
+            const toc = document.getElementById("toc");
+            const tocSidebar = document.getElementById("toc-sidebar");
+
+            if (toc) {
+                toc.classList.add("nav-menu");
+                toc.innerHTML = Toc.buildTree(Toc.getHeaders());
             }
-            if(document.getElementById("toc-sidebar")) {
-                const headers = Toc.getHeaders(3); // Limit sidebar to 3 levels (h2, h3, h4)
-                document.getElementById("toc-sidebar").classList.add("nav-menu");
-                document.getElementById("toc-sidebar").innerHTML = Toc.buildTree(headers);
+            if (tocSidebar) {
+                tocSidebar.classList.add("nav-menu");
+                tocSidebar.innerHTML = Toc.buildTree(Toc.getHeaders(3));
             }
         }
 
         static getHeaders(maxDepth = 5) {
             const hTags = ["h2", "h3", "h4", "h5", "h6"].slice(0, maxDepth);
-            const elements = document.querySelectorAll(hTags.join());
+            const elements = document.querySelectorAll(hTags.join(","));
             const headers = [];
 
             elements.forEach(element => {
-                if(!element.classList.contains("no-toc")) {
+                if (!element.classList.contains("no-toc")) {
                     const text = element.innerText;
                     const id = text.toLowerCase().split(" ").join("-");
                     element.setAttribute("id", id);
-                    headers.push({id, text, level: hTags.indexOf(element.tagName.toLowerCase())
-                    });
+                    headers.push({ id, text, level: hTags.indexOf(element.tagName.toLowerCase()) });
                 }
             });
 
@@ -234,13 +261,11 @@
         }
 
         static buildTree(headers) {
+            if (headers.length === 0) return "";
+
             const list = [];
             let nextLevelHeaders = [];
             let lastLevel = -1;
-
-            if (headers.length === 0) {
-                return "";
-            }
 
             const buildSubTree = () => {
                 if (nextLevelHeaders.length > 0) {
@@ -253,224 +278,220 @@
                     nextLevelHeaders.push(h);
                     return;
                 }
-
                 buildSubTree();
-
                 lastLevel = h.level;
                 list.push(`<a href="#${h.id}">${h.text}</a>`);
                 nextLevelHeaders = [];
             });
 
             buildSubTree();
-
-            const listHTML = list.map(i => `<li>${i}</li>`).join("");
-            return `<ul>${listHTML}</ul>`;
+            return `<ul>${list.map(i => `<li>${i}</li>`).join("")}</ul>`;
         }
     }
+
     // ------------------------------------------------------------------------
-    // Yolo class for the site logic
+    // Yolo main class
     // ------------------------------------------------------------------------
     class Yolo {
         constructor() {
-            this.lightboxes = new Map();
-            this.imageGrids = new Map();
+            this.galleries = new Map();
         }
+
         static create() {
             const yolo = new Yolo();
-            // Initialize image scaling
-            yolo.scaleImages();
-            // Initialize sidebar
+            yolo.initEventDelegation();
+            yolo.initKeyboardNavigation();
             yolo.initSidebar();
-            // Initialize toc on the page and sidebar
             yolo.initToc();
-            // Initialize tabs on the page
             yolo.initTabs();
-            // Initialize sortable tables
             yolo.initSortableTables();
+            yolo.initScalableImages();
             return yolo;
         }
-    }
 
-    Yolo.prototype.initSidebar = function() {
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebar-toggle');
-        const body = document.body;
-
-        if(sidebar !== null && sidebarToggle !== null) {
-            Console.log("Sidebar is enabled, adding toggle listener.");
-            sidebarToggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                Console.log("Sidebar toggle clicked.");
-                if(body.classList.contains("sidebar-hidden")) {
-                    body.classList.remove("sidebar-hidden");
-                    sidebarToggle.textContent = "menu";
-                } else {
-                    body.classList.add("sidebar-hidden");
-                    sidebarToggle.textContent = "menu_open";
-                }
-            }, false);
-        } else {
-            Console.log("Sidebar is disabled.");
-        }
-    };
-
-    Yolo.prototype.scaleImages = function() {
-        const images = document.querySelectorAll('.image');
-        images.forEach((image, index) => {
-            image.addEventListener("click", () => {
-                Console.log("Yolo.scaleImage to max: " + image.src);
-                image.classList.toggle("max");
-            });
-        });
-    };
-
-    Yolo.prototype.lightbox = function(name) {
-        // Return lightbox instance if it exists
-        if(this.lightboxes.has(name)) {
-            Console.log("Yolo.lightbox returning existing Lightbox: name=" + name);
-            return this.lightboxes.get(name);
-        }
-        // Protection against lightbox craziness
-        if(this.lightboxes.size > 20) {
-            Console.log("Yolo.lightbox max instances " + this.lightboxes.size + " reached.");
-            throw "Error: Yolo lightbox limit, perhaps start another single page site?";
-        }
-        // Create new lightbox instance, setup event listener for prev, next links
-        const lightbox = Lightbox.create(name);
-        Console.log("Yolo.lightbox, created new instance named: " + name);
-        window.document.addEventListener("keydown", event => {
-            if(lightbox.isOpen) {
-                if (event.key === "ArrowLeft" || (event.key === "<" && event.shiftKey)) {
-                    Console.log("Yolo.lightbox keydown ArrowLeft clicked.");
-                    lightbox.plusSlides(-1);
-                } else if (event.key === "ArrowRight" || (event.key === ">" && event.shiftKey)) {
-                    Console.log("Yolo.lightbox keydown ArrowRight clicked.");
-                    lightbox.plusSlides(1);
-                }
+        // --------------------------------------------------------------------
+        // Gallery management
+        // --------------------------------------------------------------------
+        getGallery(type, name) {
+            const key = type + ":" + name;
+            if (this.galleries.has(key)) {
+                return this.galleries.get(key);
             }
-        });
-        this.lightboxes.set(name, lightbox);
-        return this.lightboxes.get(name);
-    };
-
-    Yolo.prototype.imageGrid = function(name) {
-        // Return image-grid instance if it exists
-        if(this.imageGrids.has(name)) {
-            return this.imageGrids.get(name);
-        }
-        // Protect against image-grid craziness
-        if(this.imageGrids.size > 20) {
-            Console.error("Yolo.imageGrid max instances " + this.imageGrids.size + " reached.");
-            throw "Error: Yolo imageGrid limit, perhaps start another single page site?";
-        }
-        // Create new image-grid instance
-        const imageGrid = ImageGrid.create(name);
-        Console.log("Yolo.imageGrid, created new instance named: " + name);
-        // Setup keyboard event listener for arrow key navigation
-        window.document.addEventListener("keydown", event => {
-            if(imageGrid.isOpen) {
-                if (event.key === "ArrowLeft" || (event.key === "<" && event.shiftKey)) {
-                    Console.log("Yolo.imageGrid keydown ArrowLeft.");
-                    imageGrid.prevImage();
-                } else if (event.key === "ArrowRight" || (event.key === ">" && event.shiftKey)) {
-                    Console.log("Yolo.imageGrid keydown ArrowRight.");
-                    imageGrid.nextImage();
-                } else if (event.key === "Escape") {
-                    Console.log("Yolo.imageGrid keydown Escape.");
-                    imageGrid.closeImage();
-                }
+            if (this.galleries.size > 40) {
+                throw new Error("Gallery limit reached");
             }
-        });
-        this.imageGrids.set(name, imageGrid);
-        return this.imageGrids.get(name);
-    };
 
-    Yolo.prototype.initToc = function() {
-        Toc.create();
-    };
+            let gallery;
+            if (type === "ig") {
+                gallery = ImageGrid.create(name);
+            } else if (type === "lb") {
+                gallery = Lightbox.create(name);
+            }
 
-    Yolo.prototype.initTabs = function() {
-        let i, tabButtons = document.querySelectorAll('.yolo-tab-button');
-        const parent = this;
-        for(i = 0; i < tabButtons.length; i++) {
-            tabButtons[i].addEventListener("click", function() {
-                parent.openTab(this);
+            this.galleries.set(key, gallery);
+            return gallery;
+        }
+
+        imageGrid(name) { return this.getGallery("ig", name); }
+        lightbox(name) { return this.getGallery("lb", name); }
+
+        // --------------------------------------------------------------------
+        // Event delegation - single listener handles all gallery interactions
+        // --------------------------------------------------------------------
+        initEventDelegation() {
+            document.addEventListener('click', (e) => {
+                const target = e.target.closest('[data-gallery]');
+                if (!target) return;
+
+                const { gallery, galleryType, action, index } = target.dataset;
+                if (!gallery || !action) return;
+
+                const instance = this.getGallery(galleryType, gallery);
+
+                switch (action) {
+                    case 'open':
+                        instance.open(parseInt(index, 10) || 0);
+                        break;
+                    case 'close':
+                        instance.close();
+                        break;
+                    case 'next':
+                        instance.next();
+                        break;
+                    case 'prev':
+                        instance.prev();
+                        break;
+                }
             });
         }
-    };
 
-    Yolo.prototype.openTab = function(tabButton) {
-        // Get the tab element to show/hide from data attribute on DOM
-        const tabId = tabButton.dataset.openTab;
-        const tabElement = document.getElementById(tabId);
-        if(tabElement === null) {
-            Console.error("Yolo.openTab called with non-existent tab: " + tabId);
-            return;
-        }
-        // If an "active" button is clicked then close the open tab and return
-        if(tabButton.classList.contains("active")) {
-            tabButton.classList.remove("active");
-            tabElement.style.display = "none";
-            return;
-        }
-        // Close/hide all tabs
-        let i, tabContent, tabLinks;
-        tabContent = document.getElementsByClassName("yolo-tab-content");
-        for (i = 0; i < tabContent.length; i++) {
-            tabContent[i].style.display = "none";
-        }
-        // Remove "active" from all tabLinks on load.
-        tabLinks = document.getElementsByClassName("yolo-tab-links");
-        for (i = 0; i < tabLinks.length; i++) {
-            tabLinks[i].classList.remove("active");
-        }
-        // Show active tab and add "active" class to tabButton
-        tabElement.style.display = "block";
-        tabButton.classList.add("active");
-    };
-
-    Yolo.prototype.initSortableTables = function() {
-        const tables = document.querySelectorAll('.yolo-themed table');
-        tables.forEach(function(table) {
-            const headers = table.querySelectorAll('th');
-            headers.forEach(function(header, columnIndex) {
-                header.style.cursor = 'pointer';
-                header.addEventListener('click', function() {
-                    const tbody = table.querySelector('tbody') || table;
-                    const rows = Array.from(tbody.querySelectorAll('tr')).filter(function(row) {
-                        return row.querySelector('td');
-                    });
-                    const isAscending = header.dataset.sortDir !== 'asc';
-                    header.dataset.sortDir = isAscending ? 'asc' : 'desc';
-                    // Clear sort direction on other headers
-                    headers.forEach(function(h) {
-                        if (h !== header) h.dataset.sortDir = '';
-                    });
-                    rows.sort(function(a, b) {
-                        const aCell = a.querySelectorAll('td')[columnIndex];
-                        const bCell = b.querySelectorAll('td')[columnIndex];
-                        const aVal = aCell ? aCell.textContent.trim() : '';
-                        const bVal = bCell ? bCell.textContent.trim() : '';
-                        // Try numeric sort first
-                        const aNum = parseFloat(aVal);
-                        const bNum = parseFloat(bVal);
-                        if (!isNaN(aNum) && !isNaN(bNum)) {
-                            return isAscending ? aNum - bNum : bNum - aNum;
+        // --------------------------------------------------------------------
+        // Keyboard navigation - single listener for all galleries
+        // --------------------------------------------------------------------
+        initKeyboardNavigation() {
+            document.addEventListener('keydown', (e) => {
+                // Find any open gallery
+                for (const gallery of this.galleries.values()) {
+                    if (gallery.isOpen) {
+                        if (e.key === "ArrowLeft" || (e.key === "<" && e.shiftKey)) {
+                            gallery.prev();
+                            e.preventDefault();
+                        } else if (e.key === "ArrowRight" || (e.key === ">" && e.shiftKey)) {
+                            gallery.next();
+                            e.preventDefault();
+                        } else if (e.key === "Escape") {
+                            gallery.close();
+                            e.preventDefault();
                         }
-                        // Fall back to string sort
-                        return isAscending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-                    });
-                    rows.forEach(function(row) {
-                        tbody.appendChild(row);
+                        break;
+                    }
+                }
+            });
+        }
+
+        // --------------------------------------------------------------------
+        // Sidebar toggle
+        // --------------------------------------------------------------------
+        initSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('sidebar-toggle');
+
+            if (sidebar && toggle) {
+                Console.log("Sidebar enabled");
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const hidden = document.body.classList.toggle("sidebar-hidden");
+                    toggle.textContent = hidden ? "menu_open" : "menu";
+                });
+            }
+        }
+
+        // --------------------------------------------------------------------
+        // Table of contents
+        // --------------------------------------------------------------------
+        initToc() {
+            Toc.create();
+        }
+
+        // --------------------------------------------------------------------
+        // Tabs
+        // --------------------------------------------------------------------
+        initTabs() {
+            document.querySelectorAll('.yolo-tab-button').forEach(button => {
+                button.addEventListener('click', () => this.openTab(button));
+            });
+        }
+
+        openTab(button) {
+            const tabId = button.dataset.openTab;
+            const tabElement = document.getElementById(tabId);
+
+            if (!tabElement) {
+                Console.error("Tab not found: " + tabId);
+                return;
+            }
+
+            if (button.classList.contains("active")) {
+                button.classList.remove("active");
+                tabElement.style.display = "none";
+                return;
+            }
+
+            document.querySelectorAll(".yolo-tab-content").forEach(el => el.style.display = "none");
+            document.querySelectorAll(".yolo-tab-links").forEach(el => el.classList.remove("active"));
+
+            tabElement.style.display = "block";
+            button.classList.add("active");
+        }
+
+        // --------------------------------------------------------------------
+        // Sortable tables
+        // --------------------------------------------------------------------
+        initSortableTables() {
+            document.querySelectorAll('.yolo-themed table').forEach(table => {
+                const headers = table.querySelectorAll('th');
+
+                headers.forEach((header, colIndex) => {
+                    header.style.cursor = 'pointer';
+                    header.addEventListener('click', () => {
+                        const tbody = table.querySelector('tbody') || table;
+                        const rows = Array.from(tbody.querySelectorAll('tr'))
+                            .filter(row => row.querySelector('td'));
+
+                        const isAsc = header.dataset.sortDir !== 'asc';
+                        header.dataset.sortDir = isAsc ? 'asc' : 'desc';
+                        headers.forEach(h => { if (h !== header) h.dataset.sortDir = ''; });
+
+                        rows.sort((a, b) => {
+                            const aVal = a.querySelectorAll('td')[colIndex]?.textContent.trim() || '';
+                            const bVal = b.querySelectorAll('td')[colIndex]?.textContent.trim() || '';
+                            const aNum = parseFloat(aVal), bNum = parseFloat(bVal);
+
+                            if (!isNaN(aNum) && !isNaN(bNum)) {
+                                return isAsc ? aNum - bNum : bNum - aNum;
+                            }
+                            return isAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                        });
+
+                        rows.forEach(row => tbody.appendChild(row));
                     });
                 });
             });
-        });
-    };
+        }
+
+        // --------------------------------------------------------------------
+        // Scalable images
+        // --------------------------------------------------------------------
+        initScalableImages() {
+            document.querySelectorAll('.image').forEach(image => {
+                image.addEventListener('click', () => image.classList.toggle('max'));
+            });
+        }
+    }
 
     // ------------------------------------------------------------------------
-    // Expose Yolo on the window object.
-    //   Call from HTML: onclick="Yolo.lightbox("lb-images").openModal();"
+    // Initialize and expose
     // ------------------------------------------------------------------------
     window.Yolo = Yolo.create();
+
 })(window);
