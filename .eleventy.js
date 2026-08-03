@@ -245,8 +245,8 @@ module.exports = function(eleventyConfig) {
     html += `\n    </div>
 </div>
 <div id="ig-target-${igData}" class="no-display">
-    <div class="columns is-mobile">
-        <div id="${igData}-target-column" class="column">`;
+    <div class="ig-modal-content">
+        <div id="${igData}-target-column" class="ig-slides">`;
 
     for (let i = 0; i < igNumImages; i++) {
       const igImage = igImages[i];
@@ -262,6 +262,9 @@ module.exports = function(eleventyConfig) {
     }
 
     html += `\n        </div>
+        <!-- Next/previous controls -->
+        <a class="ig-nav ig-prev" onclick="Yolo.imageGrid('${igData}').prevImage();">&#10094;</a>
+        <a class="ig-nav ig-next" onclick="Yolo.imageGrid('${igData}').nextImage();">&#10095;</a>
     </div>
 </div>`;
 

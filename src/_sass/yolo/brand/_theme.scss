@@ -227,6 +227,13 @@
     }
   }
 
+  .ig-nav {
+    color: var(--secondary-color);
+    &:hover {
+      color: var(--tertiary-color);
+    }
+  }
+
   .yolo-to-top {
     color: var(--secondary-color);
     span:hover {

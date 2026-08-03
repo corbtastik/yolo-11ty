@@ -174,3 +174,44 @@ img {
     }
   }
 }
+
+// ----------------------------------------------------------------------------
+// Image Grid Navigation
+// ----------------------------------------------------------------------------
+.ig-modal-content {
+  margin: auto;
+  max-width: 100%;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+.ig-slides {
+  text-align: center;
+}
+
+.ig-nav {
+  -webkit-user-select: none;
+  user-select: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 1rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
+    text-decoration: none;
+  }
+}
+
+.ig-prev {
+  left: 0;
+}
+
+.ig-next {
+  right: 0;
+}
