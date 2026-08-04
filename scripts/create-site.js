@@ -140,12 +140,10 @@ async function main() {
       '.gitignore',
       'scripts/build-scss.js',
       'scripts/generate-themes.js',
-      'src/_includes/default.njk',
       'src/css/main.scss.njk',
       'src/css/brand.scss.njk',
       'src/site.json.njk',
-      'src/themes.json.njk',
-      'src/404.md'
+      'src/themes.json.njk'
     ];
 
     for (const file of filesToCopy) {
@@ -163,6 +161,30 @@ async function main() {
     if (fs.existsSync(sassDir)) {
       copyDirSync(sassDir, path.join(siteDir, 'src', '_sass'));
       log.info('  Copied: src/_sass/');
+    }
+
+    // Copy _includes directory (layouts and components)
+    const includesDir = path.join(yoloDir, 'src', '_includes');
+    if (fs.existsSync(includesDir)) {
+      // Copy layouts
+      const layoutsDir = path.join(includesDir, 'layouts');
+      if (fs.existsSync(layoutsDir)) {
+        copyDirSync(layoutsDir, path.join(siteDir, 'src', '_includes', 'layouts'));
+        log.info('  Copied: src/_includes/layouts/');
+      }
+      // Copy components (required by layouts)
+      const componentsDir = path.join(includesDir, 'components');
+      if (fs.existsSync(componentsDir)) {
+        copyDirSync(componentsDir, path.join(siteDir, 'src', '_includes', 'components'));
+        log.info('  Copied: src/_includes/components/');
+      }
+    }
+
+    // Copy assets/js directory (core JavaScript)
+    const jsDir = path.join(yoloDir, 'src', 'assets', 'js');
+    if (fs.existsSync(jsDir)) {
+      copyDirSync(jsDir, path.join(siteDir, 'src', 'assets', 'js'));
+      log.info('  Copied: src/assets/js/');
     }
 
     // Copy _data directory (except settings.yml which we'll create fresh)
@@ -228,6 +250,21 @@ Edit this file at \`src/index.md\` to customize your page.
 `;
     fs.writeFileSync(path.join(siteDir, 'src', 'index.md'), indexContent);
     log.info('  Created: src/index.md');
+
+    // Create 404.md
+    const notFoundContent = `---
+layout: layouts/default.njk
+permalink: /404.html
+---
+
+# Page Not Found
+
+The page you're looking for doesn't exist.
+
+[Go back home](/)
+`;
+    fs.writeFileSync(path.join(siteDir, 'src', '404.md'), notFoundContent);
+    log.info('  Created: src/404.md');
 
     // Create package.json
     const packageJson = {
