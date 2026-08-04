@@ -2,8 +2,8 @@
 // ----------------------------------------------------------------------------
 // Components scss module
 // ----------------------------------------------------------------------------
-@import "images";
-@import "lightbox";
-@import "navigation";
-@import "other";
-//@import "sidebar";
+@forward "images";
+@forward "lightbox";
+@forward "navigation";
+@forward "other";
+// @forward "sidebar";

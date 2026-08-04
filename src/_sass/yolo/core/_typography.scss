@@ -1,15 +1,20 @@
 // ----------------------------------------------------------------------------
 // typography stylesheet
 // ----------------------------------------------------------------------------
-@import "../base/variables";
-@import "responsiveness";
+@use "sass:list";
+@use "../base/variables" as *;
+@use "responsiveness" as *;
 
 $sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7 !default;
 
 @mixin typography-size($target:'') {
+  $suffix: '';
+  @if $target != '' {
+    $suffix: '-' + $target;
+  }
   @each $size in $sizes {
-    $i: index($sizes, $size);
-    .is-size-#{$i}#{if($target == '', '', '-' + $target)} {
+    $i: list.index($sizes, $size);
+    .is-size-#{$i}#{$suffix} {
       font-size: $size !important;
     }
   }

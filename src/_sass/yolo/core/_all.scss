@@ -2,6 +2,6 @@
 // ----------------------------------------------------------------------------
 // Core scss module
 // ----------------------------------------------------------------------------
-@import "responsiveness";
-@import "layout";
-@import "typography";
+@forward "responsiveness";
+@forward "layout";
+@forward "typography";

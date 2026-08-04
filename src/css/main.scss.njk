@@ -9,10 +9,10 @@ permalink: /css/main.scss
 // 3. core
 // 4. components
 // ----------------------------------------------------------------------------
-@import "yolo/base/all";
-@import "yolo/utilities/all";
-@import "yolo/core/all";
-@import "yolo/components/all";
+@use "yolo/base/all" as *;
+@use "yolo/utilities/all" as *;
+@use "yolo/core/all" as *;
+@use "yolo/components/all" as *;
 {% if settings.sidebar %}
-@import "yolo/components/sidebar";
+@use "yolo/components/sidebar" as *;
 {% endif %}

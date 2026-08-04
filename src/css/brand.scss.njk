@@ -29,6 +29,11 @@ permalink: /css/brand.scss
 // ----------------------------------------------------------------------------
 @use "yolo/brand/theme/{{ settings.brand.theme | default('yolo') }}" as brand-theme;
 @use "yolo/brand/syntax/{{ settings.brand.syntax | default('yolo') }}" as brand-syntax;
+// Import theme/syntax to put variables in global scope for _colors.scss
+// Note: @import is deprecated but needed here for dynamic theme loading
+@import "yolo/brand/theme/{{ settings.brand.theme | default('yolo') }}";
+@import "yolo/brand/syntax/{{ settings.brand.syntax | default('yolo') }}";
+@import "yolo/brand/all";
 // ----------------------------------------------------------------------------
 // Generate CSS global-variables used for skinning light/dark modes
 // ----------------------------------------------------------------------------
@@ -72,11 +77,3 @@ permalink: /css/brand.scss
     }
   }
 }
-// ----------------------------------------------------------------------------
-// Import brand SASS variables after brand.theme and brand.syntax CSS vars are
-// generated as ":root" globals above. This is needed to place the SASS
-// variables in-scope for the rest of the SASS theme files.
-// ----------------------------------------------------------------------------
-@import "yolo/brand/theme/{{ settings.brand.theme | default('yolo') }}";
-@import "yolo/brand/syntax/{{ settings.brand.syntax | default('yolo') }}";
-@import "yolo/brand/all";

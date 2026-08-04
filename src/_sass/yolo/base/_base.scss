@@ -3,7 +3,7 @@
 // - no classes should be defined here (see _yolo.scss)
 // - no colors should be defined here (see _themes.scss)
 // ----------------------------------------------------------------------------
-@import "variables";
+@use "variables" as *;
 
 html {
   font-size: $size-6;

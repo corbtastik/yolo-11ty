@@ -1,14 +1,18 @@
 // ----------------------------------------------------------------------------
 // Layout support
 // ----------------------------------------------------------------------------
-@import "../base/variables";
-@import "responsiveness";
+@use "sass:math";
+@use "../base/variables" as *;
+@use "responsiveness" as *;
 
 // Divide function for flexbox
 @function divide($dividend, $divisor, $precision: 10) {
-  $sign: if($dividend > 0 and $divisor > 0, 1, -1);
-  $dividend: abs($dividend);
-  $divisor: abs($divisor);
+  $sign: 1;
+  @if not ($dividend > 0 and $divisor > 0) {
+    $sign: -1;
+  }
+  $dividend: math.abs($dividend);
+  $divisor: math.abs($divisor);
   $quotient: 0;
   $remainder: $dividend;
   @if $dividend == 0 {
@@ -28,7 +32,7 @@
     $remainder: divide($remainder * 10, $divisor, $precision - 1) * .1;
   }
   @return ($quotient + $remainder) * $sign;
-};
+}
 
 // ----------------------------------------------------------------------------
 // Container classes
@@ -158,10 +162,10 @@ $column-gap: 0.50rem !default;
   @for $i from 0 through 12 {
     .columns.is-mobile > &.is-#{$i} {
       flex: none;
-      width: percentage(divide($i, 12));
+      width: math.percentage(divide($i, 12));
     }
     .columns.is-mobile > &.is-offset-#{$i} {
-      margin-left: percentage(divide($i, 12));
+      margin-left: math.percentage(divide($i, 12));
     }
   }
   @include mobile {
@@ -239,10 +243,10 @@ $column-gap: 0.50rem !default;
     @for $i from 0 through 12 {
       &.is-#{$i}-mobile {
         flex: none;
-        width: percentage(divide($i, 12));
+        width: math.percentage(divide($i, 12));
       }
       &.is-offset-#{$i}-mobile {
-        margin-left: percentage(divide($i, 12));
+        margin-left: math.percentage(divide($i, 12));
       }
     }
   }
@@ -342,11 +346,11 @@ $column-gap: 0.50rem !default;
       &.is-#{$i},
       &.is-#{$i}-tablet {
         flex: none;
-        width: percentage(divide($i, 12));
+        width: math.percentage(divide($i, 12));
       }
       &.is-offset-#{$i},
       &.is-offset-#{$i}-tablet {
-        margin-left: percentage(divide($i, 12));
+        margin-left: math.percentage(divide($i, 12));
       }
     }
   }
@@ -425,10 +429,10 @@ $column-gap: 0.50rem !default;
     @for $i from 0 through 12 {
       &.is-#{$i}-touch {
         flex: none;
-        width: percentage(divide($i, 12));
+        width: math.percentage(divide($i, 12));
       }
       &.is-offset-#{$i}-touch {
-        margin-left: percentage(divide($i, 12));
+        margin-left: math.percentage(divide($i, 12));
       }
     }
   }
@@ -507,10 +511,10 @@ $column-gap: 0.50rem !default;
     @for $i from 0 through 12 {
       &.is-#{$i}-desktop {
         flex: none;
-        width: percentage(divide($i, 12));
+        width: math.percentage(divide($i, 12));
       }
       &.is-offset-#{$i}-desktop {
-        margin-left: percentage(divide($i, 12));
+        margin-left: math.percentage(divide($i, 12));
       }
     }
   }

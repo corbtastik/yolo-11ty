@@ -1,6 +1,8 @@
 @charset "utf-8";
 // ----------------------------------------------------------------------------
 // Brand scss module
+// Note: Using @import here because _colors.scss needs access to theme
+// variables that are loaded in the parent scope
 // ----------------------------------------------------------------------------
 @import "colors";
 @import "theme";
