@@ -8,14 +8,30 @@ Yolo builds beautiful single-page sites. It works for writers, developers, and p
 
 ## Quick Start
 
+### Create a New Site
+
+The fastest way to start is to generate a new site from the template:
+
 ```bash
-# Clone and install
+# Clone yolo-11ty
 git clone https://github.com/corbtastik/yolo-11ty.git
 cd yolo-11ty
 npm install
 
-# Build and serve
-npm run build
+# Create your new site (interactive prompts)
+npm run create
+```
+
+This creates a new site directory at the same level as yolo-11ty with your chosen settings.
+
+### Run the Demo
+
+To run the Yolo demo site:
+
+```bash
+git clone https://github.com/corbtastik/yolo-11ty.git
+cd yolo-11ty
+npm install
 npm run serve
 ```
 
@@ -186,6 +202,7 @@ yolo-11ty/
 
 | Command | Description |
 |---------|-------------|
+| `npm run create` | Create a new site from template |
 | `npm run build` | Build site + compile SCSS |
 | `npm run serve` | Build and serve with hot reload |
 | `npm run clean` | Remove `_site` directory |
