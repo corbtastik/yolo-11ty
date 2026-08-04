@@ -223,30 +223,12 @@ align: left
 
     // Create index.md
     const indexContent = `---
-layout: default
+layout: layouts/default.njk
 ---
 
-# ${title}
+# Hello ${title}
 
 ${description}
-
----
-
-## Getting Started
-
-Edit this file at \`src/index.md\` to customize your page.
-
-### Features
-
-- Single page site built with [Eleventy](https://www.11ty.dev/)
-- Multiple color themes
-- Light/dark mode toggle
-- Responsive design
-- Syntax highlighting
-
----
-
-*Built with [Yolo](https://github.com/corbtastik/yolo-11ty)*
 `;
     fs.writeFileSync(path.join(siteDir, 'src', 'index.md'), indexContent);
     log.info('  Created: src/index.md');
