@@ -1,835 +1,421 @@
 // ----------------------------------------------------------------------------
-// Color utilities
+// Color utilities - uses CSS custom properties for runtime theming
 // ----------------------------------------------------------------------------
-@use "sass:color";
 
-@mixin on-color($background-color) {
-  @if(color.channel($background-color, "lightness", $space: hsl) > 50) {
-    // light background
-    color: #000;
-  } @else {
-    // dark background
-    color: #fff;
-  }
-}
-// ----------------------------------------------------------------------------
 // Sass variables for neutral, error, warn and info colors
+// These are static and don't change with themes
+$neutral-color: #212121;
+$on-neutral-color: #e0e0e0;
+$error-color: #b71c1c;
+$on-error-color: #ffcdd2;
+$warn-color: #ffee58;
+$on-warn-color: #212121;
+$info-color: #1565c0;
+$on-info-color: #bbdefb;
+
 // ----------------------------------------------------------------------------
-$light-neutral-color: #212121;
-$light-on-neutral-color: #e0e0e0;
-$light-error-color: #b71c1c;
-$light-on-error-color: #ffcdd2;
-$light-warn-color: #ffee58;
-$light-on-warn-color: #212121;
-$light-info-color: #1565c0;
-$light-on-info-color: #bbdefb;
-$dark-neutral-color: #e0e0e0;
-$dark-on-neutral-color: #212121;
-$dark-error-color: #b71c1c;
-$dark-on-error-color: #ffcdd2;
-$dark-warn-color: #ffee58;
-$dark-on-warn-color: #212121;
-$dark-info-color: #1565c0;
-$dark-on-info-color: #bbdefb;
+// Font family utility classes
 // ----------------------------------------------------------------------------
-// Sass variables to CSS globals for light mode colors
-// ----------------------------------------------------------------------------
-:root[light] {
-  // --------------------------------------------------------------------------
-  // CSS classes for theme colors and fonts
-  // --------------------------------------------------------------------------
-  .is-family-primary {
-    font-family: $font-family-primary;
-  }
-  .is-family-secondary {
-    font-family: $font-family-secondary;
-  }
-  .is-family-monospace {
-    font-family: $font-family-monospace;
-  }
-  .primary-color {
-    background-color: $light-primary-color;
-    color: $light-on-primary-color;
-  }
-  .on-primary-color {
-    background-color: $light-on-primary-color;
-    color: $light-primary-color;
-  }
-  .primary-container-color {
-    background-color: $light-primary-container-color;
-    color: $light-on-primary-container-color;
-  }
-  .on-primary-container-color {
-    background-color: $light-on-primary-container-color;
-    color: $light-primary-container-color;
-  }
-  .secondary-color {
-    background-color: $light-secondary-color;
-    color: $light-on-secondary-color;
-  }
-  .on-secondary-color {
-    background-color: $light-on-secondary-color;
-    color: $light-secondary-color;
-  }
-  .secondary-container-color {
-    background-color: $light-secondary-container-color;
-    color: $light-on-secondary-container-color;
-  }
-  .on-secondary-container-color {
-    background-color: $light-on-secondary-container-color;
-    color: $light-secondary-container-color;
-  }
-  .tertiary-color {
-    background-color: $light-tertiary-color;
-    color: $light-on-tertiary-color;
-  }
-  .on-tertiary-color {
-    background-color: $light-on-tertiary-color;
-    color: $light-tertiary-color;
-  }
-  .neutral-color {
-    background-color: $light-neutral-color;
-    color: $light-on-neutral-color;
-  }
-  .on-neutral-color {
-    background-color: $light-on-neutral-color;
-    color: $light-neutral-color;
-  }
-  .link-color {
-    background-color: $light-link-color;
-    color: $light-primary-color;
-  }
-  .error-color {
-    background-color: $light-error-color;
-    color: $light-on-error-color;
-  }
-  .on-error-color {
-    background-color: $light-on-error-color;
-    color: $light-error-color;
-  }
-  .warn-color {
-    background-color: $light-warn-color;
-    color: $light-on-warn-color;
-  }
-  .on-warn-color {
-    background-color: $light-on-warn-color;
-    color: $light-warn-color;
-  }
-  .info-color {
-    background-color: $light-info-color;
-    color: $light-on-info-color;
-  }
-  .on-info-color {
-    background-color: $light-on-info-color;
-    color: $light-info-color;
-  }
-  // --------------------------------------------------------------------------
-  // CSS classes for syntax theme colors
-  // --------------------------------------------------------------------------
-  .syntax-container-color {
-    background-color: $light-syntax-container-color;
-    @include on-color($light-syntax-container-color);
-  }
-  .syntax-text-color {
-    background-color: $light-syntax-text;
-    @include on-color($light-syntax-text);
-  }
-  .syntax-highlight-line-color {
-    background-color: $light-syntax-highlight-line;
-    @include on-color($light-syntax-highlight-line);
-  }
-  .syntax-error-color {
-    background-color: $light-syntax-error;
-    @include on-color($light-syntax-error);
-  }
-  .syntax-punctuation-color {
-    background-color: $light-syntax-punctuation;
-    @include on-color($light-syntax-punctuation);
-  }
-  .syntax-text-whitespace-color {
-    background-color: $light-syntax-text-whitespace;
-    @include on-color($light-syntax-text-whitespace);
-  }
-  .syntax-comment-color {
-    background-color: $light-syntax-comment;
-    @include on-color($light-syntax-comment);
-  }
-  .syntax-comment-hashbang-color {
-    background-color: $light-syntax-comment-hashbang;
-    @include on-color($light-syntax-comment-hashbang);
-  }
-  .syntax-comment-multiline-color {
-    background-color: $light-syntax-comment-multiline;
-    @include on-color($light-syntax-comment-multiline);
-  }
-  .syntax-comment-preproc-color {
-    background-color: $light-syntax-comment-preproc;
-    @include on-color($light-syntax-comment-preproc);
-  }
-  .syntax-comment-preprocfile-color {
-    background-color: $light-syntax-comment-preprocfile;
-    @include on-color($light-syntax-comment-preprocfile);
-  }
-  .syntax-comment-single-color {
-    background-color: $light-syntax-comment-single;
-    @include on-color($light-syntax-comment-single);
-  }
-  .syntax-comment-special-color {
-    background-color: $light-syntax-comment-special;
-    @include on-color($light-syntax-comment-special);
-  }
-  .syntax-generic-deleted-color {
-    background-color: $light-syntax-generic-deleted;
-    @include on-color($light-syntax-generic-deleted);
-  }
-  .syntax-generic-emph-color {
-    background-color: $light-syntax-generic-emph;
-    @include on-color($light-syntax-generic-emph);
-  }
-  .syntax-generic-error-color {
-    background-color: $light-syntax-generic-error;
-    @include on-color($light-syntax-generic-error);
-  }
-  .syntax-generic-heading-color {
-    background-color: $light-syntax-generic-heading;
-    @include on-color($light-syntax-generic-heading);
-  }
-  .syntax-generic-inserted-color {
-    background-color: $light-syntax-generic-inserted;
-    @include on-color($light-syntax-generic-inserted);
-  }
-  .syntax-generic-output-color {
-    background-color: $light-syntax-generic-output;
-    @include on-color($light-syntax-generic-output);
-  }
-  .syntax-generic-prompt-color {
-    background-color: $light-syntax-generic-prompt;
-    @include on-color($light-syntax-generic-prompt);
-  }
-  .syntax-generic-strong-color {
-    background-color: $light-syntax-generic-strong;
-    @include on-color($light-syntax-generic-strong);
-  }
-  .syntax-generic-subheading-color {
-    background-color: $light-syntax-generic-subheading;
-    @include on-color($light-syntax-generic-subheading);
-  }
-  .syntax-generic-traceback-color {
-    background-color: $light-syntax-generic-traceback;
-    @include on-color($light-syntax-generic-traceback);
-  }
-  .syntax-keyword-color {
-    background-color: $light-syntax-keyword;
-    @include on-color($light-syntax-keyword);
-  }
-  .syntax-keyword-constant-color {
-    background-color: $light-syntax-keyword-constant;
-    @include on-color($light-syntax-keyword-constant);
-  }
-  .syntax-keyword-declaration-color {
-    background-color: $light-syntax-keyword-declaration;
-    @include on-color($light-syntax-keyword-declaration);
-  }
-  .syntax-keyword-namespace-color {
-    background-color: $light-syntax-keyword-namespace;
-    @include on-color($light-syntax-keyword-namespace);
-  }
-  .syntax-keyword-pseudo-color {
-    background-color: $light-syntax-keyword-pseudo;
-    @include on-color($light-syntax-keyword-pseudo);
-  }
-  .syntax-keyword-reserved-color {
-    background-color: $light-syntax-keyword-reserved;
-    @include on-color($light-syntax-keyword-reserved);
-  }
-  .syntax-keyword-type-color {
-    background-color: $light-syntax-keyword-type;
-    @include on-color($light-syntax-keyword-type);
-  }
-  .syntax-literal-color {
-    background-color: $light-syntax-literal;
-    @include on-color($light-syntax-literal);
-  }
-  .syntax-literal-date-color {
-    background-color: $light-syntax-literal-date;
-    @include on-color($light-syntax-literal-date);
-  }
-  .syntax-name-color {
-    background-color: $light-syntax-name;
-    @include on-color($light-syntax-name);
-  }
-  .syntax-name-attribute-color {
-    background-color: $light-syntax-name-attribute;
-    @include on-color($light-syntax-name-attribute);
-  }
-  .syntax-name-builtin-pseudo-color {
-    background-color: $light-syntax-name-builtin-pseudo;
-    @include on-color($light-syntax-name-builtin-pseudo);
-  }
-  .syntax-name-builtin-color {
-    background-color: $light-syntax-name-builtin;
-    @include on-color($light-syntax-name-builtin);
-  }
-  .syntax-name-class-color {
-    background-color: $light-syntax-name-class;
-    @include on-color($light-syntax-name-class);
-  }
-  .syntax-name-constant-color {
-    background-color: $light-syntax-name-constant;
-    @include on-color($light-syntax-name-constant);
-  }
-  .syntax-name-decorator-color {
-    background-color: $light-syntax-name-decorator;
-    @include on-color($light-syntax-name-decorator);
-  }
-  .syntax-name-entity-color {
-    background-color: $light-syntax-name-entity;
-    @include on-color($light-syntax-name-entity);
-  }
-  .syntax-name-exception-color {
-    background-color: $light-syntax-name-exception;
-    @include on-color($light-syntax-name-exception);
-  }
-  .syntax-name-function-magic-color {
-    background-color: $light-syntax-name-function-magic;
-    @include on-color($light-syntax-name-function-magic);
-  }
-  .syntax-name-function-color {
-    background-color: $light-syntax-name-function;
-    @include on-color($light-syntax-name-function);
-  }
-  .syntax-name-label-color {
-    background-color: $light-syntax-name-label;
-    @include on-color($light-syntax-name-label);
-  }
-  .syntax-name-namespace-color {
-    background-color: $light-syntax-name-namespace;
-    @include on-color($light-syntax-name-namespace);
-  }
-  .syntax-name-other-color {
-    background-color: $light-syntax-name-other;
-    @include on-color($light-syntax-name-other);
-  }
-  .syntax-name-tag-color {
-    background-color: $light-syntax-name-tag;
-    @include on-color($light-syntax-name-tag);
-  }
-  .syntax-name-property-color {
-    background-color: $light-syntax-name-property;
-    @include on-color($light-syntax-name-property);
-  }
-  .syntax-name-variable-class-color {
-    background-color: $light-syntax-name-variable-class;
-    @include on-color($light-syntax-name-variable-class);
-  }
-  .syntax-name-variable-global-color {
-    background-color: $light-syntax-name-variable-global;
-    @include on-color($light-syntax-name-variable-global);
-  }
-  .syntax-name-variable-instance-color {
-    background-color: $light-syntax-name-variable-instance;
-    @include on-color($light-syntax-name-variable-instance);
-  }
-  .syntax-name-variable-magic-color {
-    background-color: $light-syntax-name-variable-magic;
-    @include on-color($light-syntax-name-variable-magic);
-  }
-  .syntax-name-variable-color {
-    background-color: $light-syntax-name-variable;
-    @include on-color($light-syntax-name-variable);
-  }
-  .syntax-number-bin-color {
-    background-color: $light-syntax-number-bin;
-    @include on-color($light-syntax-number-bin);
-  }
-  .syntax-number-float-color {
-    background-color: $light-syntax-number-float;
-    @include on-color($light-syntax-number-float);
-  }
-  .syntax-number-hex-color {
-    background-color: $light-syntax-number-hex;
-    @include on-color($light-syntax-number-hex);
-  }
-  .syntax-number-integer-long-color {
-    background-color: $light-syntax-number-integer-long;
-    @include on-color($light-syntax-number-integer-long);
-  }
-  .syntax-number-integer-color {
-    background-color: $light-syntax-number-integer;
-    @include on-color($light-syntax-number-integer);
-  }
-  .syntax-number-oct-color {
-    background-color: $light-syntax-number-oct;
-    @include on-color($light-syntax-number-oct);
-  }
-  .syntax-number-color {
-    background-color: $light-syntax-number;
-    @include on-color($light-syntax-number);
-  }
-  .syntax-operator-color {
-    background-color: $light-syntax-operator;
-    @include on-color($light-syntax-operator);
-  }
-  .syntax-operator-word-color {
-    background-color: $light-syntax-operator-word;
-    @include on-color($light-syntax-operator-word);
-  }
-  .syntax-string-color {
-    background-color: $light-syntax-string;
-    @include on-color($light-syntax-string);
-  }
-  .syntax-string-affix-color {
-    background-color: $light-syntax-string-affix;
-    @include on-color($light-syntax-string-affix);
-  }
-  .syntax-string-backtick-color {
-    background-color: $light-syntax-string-backtick;
-    @include on-color($light-syntax-string-backtick);
-  }
-  .syntax-string-char-color {
-    background-color: $light-syntax-string-char;
-    @include on-color($light-syntax-string-char);
-  }
-  .syntax-string-delimiter-color {
-    background-color: $light-syntax-string-delimiter;
-    @include on-color($light-syntax-string-delimiter);
-  }
-  .syntax-string-doc-color {
-    background-color: $light-syntax-string-doc;
-    @include on-color($light-syntax-string-doc);
-  }
-  .syntax-string-double-color {
-    background-color: $light-syntax-string-double;
-    @include on-color($light-syntax-string-double);
-  }
-  .syntax-string-escape-color {
-    background-color: $light-syntax-string-escape;
-    @include on-color($light-syntax-string-escape);
-  }
-  .syntax-string-heredoc-color {
-    background-color: $light-syntax-string-heredoc;
-    @include on-color($light-syntax-string-heredoc);
-  }
-  .syntax-string-interpol-color {
-    background-color: $light-syntax-string-interpol;
-    @include on-color($light-syntax-string-interpol);
-  }
-  .syntax-string-other-color {
-    background-color: $light-syntax-string-other;
-    @include on-color($light-syntax-string-other);
-  }
-  .syntax-string-regex-color {
-    background-color: $light-syntax-string-regex;
-    @include on-color($light-syntax-string-regex);
-  }
-  .syntax-string-single-color {
-    background-color: $light-syntax-string-single;
-    @include on-color($light-syntax-string-single);
-  }
-  .syntax-string-symbol-color {
-    background-color: $light-syntax-string-symbol;
-    @include on-color($light-syntax-string-symbol);
-  }
+.is-family-primary {
+  font-family: var(--font-family-primary);
+}
+.is-family-secondary {
+  font-family: var(--font-family-secondary);
+}
+.is-family-monospace {
+  font-family: var(--font-family-monospace);
 }
 
 // ----------------------------------------------------------------------------
-// Sass variables to CSS globals for dark mode colors
+// Theme color utility classes - uses CSS custom properties
+// These automatically respond to light/dark mode
 // ----------------------------------------------------------------------------
-:root[dark] {
-  // --------------------------------------------------------------------------
-  // CSS classes for theme colors and fonts
-  // --------------------------------------------------------------------------
-  .is-family-primary {
-    font-family: $font-family-primary;
-  }
-  .is-family-secondary {
-    font-family: $font-family-secondary;
-  }
-  .is-family-monospace {
-    font-family: $font-family-monospace;
-  }
-  .primary-color {
-    background-color: $dark-primary-color;
-    color: $dark-on-primary-color;
-  }
-  .on-primary-color {
-    background-color: $dark-on-primary-color;
-    color: $dark-primary-color;
-  }
-  .primary-container-color {
-    background-color: $dark-primary-container-color;
-    color: $dark-on-primary-container-color;
-  }
-  .on-primary-container-color {
-    background-color: $dark-on-primary-container-color;
-    color: $dark-primary-container-color;
-  }
-  .secondary-color {
-    background-color: $dark-secondary-color;
-    color: $dark-on-secondary-color;
-  }
-  .on-secondary-color {
-    background-color: $dark-on-secondary-color;
-    color: $dark-secondary-color;
-  }
-  .secondary-container-color {
-    background-color: $dark-secondary-container-color;
-    color: $dark-on-secondary-container-color;
-  }
-  .on-secondary-container-color {
-    background-color: $dark-on-secondary-container-color;
-    color: $dark-secondary-container-color;
-  }
-  .tertiary-color {
-    background-color: $dark-tertiary-color;
-    color: $dark-on-tertiary-color;
-  }
-  .on-tertiary-color {
-    background-color: $dark-on-tertiary-color;
-    color: $dark-tertiary-color;
-  }
-  .neutral-color {
-    background-color: $dark-neutral-color;
-    color: $dark-on-neutral-color;
-  }
-  .on-neutral-color {
-    background-color: $dark-on-neutral-color;
-    color: $dark-neutral-color;
-  }
-  .link-color {
-    background-color: $dark-link-color;
-    color: $dark-primary-color;
-  }
-  .error-color {
-    background-color: $dark-error-color;
-    color: $dark-on-error-color;
-  }
-  .on-error-color {
-    background-color: $dark-on-error-color;
-    color: $dark-error-color;
-  }
-  .warn-color {
-    background-color: $dark-warn-color;
-    color: $dark-on-warn-color;
-  }
-  .on-warn-color {
-    background-color: $dark-on-warn-color;
-    color: $dark-warn-color;
-  }
-  .info-color {
-    background-color: $dark-info-color;
-    color: $dark-on-info-color;
-  }
-  .on-info-color {
-    background-color: $dark-on-info-color;
-    color: $dark-info-color;
-  }
-  // --------------------------------------------------------------------------
-  // CSS classes for syntax theme colors
-  // --------------------------------------------------------------------------
-  .syntax-container-color {
-    background-color: $dark-syntax-container-color;
-    @include on-color($dark-syntax-container-color);
-  }
-  .syntax-text-color {
-    background-color: $dark-syntax-text;
-    @include on-color($dark-syntax-text);
-  }
-  .syntax-highlight-line-color {
-    background-color: $dark-syntax-highlight-line;
-    @include on-color($dark-syntax-highlight-line);
-  }
-  .syntax-error-color {
-    background-color: $dark-syntax-error;
-    @include on-color($dark-syntax-error);
-  }
-  .syntax-punctuation-color {
-    background-color: $dark-syntax-punctuation;
-    @include on-color($dark-syntax-punctuation);
-  }
-  .syntax-text-whitespace-color {
-    background-color: $dark-syntax-text-whitespace;
-    @include on-color($dark-syntax-text-whitespace);
-  }
-  .syntax-comment-color {
-    background-color: $dark-syntax-comment;
-    @include on-color($dark-syntax-comment);
-  }
-  .syntax-comment-hashbang-color {
-    background-color: $dark-syntax-comment-hashbang;
-    @include on-color($dark-syntax-comment-hashbang);
-  }
-  .syntax-comment-multiline-color {
-    background-color: $dark-syntax-comment-multiline;
-    @include on-color($dark-syntax-comment-multiline);
-  }
-  .syntax-comment-preproc-color {
-    background-color: $dark-syntax-comment-preproc;
-    @include on-color($dark-syntax-comment-preproc);
-  }
-  .syntax-comment-preprocfile-color {
-    background-color: $dark-syntax-comment-preprocfile;
-    @include on-color($dark-syntax-comment-preprocfile);
-  }
-  .syntax-comment-single-color {
-    background-color: $dark-syntax-comment-single;
-    @include on-color($dark-syntax-comment-single);
-  }
-  .syntax-comment-special-color {
-    background-color: $dark-syntax-comment-special;
-    @include on-color($dark-syntax-comment-special);
-  }
-  .syntax-generic-deleted-color {
-    background-color: $dark-syntax-generic-deleted;
-    @include on-color($dark-syntax-generic-deleted);
-  }
-  .syntax-generic-emph-color {
-    background-color: $dark-syntax-generic-emph;
-    @include on-color($dark-syntax-generic-emph);
-  }
-  .syntax-generic-error-color {
-    background-color: $dark-syntax-generic-error;
-    @include on-color($dark-syntax-generic-error);
-  }
-  .syntax-generic-heading-color {
-    background-color: $dark-syntax-generic-heading;
-    @include on-color($dark-syntax-generic-heading);
-  }
-  .syntax-generic-inserted-color {
-    background-color: $dark-syntax-generic-inserted;
-    @include on-color($dark-syntax-generic-inserted);
-  }
-  .syntax-generic-output-color {
-    background-color: $dark-syntax-generic-output;
-    @include on-color($dark-syntax-generic-output);
-  }
-  .syntax-generic-prompt-color {
-    background-color: $dark-syntax-generic-prompt;
-    @include on-color($dark-syntax-generic-prompt);
-  }
-  .syntax-generic-strong-color {
-    background-color: $dark-syntax-generic-strong;
-    @include on-color($dark-syntax-generic-strong);
-  }
-  .syntax-generic-subheading-color {
-    background-color: $dark-syntax-generic-subheading;
-    @include on-color($dark-syntax-generic-subheading);
-  }
-  .syntax-generic-traceback-color {
-    background-color: $dark-syntax-generic-traceback;
-    @include on-color($dark-syntax-generic-traceback);
-  }
-  .syntax-keyword-color {
-    background-color: $dark-syntax-keyword;
-    @include on-color($dark-syntax-keyword);
-  }
-  .syntax-keyword-constant-color {
-    background-color: $dark-syntax-keyword-constant;
-    @include on-color($dark-syntax-keyword-constant);
-  }
-  .syntax-keyword-declaration-color {
-    background-color: $dark-syntax-keyword-declaration;
-    @include on-color($dark-syntax-keyword-declaration);
-  }
-  .syntax-keyword-namespace-color {
-    background-color: $dark-syntax-keyword-namespace;
-    @include on-color($dark-syntax-keyword-namespace);
-  }
-  .syntax-keyword-pseudo-color {
-    background-color: $dark-syntax-keyword-pseudo;
-    @include on-color($dark-syntax-keyword-pseudo);
-  }
-  .syntax-keyword-reserved-color {
-    background-color: $dark-syntax-keyword-reserved;
-    @include on-color($dark-syntax-keyword-reserved);
-  }
-  .syntax-keyword-type-color {
-    background-color: $dark-syntax-keyword-type;
-    @include on-color($dark-syntax-keyword-type);
-  }
-  .syntax-literal-color {
-    background-color: $dark-syntax-literal;
-    @include on-color($dark-syntax-literal);
-  }
-  .syntax-literal-date-color {
-    background-color: $dark-syntax-literal-date;
-    @include on-color($dark-syntax-literal-date);
-  }
-  .syntax-name-color {
-    background-color: $dark-syntax-name;
-    @include on-color($dark-syntax-name);
-  }
-  .syntax-name-attribute-color {
-    background-color: $dark-syntax-name-attribute;
-    @include on-color($dark-syntax-name-attribute);
-  }
-  .syntax-name-builtin-pseudo-color {
-    background-color: $dark-syntax-name-builtin-pseudo;
-    @include on-color($dark-syntax-name-builtin-pseudo);
-  }
-  .syntax-name-builtin-color {
-    background-color: $dark-syntax-name-builtin;
-    @include on-color($dark-syntax-name-builtin);
-  }
-  .syntax-name-class-color {
-    background-color: $dark-syntax-name-class;
-    @include on-color($dark-syntax-name-class);
-  }
-  .syntax-name-constant-color {
-    background-color: $dark-syntax-name-constant;
-    @include on-color($dark-syntax-name-constant);
-  }
-  .syntax-name-decorator-color {
-    background-color: $dark-syntax-name-decorator;
-    @include on-color($dark-syntax-name-decorator);
-  }
-  .syntax-name-entity-color {
-    background-color: $dark-syntax-name-entity;
-    @include on-color($dark-syntax-name-entity);
-  }
-  .syntax-name-exception-color {
-    background-color: $dark-syntax-name-exception;
-    @include on-color($dark-syntax-name-exception);
-  }
-  .syntax-name-function-magic-color {
-    background-color: $dark-syntax-name-function-magic;
-    @include on-color($dark-syntax-name-function-magic);
-  }
-  .syntax-name-function-color {
-    background-color: $dark-syntax-name-function;
-    @include on-color($dark-syntax-name-function);
-  }
-  .syntax-name-label-color {
-    background-color: $dark-syntax-name-label;
-    @include on-color($dark-syntax-name-label);
-  }
-  .syntax-name-namespace-color {
-    background-color: $dark-syntax-name-namespace;
-    @include on-color($dark-syntax-name-namespace);
-  }
-  .syntax-name-other-color {
-    background-color: $dark-syntax-name-other;
-    @include on-color($dark-syntax-name-other);
-  }
-  .syntax-name-tag-color {
-    background-color: $dark-syntax-name-tag;
-    @include on-color($dark-syntax-name-tag);
-  }
-  .syntax-name-property-color {
-    background-color: $dark-syntax-name-property;
-    @include on-color($dark-syntax-name-property);
-  }
-  .syntax-name-variable-class-color {
-    background-color: $dark-syntax-name-variable-class;
-    @include on-color($dark-syntax-name-variable-class);
-  }
-  .syntax-name-variable-global-color {
-    background-color: $dark-syntax-name-variable-global;
-    @include on-color($dark-syntax-name-variable-global);
-  }
-  .syntax-name-variable-instance-color {
-    background-color: $dark-syntax-name-variable-instance;
-    @include on-color($dark-syntax-name-variable-instance);
-  }
-  .syntax-name-variable-magic-color {
-    background-color: $dark-syntax-name-variable-magic;
-    @include on-color($dark-syntax-name-variable-magic);
-  }
-  .syntax-name-variable-color {
-    background-color: $dark-syntax-name-variable;
-    @include on-color($dark-syntax-name-variable);
-  }
-  .syntax-number-bin-color {
-    background-color: $dark-syntax-number-bin;
-    @include on-color($dark-syntax-number-bin);
-  }
-  .syntax-number-float-color {
-    background-color: $dark-syntax-number-float;
-    @include on-color($dark-syntax-number-float);
-  }
-  .syntax-number-hex-color {
-    background-color: $dark-syntax-number-hex;
-    @include on-color($dark-syntax-number-hex);
-  }
-  .syntax-number-integer-long-color {
-    background-color: $dark-syntax-number-integer-long;
-    @include on-color($dark-syntax-number-integer-long);
-  }
-  .syntax-number-integer-color {
-    background-color: $dark-syntax-number-integer;
-    @include on-color($dark-syntax-number-integer);
-  }
-  .syntax-number-oct-color {
-    background-color: $dark-syntax-number-oct;
-    @include on-color($dark-syntax-number-oct);
-  }
-  .syntax-number-color {
-    background-color: $dark-syntax-number;
-    @include on-color($dark-syntax-number);
-  }
-  .syntax-operator-color {
-    background-color: $dark-syntax-operator;
-    @include on-color($dark-syntax-operator);
-  }
-  .syntax-operator-word-color {
-    background-color: $dark-syntax-operator-word;
-    @include on-color($dark-syntax-operator-word);
-  }
-  .syntax-string-color {
-    background-color: $dark-syntax-string;
-    @include on-color($dark-syntax-string);
-  }
-  .syntax-string-affix-color {
-    background-color: $dark-syntax-string-affix;
-    @include on-color($dark-syntax-string-affix);
-  }
-  .syntax-string-backtick-color {
-    background-color: $dark-syntax-string-backtick;
-    @include on-color($dark-syntax-string-backtick);
-  }
-  .syntax-string-char-color {
-    background-color: $dark-syntax-string-char;
-    @include on-color($dark-syntax-string-char);
-  }
-  .syntax-string-delimiter-color {
-    background-color: $dark-syntax-string-delimiter;
-    @include on-color($dark-syntax-string-delimiter);
-  }
-  .syntax-string-doc-color {
-    background-color: $dark-syntax-string-doc;
-    @include on-color($dark-syntax-string-doc);
-  }
-  .syntax-string-double-color {
-    background-color: $dark-syntax-string-double;
-    @include on-color($dark-syntax-string-double);
-  }
-  .syntax-string-escape-color {
-    background-color: $dark-syntax-string-escape;
-    @include on-color($dark-syntax-string-escape);
-  }
-  .syntax-string-heredoc-color {
-    background-color: $dark-syntax-string-heredoc;
-    @include on-color($dark-syntax-string-heredoc);
-  }
-  .syntax-string-interpol-color {
-    background-color: $dark-syntax-string-interpol;
-    @include on-color($dark-syntax-string-interpol);
-  }
-  .syntax-string-other-color {
-    background-color: $dark-syntax-string-other;
-    @include on-color($dark-syntax-string-other);
-  }
-  .syntax-string-regex-color {
-    background-color: $dark-syntax-string-regex;
-    @include on-color($dark-syntax-string-regex);
-  }
-  .syntax-string-single-color {
-    background-color: $dark-syntax-string-single;
-    @include on-color($dark-syntax-string-single);
-  }
-  .syntax-string-symbol-color {
-    background-color: $dark-syntax-string-symbol;
-    @include on-color($dark-syntax-string-symbol);
-  }
+.primary-color {
+  background-color: var(--primary-color);
+  color: var(--on-primary-color);
+}
+.on-primary-color {
+  background-color: var(--on-primary-color);
+  color: var(--primary-color);
+}
+.primary-container-color {
+  background-color: var(--primary-container-color);
+  color: var(--on-primary-container-color);
+}
+.on-primary-container-color {
+  background-color: var(--on-primary-container-color);
+  color: var(--primary-container-color);
+}
+.secondary-color {
+  background-color: var(--secondary-color);
+  color: var(--on-secondary-color);
+}
+.on-secondary-color {
+  background-color: var(--on-secondary-color);
+  color: var(--secondary-color);
+}
+.secondary-container-color {
+  background-color: var(--secondary-container-color);
+  color: var(--on-secondary-container-color);
+}
+.on-secondary-container-color {
+  background-color: var(--on-secondary-container-color);
+  color: var(--secondary-container-color);
+}
+.tertiary-color {
+  background-color: var(--tertiary-color);
+  color: var(--on-tertiary-color);
+}
+.on-tertiary-color {
+  background-color: var(--on-tertiary-color);
+  color: var(--tertiary-color);
+}
+.neutral-color {
+  background-color: $neutral-color;
+  color: $on-neutral-color;
+}
+.on-neutral-color {
+  background-color: $on-neutral-color;
+  color: $neutral-color;
+}
+.link-color {
+  background-color: var(--link-color);
+  color: var(--primary-color);
+}
+.accent-color {
+  background-color: var(--tertiary-color);
+  color: var(--on-tertiary-color);
+}
+.error-color {
+  background-color: $error-color;
+  color: $on-error-color;
+}
+.on-error-color {
+  background-color: $on-error-color;
+  color: $error-color;
+}
+.warn-color {
+  background-color: $warn-color;
+  color: $on-warn-color;
+}
+.on-warn-color {
+  background-color: $on-warn-color;
+  color: $warn-color;
+}
+.info-color {
+  background-color: $info-color;
+  color: $on-info-color;
+}
+.on-info-color {
+  background-color: $on-info-color;
+  color: $info-color;
 }
 
+// ----------------------------------------------------------------------------
+// Syntax color swatch classes - uses CSS custom properties
+// Text color is determined by --syntax-*-on-color custom properties
+// ----------------------------------------------------------------------------
+.syntax-container-color {
+  background-color: var(--syntax-container-color);
+  color: var(--syntax-container-on-color, #fff);
+}
+.syntax-text-color {
+  background-color: var(--syntax-text);
+  color: var(--syntax-text-on-color, #000);
+}
+.syntax-highlight-line-color {
+  background-color: var(--syntax-highlight-line);
+  color: var(--syntax-highlight-line-on-color, #000);
+}
+.syntax-error-color {
+  background-color: var(--syntax-error);
+  color: var(--syntax-error-on-color, #000);
+}
+.syntax-punctuation-color {
+  background-color: var(--syntax-punctuation);
+  color: var(--syntax-punctuation-on-color, #000);
+}
+.syntax-text-whitespace-color {
+  background-color: var(--syntax-text-whitespace);
+  color: var(--syntax-text-whitespace-on-color, #000);
+}
+.syntax-comment-color {
+  background-color: var(--syntax-comment);
+  color: var(--syntax-comment-on-color, #000);
+}
+.syntax-comment-hashbang-color {
+  background-color: var(--syntax-comment-hashbang);
+  color: var(--syntax-comment-hashbang-on-color, #000);
+}
+.syntax-comment-multiline-color {
+  background-color: var(--syntax-comment-multiline);
+  color: var(--syntax-comment-multiline-on-color, #000);
+}
+.syntax-comment-preproc-color {
+  background-color: var(--syntax-comment-preproc);
+  color: var(--syntax-comment-preproc-on-color, #000);
+}
+.syntax-comment-preprocfile-color {
+  background-color: var(--syntax-comment-preprocfile);
+  color: var(--syntax-comment-preprocfile-on-color, #000);
+}
+.syntax-comment-single-color {
+  background-color: var(--syntax-comment-single);
+  color: var(--syntax-comment-single-on-color, #000);
+}
+.syntax-comment-special-color {
+  background-color: var(--syntax-comment-special);
+  color: var(--syntax-comment-special-on-color, #000);
+}
+.syntax-generic-deleted-color {
+  background-color: var(--syntax-generic-deleted);
+  color: var(--syntax-generic-deleted-on-color, #000);
+}
+.syntax-generic-emph-color {
+  background-color: var(--syntax-generic-emph);
+  color: var(--syntax-generic-emph-on-color, #000);
+}
+.syntax-generic-error-color {
+  background-color: var(--syntax-generic-error);
+  color: var(--syntax-generic-error-on-color, #000);
+}
+.syntax-generic-heading-color {
+  background-color: var(--syntax-generic-heading);
+  color: var(--syntax-generic-heading-on-color, #000);
+}
+.syntax-generic-inserted-color {
+  background-color: var(--syntax-generic-inserted);
+  color: var(--syntax-generic-inserted-on-color, #000);
+}
+.syntax-generic-output-color {
+  background-color: var(--syntax-generic-output);
+  color: var(--syntax-generic-output-on-color, #000);
+}
+.syntax-generic-prompt-color {
+  background-color: var(--syntax-generic-prompt);
+  color: var(--syntax-generic-prompt-on-color, #000);
+}
+.syntax-generic-strong-color {
+  background-color: var(--syntax-generic-strong);
+  color: var(--syntax-generic-strong-on-color, #000);
+}
+.syntax-generic-subheading-color {
+  background-color: var(--syntax-generic-subheading);
+  color: var(--syntax-generic-subheading-on-color, #000);
+}
+.syntax-generic-traceback-color {
+  background-color: var(--syntax-generic-traceback);
+  color: var(--syntax-generic-traceback-on-color, #000);
+}
+.syntax-keyword-color {
+  background-color: var(--syntax-keyword);
+  color: var(--syntax-keyword-on-color, #000);
+}
+.syntax-keyword-constant-color {
+  background-color: var(--syntax-keyword-constant);
+  color: var(--syntax-keyword-constant-on-color, #000);
+}
+.syntax-keyword-declaration-color {
+  background-color: var(--syntax-keyword-declaration);
+  color: var(--syntax-keyword-declaration-on-color, #000);
+}
+.syntax-keyword-namespace-color {
+  background-color: var(--syntax-keyword-namespace);
+  color: var(--syntax-keyword-namespace-on-color, #000);
+}
+.syntax-keyword-pseudo-color {
+  background-color: var(--syntax-keyword-pseudo);
+  color: var(--syntax-keyword-pseudo-on-color, #000);
+}
+.syntax-keyword-reserved-color {
+  background-color: var(--syntax-keyword-reserved);
+  color: var(--syntax-keyword-reserved-on-color, #000);
+}
+.syntax-keyword-type-color {
+  background-color: var(--syntax-keyword-type);
+  color: var(--syntax-keyword-type-on-color, #000);
+}
+.syntax-literal-color {
+  background-color: var(--syntax-literal);
+  color: var(--syntax-literal-on-color, #000);
+}
+.syntax-literal-date-color {
+  background-color: var(--syntax-literal-date);
+  color: var(--syntax-literal-date-on-color, #000);
+}
+.syntax-name-color {
+  background-color: var(--syntax-name);
+  color: var(--syntax-name-on-color, #000);
+}
+.syntax-name-attribute-color {
+  background-color: var(--syntax-name-attribute);
+  color: var(--syntax-name-attribute-on-color, #000);
+}
+.syntax-name-builtin-pseudo-color {
+  background-color: var(--syntax-name-builtin-pseudo);
+  color: var(--syntax-name-builtin-pseudo-on-color, #000);
+}
+.syntax-name-builtin-color {
+  background-color: var(--syntax-name-builtin);
+  color: var(--syntax-name-builtin-on-color, #000);
+}
+.syntax-name-class-color {
+  background-color: var(--syntax-name-class);
+  color: var(--syntax-name-class-on-color, #000);
+}
+.syntax-name-constant-color {
+  background-color: var(--syntax-name-constant);
+  color: var(--syntax-name-constant-on-color, #000);
+}
+.syntax-name-decorator-color {
+  background-color: var(--syntax-name-decorator);
+  color: var(--syntax-name-decorator-on-color, #000);
+}
+.syntax-name-entity-color {
+  background-color: var(--syntax-name-entity);
+  color: var(--syntax-name-entity-on-color, #000);
+}
+.syntax-name-exception-color {
+  background-color: var(--syntax-name-exception);
+  color: var(--syntax-name-exception-on-color, #000);
+}
+.syntax-name-function-magic-color {
+  background-color: var(--syntax-name-function-magic);
+  color: var(--syntax-name-function-magic-on-color, #000);
+}
+.syntax-name-function-color {
+  background-color: var(--syntax-name-function);
+  color: var(--syntax-name-function-on-color, #000);
+}
+.syntax-name-label-color {
+  background-color: var(--syntax-name-label);
+  color: var(--syntax-name-label-on-color, #000);
+}
+.syntax-name-namespace-color {
+  background-color: var(--syntax-name-namespace);
+  color: var(--syntax-name-namespace-on-color, #000);
+}
+.syntax-name-other-color {
+  background-color: var(--syntax-name-other);
+  color: var(--syntax-name-other-on-color, #000);
+}
+.syntax-name-tag-color {
+  background-color: var(--syntax-name-tag);
+  color: var(--syntax-name-tag-on-color, #000);
+}
+.syntax-name-property-color {
+  background-color: var(--syntax-name-property);
+  color: var(--syntax-name-property-on-color, #000);
+}
+.syntax-name-variable-class-color {
+  background-color: var(--syntax-name-variable-class);
+  color: var(--syntax-name-variable-class-on-color, #000);
+}
+.syntax-name-variable-global-color {
+  background-color: var(--syntax-name-variable-global);
+  color: var(--syntax-name-variable-global-on-color, #000);
+}
+.syntax-name-variable-instance-color {
+  background-color: var(--syntax-name-variable-instance);
+  color: var(--syntax-name-variable-instance-on-color, #000);
+}
+.syntax-name-variable-magic-color {
+  background-color: var(--syntax-name-variable-magic);
+  color: var(--syntax-name-variable-magic-on-color, #000);
+}
+.syntax-name-variable-color {
+  background-color: var(--syntax-name-variable);
+  color: var(--syntax-name-variable-on-color, #000);
+}
+.syntax-number-bin-color {
+  background-color: var(--syntax-number-bin);
+  color: var(--syntax-number-bin-on-color, #000);
+}
+.syntax-number-float-color {
+  background-color: var(--syntax-number-float);
+  color: var(--syntax-number-float-on-color, #000);
+}
+.syntax-number-hex-color {
+  background-color: var(--syntax-number-hex);
+  color: var(--syntax-number-hex-on-color, #000);
+}
+.syntax-number-integer-long-color {
+  background-color: var(--syntax-number-integer-long);
+  color: var(--syntax-number-integer-long-on-color, #000);
+}
+.syntax-number-integer-color {
+  background-color: var(--syntax-number-integer);
+  color: var(--syntax-number-integer-on-color, #000);
+}
+.syntax-number-oct-color {
+  background-color: var(--syntax-number-oct);
+  color: var(--syntax-number-oct-on-color, #000);
+}
+.syntax-number-color {
+  background-color: var(--syntax-number);
+  color: var(--syntax-number-on-color, #000);
+}
+.syntax-operator-color {
+  background-color: var(--syntax-operator);
+  color: var(--syntax-operator-on-color, #000);
+}
+.syntax-operator-word-color {
+  background-color: var(--syntax-operator-word);
+  color: var(--syntax-operator-word-on-color, #000);
+}
+.syntax-string-color {
+  background-color: var(--syntax-string);
+  color: var(--syntax-string-on-color, #000);
+}
+.syntax-string-affix-color {
+  background-color: var(--syntax-string-affix);
+  color: var(--syntax-string-affix-on-color, #000);
+}
+.syntax-string-backtick-color {
+  background-color: var(--syntax-string-backtick);
+  color: var(--syntax-string-backtick-on-color, #000);
+}
+.syntax-string-char-color {
+  background-color: var(--syntax-string-char);
+  color: var(--syntax-string-char-on-color, #000);
+}
+.syntax-string-delimiter-color {
+  background-color: var(--syntax-string-delimiter);
+  color: var(--syntax-string-delimiter-on-color, #000);
+}
+.syntax-string-doc-color {
+  background-color: var(--syntax-string-doc);
+  color: var(--syntax-string-doc-on-color, #000);
+}
+.syntax-string-double-color {
+  background-color: var(--syntax-string-double);
+  color: var(--syntax-string-double-on-color, #000);
+}
+.syntax-string-escape-color {
+  background-color: var(--syntax-string-escape);
+  color: var(--syntax-string-escape-on-color, #000);
+}
+.syntax-string-heredoc-color {
+  background-color: var(--syntax-string-heredoc);
+  color: var(--syntax-string-heredoc-on-color, #000);
+}
+.syntax-string-interpol-color {
+  background-color: var(--syntax-string-interpol);
+  color: var(--syntax-string-interpol-on-color, #000);
+}
+.syntax-string-other-color {
+  background-color: var(--syntax-string-other);
+  color: var(--syntax-string-other-on-color, #000);
+}
+.syntax-string-regex-color {
+  background-color: var(--syntax-string-regex);
+  color: var(--syntax-string-regex-on-color, #000);
+}
+.syntax-string-single-color {
+  background-color: var(--syntax-string-single);
+  color: var(--syntax-string-single-on-color, #000);
+}
+.syntax-string-symbol-color {
+  background-color: var(--syntax-string-symbol);
+  color: var(--syntax-string-symbol-on-color, #000);
+}
