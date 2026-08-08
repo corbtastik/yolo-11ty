@@ -204,17 +204,20 @@
   }
 }
 
-// pill styling
+// pill styling - base class for pill/tag elements
 .yolo-pill {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-  padding: 0.25rem 1rem;
+  margin-top: $spacing-xs;
+  margin-bottom: $spacing-xs;
+  padding: $spacing-xs $spacing-md;
   font-size: $size-6;
   font-weight: bold;
-  border-radius: 3rem;
+  border-radius: $border-radius-pill;
+  background-color: var(--secondary-color);
+  color: var(--on-secondary-color);
+  font-family: var(--font-family-secondary);
 }
 
 .yolo-syntax-theme-swatches {

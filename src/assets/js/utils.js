@@ -4,6 +4,11 @@
 (function() {
     'use strict';
 
+    var MONTH_NAMES = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
     window.YoloUtils = {
         /**
          * Execute callback when DOM is ready
@@ -14,6 +19,14 @@
             } else {
                 fn();
             }
+        },
+
+        /**
+         * Format a date string as "Month D, YYYY" using UTC
+         */
+        formatDate: function(dateStr) {
+            var d = new Date(dateStr);
+            return MONTH_NAMES[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + d.getUTCFullYear();
         }
     };
 })();

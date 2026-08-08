@@ -1,206 +1,210 @@
 // ----------------------------------------------------------------------------
 // Yolo Hub - Search, filter, and pagination functionality
 // ----------------------------------------------------------------------------
-(function(window) {
-  'use strict';
+(function() {
+    'use strict';
 
-  class Hub {
-    constructor(config = {}) {
-      this.allPosts = config.posts || [];
-      this.postsPerPage = config.postsPerPage || 25;
-      this.currentPage = 1;
-      this.filteredPosts = [...this.allPosts];
-      this.isSearching = false;
+    var allPosts = [];
+    var filteredPosts = [];
+    var postsPerPage = 25;
+    var currentPage = 1;
 
-      this.searchInput = document.getElementById('hub-search');
-      this.postsContainer = document.getElementById('hub-posts');
-      this.noResults = document.getElementById('hub-no-results');
-      this.paginationContainer = document.getElementById('hub-pagination');
+    var searchInput;
+    var postsContainer;
+    var noResults;
+    var paginationContainer;
 
-      this.init();
+    function getTotalPages() {
+        return Math.ceil(filteredPosts.length / postsPerPage);
     }
 
-    init() {
-      // Search functionality
-      if (this.searchInput) {
-        this.searchInput.addEventListener('input', () => this.handleSearch());
-      }
-
-      // Event delegation for tag clicks (avoids rebinding on every render)
-      if (this.postsContainer) {
-        this.postsContainer.addEventListener('click', (e) => {
-          const tag = e.target.closest('.hub-tag');
-          if (tag) {
-            e.preventDefault();
-            this.handleTagClick(tag.dataset.tag);
-          }
-        });
-      }
-
-      // Event delegation for pagination clicks (avoids rebinding on every render)
-      if (this.paginationContainer) {
-        this.paginationContainer.addEventListener('click', (e) => {
-          const btn = e.target.closest('.hub-page-btn');
-          if (btn && !btn.hasAttribute('disabled')) {
-            const page = parseInt(btn.dataset.page, 10);
-            this.goToPage(page);
-          }
-        });
-      }
-
-      // Initial render
-      this.render();
+    function getCurrentPosts() {
+        var start = (currentPage - 1) * postsPerPage;
+        var end = start + postsPerPage;
+        return filteredPosts.slice(start, end);
     }
 
-    handleSearch() {
-      const query = this.searchInput.value.toLowerCase().trim();
-      this.isSearching = query.length > 0;
+    function handleSearch() {
+        var query = searchInput.value.toLowerCase().trim();
 
-      if (this.isSearching) {
-        // Filter all posts based on search query
-        this.filteredPosts = this.allPosts.filter(post => {
-          const title = (post.title || '').toLowerCase();
-          const description = (post.description || '').toLowerCase();
-          const tags = (post.tags || []).join(' ').toLowerCase();
+        if (query.length > 0) {
+            filteredPosts = allPosts.filter(function(post) {
+                var title = (post.title || '').toLowerCase();
+                var description = (post.description || '').toLowerCase();
+                var tags = (post.tags || []).join(' ').toLowerCase();
 
-          return title.includes(query) ||
-                 description.includes(query) ||
-                 tags.includes(query);
-        });
-      } else {
-        this.filteredPosts = [...this.allPosts];
-      }
-
-      this.currentPage = 1;
-      this.render();
-    }
-
-    handleTagClick(tagText) {
-      this.searchInput.value = tagText;
-      this.handleSearch();
-    }
-
-    get totalPages() {
-      return Math.ceil(this.filteredPosts.length / this.postsPerPage);
-    }
-
-    get currentPosts() {
-      const start = (this.currentPage - 1) * this.postsPerPage;
-      const end = start + this.postsPerPage;
-      return this.filteredPosts.slice(start, end);
-    }
-
-    goToPage(page) {
-      if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page;
-        this.render();
-        // Scroll to top of posts
-        this.postsContainer?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-
-    formatDate(dateStr) {
-      const d = new Date(dateStr);
-      const months = ['January', 'February', 'March', 'April', 'May', 'June',
-                      'July', 'August', 'September', 'October', 'November', 'December'];
-      return `${months[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
-    }
-
-    renderCard(post) {
-      const tagsHtml = (post.tags || [])
-        .map(tag => `<a href="#" class="hub-tag" data-tag="${tag}">#${tag}</a>`)
-        .join('');
-
-      return `
-        <div class="hub-card">
-          <div class="hub-card-header">
-            <h2 class="hub-card-title">
-              <a href="${post.url}">${post.title}</a>
-            </h2>
-            <span class="hub-card-date">${this.formatDate(post.date)}</span>
-          </div>
-          <p class="hub-card-description">${post.description}</p>
-          <div class="hub-card-tags">${tagsHtml}</div>
-        </div>
-      `;
-    }
-
-    renderPagination() {
-      if (this.totalPages <= 1) {
-        return '';
-      }
-
-      let pagesHtml = '';
-
-      // Previous button
-      const prevDisabled = this.currentPage === 1 ? 'disabled' : '';
-      pagesHtml += `<button class="hub-page-btn hub-page-prev" ${prevDisabled} data-page="${this.currentPage - 1}">&laquo; Prev</button>`;
-
-      // Page numbers
-      const maxVisible = 5;
-      let startPage = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
-      let endPage = Math.min(this.totalPages, startPage + maxVisible - 1);
-
-      if (endPage - startPage + 1 < maxVisible) {
-        startPage = Math.max(1, endPage - maxVisible + 1);
-      }
-
-      if (startPage > 1) {
-        pagesHtml += `<button class="hub-page-btn" data-page="1">1</button>`;
-        if (startPage > 2) {
-          pagesHtml += `<span class="hub-page-ellipsis">...</span>`;
-        }
-      }
-
-      for (let i = startPage; i <= endPage; i++) {
-        const active = i === this.currentPage ? 'active' : '';
-        pagesHtml += `<button class="hub-page-btn ${active}" data-page="${i}">${i}</button>`;
-      }
-
-      if (endPage < this.totalPages) {
-        if (endPage < this.totalPages - 1) {
-          pagesHtml += `<span class="hub-page-ellipsis">...</span>`;
-        }
-        pagesHtml += `<button class="hub-page-btn" data-page="${this.totalPages}">${this.totalPages}</button>`;
-      }
-
-      // Next button
-      const nextDisabled = this.currentPage === this.totalPages ? 'disabled' : '';
-      pagesHtml += `<button class="hub-page-btn hub-page-next" ${nextDisabled} data-page="${this.currentPage + 1}">Next &raquo;</button>`;
-
-      // Page info
-      const start = (this.currentPage - 1) * this.postsPerPage + 1;
-      const end = Math.min(this.currentPage * this.postsPerPage, this.filteredPosts.length);
-      const total = this.filteredPosts.length;
-      const infoHtml = `<div class="hub-page-info">Showing ${start}-${end} of ${total}</div>`;
-
-      return `<div class="hub-pagination-controls">${pagesHtml}</div>${infoHtml}`;
-    }
-
-    render() {
-      // Render posts
-      if (this.postsContainer) {
-        if (this.currentPosts.length === 0) {
-          this.postsContainer.innerHTML = '';
-          if (this.noResults) {
-            this.noResults.style.display = 'block';
-          }
+                return title.indexOf(query) !== -1 ||
+                       description.indexOf(query) !== -1 ||
+                       tags.indexOf(query) !== -1;
+            });
         } else {
-          this.postsContainer.innerHTML = this.currentPosts.map(post => this.renderCard(post)).join('');
-          if (this.noResults) {
-            this.noResults.style.display = 'none';
-          }
+            filteredPosts = allPosts.slice();
         }
-      }
 
-      // Render pagination
-      if (this.paginationContainer) {
-        this.paginationContainer.innerHTML = this.renderPagination();
-      }
+        currentPage = 1;
+        render();
     }
-  }
 
-  // Export for initialization
-  window.YoloHub = Hub;
+    function handleTagClick(tagText) {
+        searchInput.value = tagText;
+        handleSearch();
+    }
 
-})(window);
+    function goToPage(page) {
+        var total = getTotalPages();
+        if (page >= 1 && page <= total) {
+            currentPage = page;
+            render();
+            if (postsContainer) {
+                postsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    }
+
+    function renderCard(post) {
+        var tagsHtml = (post.tags || [])
+            .map(function(tag) {
+                return '<a href="#" class="yolo-pill hub-tag" data-tag="' + tag + '">#' + tag + '</a>';
+            })
+            .join('');
+
+        return '<div class="hub-card">' +
+            '<div class="hub-card-header">' +
+                '<h2 class="hub-card-title">' +
+                    '<a href="' + post.url + '">' + post.title + '</a>' +
+                '</h2>' +
+                '<span class="hub-card-date">' + YoloUtils.formatDate(post.date) + '</span>' +
+            '</div>' +
+            '<p class="hub-card-description">' + post.description + '</p>' +
+            '<div class="hub-card-tags">' + tagsHtml + '</div>' +
+        '</div>';
+    }
+
+    function renderPagination() {
+        var total = getTotalPages();
+        if (total <= 1) {
+            return '';
+        }
+
+        var html = '';
+        var maxVisible = 5;
+
+        // Previous button
+        var prevDisabled = currentPage === 1 ? 'disabled' : '';
+        html += '<button class="hub-page-btn hub-page-prev" ' + prevDisabled + ' data-page="' + (currentPage - 1) + '">&laquo; Prev</button>';
+
+        // Page numbers
+        var startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        var endPage = Math.min(total, startPage + maxVisible - 1);
+
+        if (endPage - startPage + 1 < maxVisible) {
+            startPage = Math.max(1, endPage - maxVisible + 1);
+        }
+
+        if (startPage > 1) {
+            html += '<button class="hub-page-btn" data-page="1">1</button>';
+            if (startPage > 2) {
+                html += '<span class="hub-page-ellipsis">...</span>';
+            }
+        }
+
+        for (var i = startPage; i <= endPage; i++) {
+            var active = i === currentPage ? 'active' : '';
+            html += '<button class="hub-page-btn ' + active + '" data-page="' + i + '">' + i + '</button>';
+        }
+
+        if (endPage < total) {
+            if (endPage < total - 1) {
+                html += '<span class="hub-page-ellipsis">...</span>';
+            }
+            html += '<button class="hub-page-btn" data-page="' + total + '">' + total + '</button>';
+        }
+
+        // Next button
+        var nextDisabled = currentPage === total ? 'disabled' : '';
+        html += '<button class="hub-page-btn hub-page-next" ' + nextDisabled + ' data-page="' + (currentPage + 1) + '">Next &raquo;</button>';
+
+        // Page info
+        var start = (currentPage - 1) * postsPerPage + 1;
+        var end = Math.min(currentPage * postsPerPage, filteredPosts.length);
+        var infoHtml = '<div class="hub-page-info">Showing ' + start + '-' + end + ' of ' + filteredPosts.length + '</div>';
+
+        return '<div class="hub-pagination-controls">' + html + '</div>' + infoHtml;
+    }
+
+    function render() {
+        var posts = getCurrentPosts();
+
+        // Render posts
+        if (postsContainer) {
+            if (posts.length === 0) {
+                postsContainer.innerHTML = '';
+                if (noResults) {
+                    noResults.style.display = 'block';
+                }
+            } else {
+                postsContainer.innerHTML = posts.map(renderCard).join('');
+                if (noResults) {
+                    noResults.style.display = 'none';
+                }
+            }
+        }
+
+        // Render pagination
+        if (paginationContainer) {
+            paginationContainer.innerHTML = renderPagination();
+        }
+    }
+
+    function init(config) {
+        config = config || {};
+        allPosts = config.posts || [];
+        postsPerPage = config.postsPerPage || 25;
+        filteredPosts = allPosts.slice();
+        currentPage = 1;
+
+        searchInput = document.getElementById('hub-search');
+        postsContainer = document.getElementById('hub-posts');
+        noResults = document.getElementById('hub-no-results');
+        paginationContainer = document.getElementById('hub-pagination');
+
+        // Early return if required elements are missing
+        if (!postsContainer) {
+            return;
+        }
+
+        // Search functionality
+        if (searchInput) {
+            searchInput.addEventListener('input', handleSearch);
+        }
+
+        // Event delegation for tag clicks
+        postsContainer.addEventListener('click', function(e) {
+            var tag = e.target.closest('.hub-tag');
+            if (tag) {
+                e.preventDefault();
+                handleTagClick(tag.dataset.tag);
+            }
+        });
+
+        // Event delegation for pagination clicks
+        if (paginationContainer) {
+            paginationContainer.addEventListener('click', function(e) {
+                var btn = e.target.closest('.hub-page-btn');
+                if (btn && !btn.hasAttribute('disabled')) {
+                    var page = parseInt(btn.dataset.page, 10);
+                    goToPage(page);
+                }
+            });
+        }
+
+        // Initial render
+        render();
+    }
+
+    // Export Hub constructor for backwards compatibility
+    window.YoloHub = function(config) {
+        init(config);
+    };
+
+})();

@@ -169,21 +169,8 @@ permalink: /css/hub.scss
   }
 }
 
-// Tags (pills) - exact match to .yolo-pill
-// Scoped under .yolo-themed to override the global "a" link color
+// Tags - uses shared .yolo-pill base styles, adds hub-specific hover behavior
 .yolo-themed .hub-tag {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-  padding: 0.25rem 1rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 3rem;
-  background-color: var(--secondary-color);
-  color: var(--on-secondary-color);
-  font-family: var(--font-family-secondary);
   cursor: pointer;
 
   &:hover {
