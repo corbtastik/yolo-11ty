@@ -1,7 +1,5 @@
 # -----------------------------------------------------------------------------
 # Posts - Each entry represents a blog post
-# The first entry links to the actual yolo-demo post
-# Others are mock entries for demonstration
 # -----------------------------------------------------------------------------
 - title: "Yolo Demo"
   description: "The official Yolo-11ty demo site showcasing all features."
@@ -13,58 +11,207 @@
     - themes
     - features
 
-- title: "Voyage AI Models by MongoDB: A Complete 101 Guide"
-  description: "A reference guide covering every Voyage AI model supported by MongoDB."
-  url: "#"
-  date: 2026-03-02
+- title: "Howdy"
+  description: "Welcome to Yolo - single page sites for writers, developers, and photographers."
+  url: "/posts/howdy/"
+  date: 2026-01-01
   tags:
-    - mongodb
-    - voyage-ai
-    - embeddings
-    - rerankers
-    - vector-search
-    - rag
+    - intro
+    - getting-started
 
-- title: "AI Code Assistants"
-  description: "Reshaping Skills, Reducing Toil, and the Risks We're Not Ready For"
-  url: "#"
-  date: 2026-02-16
+- title: "Getting Started"
+  description: "Get up and running with Yolo in minutes."
+  url: "/posts/getting-started/"
+  date: 2026-01-02
   tags:
-    - ai
-    - genai
-    - copilot
-    - mongodb
-    - software-engineering
-    - mit
+    - getting-started
+    - setup
+    - nodejs
 
-- title: "Mongoball"
-  description: "Baseball and MongoDB, now that's a walkoff."
-  url: "#"
-  date: 2026-02-14
+- title: "Branding"
+  description: "How Yolo uses themes for colors and fonts."
+  url: "/posts/branding/"
+  date: 2026-01-03
   tags:
-    - baseball
-    - analytics
-    - data
-    - mongodb
+    - branding
+    - themes
+    - customization
 
-- title: "Theming & The Theme Builder"
-  description: "Discover 50+ color themes, slash commands for quick switching, and the interactive Theme Builder for creating your own custom palettes."
-  url: "#"
-  date: 2026-02-07
+- title: "Themes"
+  description: "Preview and customize color themes in Yolo."
+  url: "/posts/themes/"
+  date: 2026-01-04
   tags:
-    - features
-    - theme
-    - tutorial
+    - themes
+    - colors
+    - customization
     - design
 
-- title: "Orbit AI Demo"
-  description: "From Prompt to Production with Orbit AI"
-  url: "#"
-  date: 2026-02-05
+- title: "Syntax Themes"
+  description: "Custom syntax highlighting for code blocks in Yolo."
+  url: "/posts/syntax-themes/"
+  date: 2026-01-05
   tags:
-    - ai
-    - reading-list
-    - openai
-    - google-deepmind
-    - llms
-    - genai
+    - syntax
+    - code
+    - highlighting
+    - themes
+
+- title: "Typography"
+  description: "Customize fonts in your Yolo theme."
+  url: "/posts/typography/"
+  date: 2026-01-06
+  tags:
+    - typography
+    - fonts
+    - design
+
+- title: "Headers"
+  description: "Header styles from H2 to H6 in Yolo."
+  url: "/posts/headers/"
+  date: 2026-01-07
+  tags:
+    - headers
+    - typography
+    - markdown
+
+- title: "Paragraph Text"
+  description: "Standard paragraph text styling in Yolo."
+  url: "/posts/paragraph-text/"
+  date: 2026-01-08
+  tags:
+    - paragraph
+    - text
+    - typography
+
+- title: "Blockquotes"
+  description: "Blockquote styles including nested and markdown content."
+  url: "/posts/blockquotes/"
+  date: 2026-01-09
+  tags:
+    - blockquotes
+    - markdown
+    - typography
+
+- title: "Inline Text"
+  description: "Inline text formatting styles in Yolo."
+  url: "/posts/inline-text/"
+  date: 2026-01-10
+  tags:
+    - inline
+    - text
+    - typography
+    - markdown
+
+- title: "Lists"
+  description: "Unordered and ordered list styles in Yolo."
+  url: "/posts/lists/"
+  date: 2026-01-11
+  tags:
+    - lists
+    - markdown
+    - typography
+
+- title: "Tables"
+  description: "Sortable table styles with column alignment in Yolo."
+  url: "/posts/tables/"
+  date: 2026-01-12
+  tags:
+    - tables
+    - markdown
+    - data
+
+- title: "Markdown Images"
+  description: "Standard markdown image styling in Yolo."
+  url: "/posts/markdown-images/"
+  date: 2026-01-13
+  tags:
+    - images
+    - markdown
+    - media
+
+- title: "Styled Images"
+  description: "Image classes for thumbnails, squares, circles, and aspect ratios."
+  url: "/posts/styled-images/"
+  date: 2026-01-14
+  tags:
+    - images
+    - styling
+    - media
+    - css
+
+- title: "Image Grid"
+  description: "Display images in a grid layout with click-to-enlarge."
+  url: "/posts/image-grid/"
+  date: 2026-01-16
+  tags:
+    - images
+    - grid
+    - media
+    - gallery
+
+- title: "Image Lightbox"
+  description: "Full-screen image lightbox with navigation controls."
+  url: "/posts/image-lightbox/"
+  date: 2026-01-17
+  tags:
+    - images
+    - lightbox
+    - media
+    - gallery
+
+- title: "Videos"
+  description: "Embed videos with responsive styling."
+  url: "/posts/videos/"
+  date: 2026-01-18
+  tags:
+    - videos
+    - media
+    - embed
+
+- title: "Presentations"
+  description: "Embed presentations with configurable aspect ratios."
+  url: "/posts/presentations/"
+  date: 2026-01-19
+  tags:
+    - presentations
+    - embed
+    - media
+    - slides
+
+- title: "Custom CSS"
+  description: "Add custom CSS to individual pages."
+  url: "/posts/custom-css/"
+  date: 2026-01-20
+  tags:
+    - css
+    - customization
+    - styling
+
+- title: "Custom JavaScript"
+  description: "Add custom JavaScript to individual pages."
+  url: "/posts/custom-javascript/"
+  date: 2026-01-21
+  tags:
+    - javascript
+    - customization
+    - api
+
+- title: "Containers"
+  description: "Build and run Yolo in Docker containers."
+  url: "/posts/containers/"
+  date: 2026-01-22
+  tags:
+    - docker
+    - containers
+    - deployment
+
+- title: "More Snippets"
+  description: "Code snippet examples in various programming languages."
+  url: "/posts/more-snippets/"
+  date: 2026-01-23
+  tags:
+    - code
+    - snippets
+    - syntax
+    - highlighting

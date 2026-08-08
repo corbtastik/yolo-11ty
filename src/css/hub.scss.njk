@@ -215,6 +215,65 @@ permalink: /css/hub.scss
   font-size: 1.1rem;
 }
 
+// Pagination
+.hub-pagination {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--secondary-container-color);
+}
+
+.hub-pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.hub-page-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font-family-secondary);
+  border: none;
+  border-radius: 0.25rem;
+  background-color: var(--secondary-color);
+  color: var(--on-secondary-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  &:hover:not([disabled]) {
+    background-color: var(--tertiary-color);
+    color: var(--on-tertiary-color);
+  }
+
+  &:active:not([disabled]) {
+    transform: scale(0.95);
+  }
+
+  &.active {
+    background-color: var(--tertiary-color);
+    color: var(--on-tertiary-color);
+  }
+
+  &[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.hub-page-ellipsis {
+  padding: 0.5rem;
+  color: var(--tertiary-color);
+}
+
+.hub-page-info {
+  text-align: center;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--tertiary-color);
+}
+
 // Responsive
 @media (max-width: 768px) {
   .hub-header {

@@ -71,6 +71,7 @@ module.exports = function(eleventyConfig) {
   });
 
   // date filter - supports both strftime and human-readable formats
+  // Uses UTC to avoid timezone shifting dates
   eleventyConfig.addFilter("date", function(date, format) {
     const d = date === "now" ? new Date() : new Date(date);
     if (!format) return d.toISOString();
@@ -79,24 +80,38 @@ module.exports = function(eleventyConfig) {
                     'July', 'August', 'September', 'October', 'November', 'December'];
     const pad = (n) => String(n).padStart(2, '0');
 
+    // Use UTC methods to avoid timezone issues with date-only strings
+    const year = d.getUTCFullYear();
+    const month = d.getUTCMonth();
+    const day = d.getUTCDate();
+    const hours = d.getUTCHours();
+    const minutes = d.getUTCMinutes();
+    const seconds = d.getUTCSeconds();
+
     // Human-readable format (e.g., "MMMM D, YYYY")
     if (format.includes('MMMM') || format.includes('YYYY')) {
+      // Use placeholders to avoid replacing D in month names like "December"
       return format
-        .replace(/YYYY/g, d.getFullYear())
-        .replace(/MMMM/g, months[d.getMonth()])
-        .replace(/MM/g, pad(d.getMonth() + 1))
-        .replace(/DD/g, pad(d.getDate()))
-        .replace(/D/g, d.getDate());
+        .replace(/YYYY/g, '{{YEAR}}')
+        .replace(/MMMM/g, '{{MONTH}}')
+        .replace(/MM/g, '{{MONTHN}}')
+        .replace(/DD/g, '{{DAYN}}')
+        .replace(/D/g, '{{DAY}}')
+        .replace(/\{\{YEAR\}\}/g, year)
+        .replace(/\{\{MONTH\}\}/g, months[month])
+        .replace(/\{\{MONTHN\}\}/g, pad(month + 1))
+        .replace(/\{\{DAYN\}\}/g, pad(day))
+        .replace(/\{\{DAY\}\}/g, day);
     }
 
     // Strftime-style patterns
     return format
-      .replace(/%Y/g, d.getFullYear())
-      .replace(/%m/g, pad(d.getMonth() + 1))
-      .replace(/%d/g, pad(d.getDate()))
-      .replace(/%H/g, pad(d.getHours()))
-      .replace(/%M/g, pad(d.getMinutes()))
-      .replace(/%S/g, pad(d.getSeconds()));
+      .replace(/%Y/g, year)
+      .replace(/%m/g, pad(month + 1))
+      .replace(/%d/g, pad(day))
+      .replace(/%H/g, pad(hours))
+      .replace(/%M/g, pad(minutes))
+      .replace(/%S/g, pad(seconds));
   });
 
   // replace filter
