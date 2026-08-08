@@ -22,8 +22,7 @@ permalink: /css/hub.scss
   color: var(--on-primary-container-color);
   border-radius: 0.5rem;
   padding: 1.5rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  border: 2px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.15s ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -31,8 +30,9 @@ permalink: /css/hub.scss
   }
 
   &.selected {
-    border-color: var(--link-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: var(--secondary-container-color);
+    border-top: 4px solid var(--tertiary-color);
+    border-radius: 0 0 0.5rem 0.5rem;
   }
 }
 
