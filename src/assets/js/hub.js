@@ -127,5 +127,6 @@
         render();
     }
 
-    window.YoloHub = init;
+    // Support both new YoloHub() and YoloHub() calls
+    window.YoloHub = function(config) { init(config); };
 })();
