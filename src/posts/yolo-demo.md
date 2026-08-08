@@ -375,9 +375,9 @@ Standard markdown images use default `<img>` styling.
 ```
 {% endraw %}
 
-![Moonie Moonpie](assets/images/moonpie.png "Sweet Moonpie")
+![Moonie Moonpie](/assets/images/moonpie.png "Sweet Moonpie")
 
-![BIG yawn Bucky](assets/images/bucky.png "Sleepy Bucky")
+![BIG yawn Bucky](/assets/images/bucky.png "Sleepy Bucky")
 
 
 ---

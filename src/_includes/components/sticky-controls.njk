@@ -3,10 +3,12 @@
         <div class="yolo-theme-toggle">
             <span id="theme-toggle" class="material-icons md-36">light_mode</span>
         </div>
+        {% if not isHub %}
         <a href="{{ '/' | relative_url }}" class="yolo-home-link">
             <span class="material-icons md-36">home</span>
         </a>
-        {% if settings.sidebar %}
+        {% endif %}
+        {% if settings.sidebar and not isHub %}
         <div class="yolo-sidebar-toggle">
             <span id="sidebar-toggle" class="material-icons md-36">menu</span>
         </div>

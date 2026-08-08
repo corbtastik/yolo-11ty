@@ -26,6 +26,28 @@
         this.searchInput.addEventListener('input', () => this.handleSearch());
       }
 
+      // Event delegation for tag clicks (avoids rebinding on every render)
+      if (this.postsContainer) {
+        this.postsContainer.addEventListener('click', (e) => {
+          const tag = e.target.closest('.hub-tag');
+          if (tag) {
+            e.preventDefault();
+            this.handleTagClick(tag.dataset.tag);
+          }
+        });
+      }
+
+      // Event delegation for pagination clicks (avoids rebinding on every render)
+      if (this.paginationContainer) {
+        this.paginationContainer.addEventListener('click', (e) => {
+          const btn = e.target.closest('.hub-page-btn');
+          if (btn && !btn.hasAttribute('disabled')) {
+            const page = parseInt(btn.dataset.page, 10);
+            this.goToPage(page);
+          }
+        });
+      }
+
       // Initial render
       this.render();
     }
@@ -168,31 +190,12 @@
           if (this.noResults) {
             this.noResults.style.display = 'none';
           }
-
-          // Rebind tag click handlers
-          this.postsContainer.querySelectorAll('.hub-tag').forEach(tag => {
-            tag.addEventListener('click', (e) => {
-              e.preventDefault();
-              const tagText = tag.dataset.tag;
-              this.handleTagClick(tagText);
-            });
-          });
         }
       }
 
       // Render pagination
       if (this.paginationContainer) {
         this.paginationContainer.innerHTML = this.renderPagination();
-
-        // Bind pagination click handlers
-        this.paginationContainer.querySelectorAll('.hub-page-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const page = parseInt(btn.dataset.page, 10);
-            if (!btn.hasAttribute('disabled')) {
-              this.goToPage(page);
-            }
-          });
-        });
       }
     }
   }
