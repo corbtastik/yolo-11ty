@@ -32,7 +32,6 @@
          * Format a date string using UTC to avoid timezone issues
          * @param {string|Date} dateStr - Date string or Date object
          * @param {string} [format='MMMM D, YYYY'] - Format string
-         *   Supported tokens: YYYY, MMMM, MMM, MM, D, DD
          * @returns {string} Formatted date string
          */
         formatDate: function(dateStr, format) {
@@ -67,6 +66,67 @@
                 timeout = setTimeout(function() {
                     fn.apply(context, args);
                 }, delay);
+            };
+        },
+
+        /**
+         * Filter items by search query matching multiple fields
+         * @param {Array} items - Array of objects to filter
+         * @param {string} query - Search query
+         * @param {Array} fields - Field names to search in
+         * @returns {Array} Filtered items
+         */
+        filterByQuery: function(items, query, fields) {
+            if (!query || !query.trim()) return items.slice();
+
+            var lowerQuery = query.toLowerCase().trim();
+            return items.filter(function(item) {
+                return fields.some(function(field) {
+                    var value = item[field];
+                    if (Array.isArray(value)) value = value.join(' ');
+                    return (value || '').toLowerCase().indexOf(lowerQuery) !== -1;
+                });
+            });
+        },
+
+        /**
+         * Highlight matching text with <mark> tags
+         * @param {string} text - Text to highlight
+         * @param {string} query - Search query
+         * @returns {string} Text with highlights
+         */
+        highlightText: function(text, query) {
+            if (!query || !text) return text;
+            var terms = query.toLowerCase().split(/\s+/).filter(function(t) { return t.length > 0; });
+            var result = text;
+            terms.forEach(function(term) {
+                var regex = new RegExp('(' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+                result = result.replace(regex, '<mark>$1</mark>');
+            });
+            return result;
+        },
+
+        /**
+         * Generate pagination info
+         * @param {number} currentPage - Current page (1-indexed)
+         * @param {number} totalItems - Total number of items
+         * @param {number} perPage - Items per page
+         * @returns {Object} Pagination info
+         */
+        paginate: function(currentPage, totalItems, perPage) {
+            var totalPages = Math.ceil(totalItems / perPage);
+            var start = (currentPage - 1) * perPage;
+            return {
+                totalPages: totalPages,
+                start: start,
+                end: Math.min(start + perPage, totalItems),
+                hasPrev: currentPage > 1,
+                hasNext: currentPage < totalPages,
+                showing: {
+                    from: totalItems > 0 ? start + 1 : 0,
+                    to: Math.min(start + perPage, totalItems),
+                    total: totalItems
+                }
             };
         },
 

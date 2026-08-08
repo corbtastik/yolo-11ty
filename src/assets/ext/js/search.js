@@ -1,39 +1,31 @@
-// Typeahead Search - Replaces page content with filtered results
+/**
+ * Typeahead Search - Filter page sections by query
+ */
 (function() {
     'use strict';
 
     var sections = [];
-    var searchInput;
-    var searchResultsContainer;
-    var pageContent;
+    var searchInput, resultsContainer, pageContent;
     var currentMatches = [];
     var selectedIndex = -1;
 
-    // Build searchable section index from H2 elements
-    function buildSectionIndex() {
-        var h2Elements = document.querySelectorAll('#page-content h2');
+    function buildIndex() {
+        var h2s = document.querySelectorAll('#page-content h2');
         sections = [];
-
-        h2Elements.forEach(function(h2) {
+        h2s.forEach(function(h2) {
             var id = h2.id || h2.textContent.toLowerCase().replace(/\s+/g, '-');
             var title = h2.textContent.trim();
-
-            // Get content preview (next few elements until next h2 or hr)
             var preview = '';
             var sibling = h2.nextElementSibling;
-            var wordCount = 0;
-            var maxWords = 50;
-
-            while (sibling && sibling.tagName !== 'H2' && sibling.tagName !== 'HR' && wordCount < maxWords) {
+            var words = 0;
+            while (sibling && sibling.tagName !== 'H2' && sibling.tagName !== 'HR' && words < 50) {
                 if (sibling.textContent) {
-                    var text = sibling.textContent.trim();
-                    var words = text.split(/\s+/);
-                    preview += ' ' + words.slice(0, maxWords - wordCount).join(' ');
-                    wordCount += words.length;
+                    var text = sibling.textContent.trim().split(/\s+/);
+                    preview += ' ' + text.slice(0, 50 - words).join(' ');
+                    words += text.length;
                 }
                 sibling = sibling.nextElementSibling;
             }
-
             sections.push({
                 id: id,
                 title: title,
@@ -43,169 +35,101 @@
         });
     }
 
-    // Filter sections based on query
-    function filterSections(query) {
-        if (!query || query.length < 1) {
-            return [];
-        }
-
-        var lowerQuery = query.toLowerCase();
-        var terms = lowerQuery.split(/\s+/).filter(function(t) { return t.length > 0; });
-
-        return sections.filter(function(section) {
-            return terms.every(function(term) {
-                return section.searchText.includes(term);
-            });
+    function filter(query) {
+        if (!query) return [];
+        var terms = query.toLowerCase().split(/\s+/).filter(function(t) { return t; });
+        return sections.filter(function(s) {
+            return terms.every(function(t) { return s.searchText.indexOf(t) !== -1; });
         });
     }
 
-    // Highlight matching text
-    function highlightMatch(text, query) {
-        if (!query) return text;
-
-        var terms = query.toLowerCase().split(/\s+/).filter(function(t) { return t.length > 0; });
-        var result = text;
-
-        terms.forEach(function(term) {
-            var regex = new RegExp('(' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-            result = result.replace(regex, '<mark>$1</mark>');
-        });
-
-        return result;
-    }
-
-    // Update visual selection
-    function updateSelection() {
-        var items = searchResultsContainer.querySelectorAll('.search-result-item');
-        items.forEach(function(item, index) {
-            if (index === selectedIndex) {
-                item.classList.add('selected');
-                item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            } else {
-                item.classList.remove('selected');
-            }
-        });
-    }
-
-    // Show search results, hide page content
     function showResults(matches, query) {
         currentMatches = matches;
         selectedIndex = matches.length > 0 ? 0 : -1;
 
-        if (matches.length === 0 && query && query.length > 0) {
-            searchResultsContainer.innerHTML = '<div class="search-no-results">No matching sections</div>';
-            searchResultsContainer.classList.add('visible');
+        if (matches.length === 0 && query) {
+            resultsContainer.innerHTML = '<div class="search-no-results">No matching sections</div>';
+            resultsContainer.classList.add('visible');
             pageContent.style.display = 'none';
             return;
         }
+        if (matches.length === 0) { hideResults(); return; }
 
-        if (matches.length === 0) {
-            hideResults();
-            return;
-        }
-
-        var html = matches.map(function(section, index) {
-            var highlightedTitle = highlightMatch(section.title, query);
-            var previewText = section.preview.length > 120
-                ? section.preview.substring(0, 120) + '...'
-                : section.preview;
-            var highlightedPreview = highlightMatch(previewText, query);
-            var selectedClass = index === 0 ? ' selected' : '';
-
-            return '<div class="search-result-item' + selectedClass + '" data-section-id="' + section.id + '" data-index="' + index + '">' +
-                '<div class="search-result-title">' + highlightedTitle + '</div>' +
-                '<div class="search-result-preview">' + highlightedPreview + '</div>' +
-                '</div>';
+        var html = matches.map(function(s, i) {
+            var title = YoloUtils.highlightText(s.title, query);
+            var preview = s.preview.length > 120 ? s.preview.substring(0, 120) + '...' : s.preview;
+            preview = YoloUtils.highlightText(preview, query);
+            return '<div class="search-result-item' + (i === 0 ? ' selected' : '') + '" data-id="' + s.id + '">' +
+                '<div class="search-result-title">' + title + '</div>' +
+                '<div class="search-result-preview">' + preview + '</div></div>';
         }).join('');
 
-        searchResultsContainer.innerHTML = html;
-        searchResultsContainer.classList.add('visible');
+        resultsContainer.innerHTML = html;
+        resultsContainer.classList.add('visible');
         pageContent.style.display = 'none';
     }
 
-    // Hide results, show page content
     function hideResults() {
-        searchResultsContainer.innerHTML = '';
-        searchResultsContainer.classList.remove('visible');
+        resultsContainer.innerHTML = '';
+        resultsContainer.classList.remove('visible');
         pageContent.style.display = '';
         currentMatches = [];
         selectedIndex = -1;
     }
 
-    // Navigate to a section
-    function navigateToSection(sectionId) {
+    function navigate(id) {
         searchInput.value = '';
         hideResults();
-
         setTimeout(function() {
-            var element = document.getElementById(sectionId);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            var el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 50);
     }
 
-    // Handle input changes
-    function handleInput(e) {
-        var query = e.target.value.trim();
-
-        if (query.length === 0) {
-            hideResults();
-            return;
-        }
-
-        var matches = filterSections(query);
-        showResults(matches, query);
+    function updateSelection() {
+        var items = resultsContainer.querySelectorAll('.search-result-item');
+        items.forEach(function(item, i) {
+            item.classList.toggle('selected', i === selectedIndex);
+            if (i === selectedIndex) item.scrollIntoView({ block: 'nearest' });
+        });
     }
 
-    // Handle result click
-    function handleResultClick(e) {
-        var item = e.target.closest('.search-result-item');
-        if (item) {
-            var sectionId = item.dataset.sectionId;
-            navigateToSection(sectionId);
-        }
-    }
+    function init() {
+        searchInput = document.getElementById('search-input');
+        resultsContainer = document.getElementById('search-results-container');
+        pageContent = document.getElementById('page-content');
+        if (!searchInput || !resultsContainer || !pageContent) return;
 
-    // Handle keyboard navigation
-    function handleKeydown(e) {
-        if (e.key === 'Escape') {
-            searchInput.value = '';
-            searchInput.blur();
-            hideResults();
-        } else if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            if (currentMatches.length > 0) {
+        buildIndex();
+
+        searchInput.addEventListener('input', function(e) {
+            var q = e.target.value.trim();
+            if (!q) { hideResults(); return; }
+            showResults(filter(q), q);
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { searchInput.value = ''; searchInput.blur(); hideResults(); }
+            else if (e.key === 'ArrowDown' && currentMatches.length) {
+                e.preventDefault();
                 selectedIndex = (selectedIndex + 1) % currentMatches.length;
                 updateSelection();
             }
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            if (currentMatches.length > 0) {
+            else if (e.key === 'ArrowUp' && currentMatches.length) {
+                e.preventDefault();
                 selectedIndex = selectedIndex <= 0 ? currentMatches.length - 1 : selectedIndex - 1;
                 updateSelection();
             }
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (currentMatches.length > 0 && selectedIndex >= 0) {
-                navigateToSection(currentMatches[selectedIndex].id);
+            else if (e.key === 'Enter' && currentMatches.length && selectedIndex >= 0) {
+                e.preventDefault();
+                navigate(currentMatches[selectedIndex].id);
             }
-        }
-    }
+        });
 
-    // Initialize search
-    function init() {
-        searchInput = document.getElementById('search-input');
-        searchResultsContainer = document.getElementById('search-results-container');
-        pageContent = document.getElementById('page-content');
-
-        if (!searchInput || !searchResultsContainer || !pageContent) return;
-
-        buildSectionIndex();
-
-        searchInput.addEventListener('input', handleInput);
-        searchInput.addEventListener('keydown', handleKeydown);
-        searchResultsContainer.addEventListener('click', handleResultClick);
+        resultsContainer.addEventListener('click', function(e) {
+            var item = e.target.closest('.search-result-item');
+            if (item) navigate(item.dataset.id);
+        });
     }
 
     YoloUtils.domReady(init);

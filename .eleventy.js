@@ -5,18 +5,13 @@ const { execSync } = require("child_process");
 
 module.exports = function(eleventyConfig) {
   // -------------------------------------------------------------------------
-  // Global Data - Build Info (git tag + build date)
+  // Global Data - Build Info
   // -------------------------------------------------------------------------
-  const buildDate = new Date();
   let gitTag = "dev";
-  try {
-    gitTag = execSync("git describe --tags --abbrev=0", { encoding: "utf8" }).trim();
-  } catch (e) {
-    // No tags found, use default
-  }
+  try { gitTag = execSync("git describe --tags --abbrev=0", { encoding: "utf8" }).trim(); } catch (e) {}
   eleventyConfig.addGlobalData("build", {
     version: gitTag,
-    date: buildDate.toISOString().replace('T', ' ').substring(0, 16)
+    date: new Date().toISOString().replace('T', ' ').substring(0, 16)
   });
 
   // -------------------------------------------------------------------------
@@ -27,24 +22,13 @@ module.exports = function(eleventyConfig) {
   // -------------------------------------------------------------------------
   // Markdown Configuration
   // -------------------------------------------------------------------------
-  const md = markdownIt({
-    html: true,
-    breaks: false,
-    linkify: true,
-    typographer: false
-  }).use(markdownItAttrs, {
-    leftDelimiter: '{:',
-    rightDelimiter: '}',
-    allowedAttributes: ['id', 'class', /^data-.*$/]
-  });
+  const md = markdownIt({ html: true, breaks: false, linkify: true, typographer: false })
+    .use(markdownItAttrs, { leftDelimiter: '{:', rightDelimiter: '}', allowedAttributes: ['id', 'class', /^data-.*$/] });
 
-  // Custom renderer for code blocks to match Jekyll/Rouge output structure
-  md.renderer.rules.fence = function(tokens, idx, options, env, self) {
+  md.renderer.rules.fence = function(tokens, idx) {
     const token = tokens[idx];
     const lang = token.info.trim() || '';
     const code = md.utils.escapeHtml(token.content);
-
-    // Match Jekyll's highlighter-rouge structure
     return `<div class="language-${lang} highlighter-rouge"><div class="highlight"><pre class="highlight"><code>${code}</code></pre></div></div>\n`;
   };
 
@@ -59,334 +43,146 @@ module.exports = function(eleventyConfig) {
   // -------------------------------------------------------------------------
   // Filters
   // -------------------------------------------------------------------------
-
-  // relative_url - prepend baseurl
   eleventyConfig.addFilter("relative_url", function(url) {
-    const baseurl = this.ctx.settings?.baseurl || "";
-    if (!url) return baseurl || "/";
-    if (url.startsWith("http://") || url.startsWith("https://")) return url;
-    const cleanBase = baseurl.replace(/\/$/, "");
-    const cleanUrl = url.startsWith("/") ? url : "/" + url;
-    return cleanBase + cleanUrl;
+    const base = (this.ctx.settings?.baseurl || "").replace(/\/$/, "");
+    if (!url) return base || "/";
+    if (url.startsWith("http")) return url;
+    return base + (url.startsWith("/") ? url : "/" + url);
   });
 
-  // date filter - supports both strftime and human-readable formats
-  // Uses UTC to avoid timezone shifting dates
   eleventyConfig.addFilter("date", function(date, format) {
     const d = date === "now" ? new Date() : new Date(date);
     if (!format) return d.toISOString();
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const pad = n => String(n).padStart(2, '0');
+    const y = d.getUTCFullYear(), m = d.getUTCMonth(), day = d.getUTCDate();
+    const h = d.getUTCHours(), min = d.getUTCMinutes(), s = d.getUTCSeconds();
 
-    const months = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-    const pad = (n) => String(n).padStart(2, '0');
-
-    // Use UTC methods to avoid timezone issues with date-only strings
-    const year = d.getUTCFullYear();
-    const month = d.getUTCMonth();
-    const day = d.getUTCDate();
-    const hours = d.getUTCHours();
-    const minutes = d.getUTCMinutes();
-    const seconds = d.getUTCSeconds();
-
-    // Human-readable format (e.g., "MMMM D, YYYY")
     if (format.includes('MMMM') || format.includes('YYYY')) {
-      // Use placeholders to avoid replacing D in month names like "December"
-      return format
-        .replace(/YYYY/g, '{{YEAR}}')
-        .replace(/MMMM/g, '{{MONTH}}')
-        .replace(/MM/g, '{{MONTHN}}')
-        .replace(/DD/g, '{{DAYN}}')
-        .replace(/D/g, '{{DAY}}')
-        .replace(/\{\{YEAR\}\}/g, year)
-        .replace(/\{\{MONTH\}\}/g, months[month])
-        .replace(/\{\{MONTHN\}\}/g, pad(month + 1))
-        .replace(/\{\{DAYN\}\}/g, pad(day))
-        .replace(/\{\{DAY\}\}/g, day);
+      return format.replace(/YYYY/g, y).replace(/MMMM/g, months[m]).replace(/MM/g, pad(m+1)).replace(/DD/g, pad(day)).replace(/D/g, day);
     }
-
-    // Strftime-style patterns
-    return format
-      .replace(/%Y/g, year)
-      .replace(/%m/g, pad(month + 1))
-      .replace(/%d/g, pad(day))
-      .replace(/%H/g, pad(hours))
-      .replace(/%M/g, pad(minutes))
-      .replace(/%S/g, pad(seconds));
+    return format.replace(/%Y/g, y).replace(/%m/g, pad(m+1)).replace(/%d/g, pad(day)).replace(/%H/g, pad(h)).replace(/%M/g, pad(min)).replace(/%S/g, pad(s));
   });
 
-  // replace filter
-  eleventyConfig.addFilter("replace", function(str, search, replace) {
-    if (!str) return "";
-    return str.split(search).join(replace);
-  });
-
-  // remove filter
-  eleventyConfig.addFilter("remove", function(str, search) {
-    if (!str) return "";
-    return str.split(search).join("");
-  });
-
-  // split filter
-  eleventyConfig.addFilter("split", function(str, sep) {
-    if (!str) return [];
-    return str.split(sep);
-  });
-
-  // default filter
-  eleventyConfig.addFilter("default", function(val, defaultVal) {
-    return val ?? defaultVal;
-  });
-
-  // Math filters
+  eleventyConfig.addFilter("replace", (str, search, replace) => str ? str.split(search).join(replace) : "");
+  eleventyConfig.addFilter("remove", (str, search) => str ? str.split(search).join("") : "");
+  eleventyConfig.addFilter("split", (str, sep) => str ? str.split(sep) : []);
+  eleventyConfig.addFilter("default", (val, def) => val ?? def);
   eleventyConfig.addFilter("minus", (a, b) => a - b);
   eleventyConfig.addFilter("plus", (a, b) => a + b);
   eleventyConfig.addFilter("times", (a, b) => a * b);
   eleventyConfig.addFilter("divided_by", (a, b) => Math.floor(a / b));
-
-  // size filter (for arrays and strings)
-  eleventyConfig.addFilter("size", function(val) {
-    if (!val) return 0;
-    return val.length;
-  });
+  eleventyConfig.addFilter("size", val => val ? val.length : 0);
 
   // -------------------------------------------------------------------------
   // Shortcodes
   // -------------------------------------------------------------------------
 
-  // arrow shortcode
-  eleventyConfig.addShortcode("arrow", function(link) {
-    const href = link || "#";
-    return `<a href="${href}" class="yolo-to-top">
-    <span class="material-icons md-36">keyboard_double_arrow_up</span>
-</a>`;
-  });
+  // Helper: generate gallery HTML
+  function galleryHtml(type, name, images, columns) {
+    const prefix = type === 'lb' ? 'lb' : 'ig';
+    const perCol = Math.floor(images.length / columns);
+    let grid = `<div class="columns is-mobile">`;
 
-  // code shortcode (code header with copy button)
-  // Note: trailing newlines ensure markdown code fences after this shortcode render correctly
-  eleventyConfig.addShortcode("code", function(label = "") {
-    return `<div class="yolo-code-header">
-    <span class="code-label">${label}</span>
-    <span class="copy-icon material-icons md-24">copy_all</span>
-</div>
+    for (let c = 0; c < columns; c++) {
+      grid += `<div class="column">`;
+      for (let r = 0; r < perCol; r++) {
+        const idx = c * perCol + r;
+        const img = images[idx];
+        if (img) {
+          const cls = type === 'lb' ? 'lb-square lb-hover-shadow' : 'image square';
+          grid += `<img class="${cls}" data-gallery="${name}" data-gallery-type="${prefix}" data-action="open" data-index="${idx}" alt="${img.description || ''}" src="${img.src}">`;
+        }
+      }
+      grid += `</div>`;
+    }
+    grid += `</div>`;
 
-`;
-  });
+    if (type === 'lb') {
+      grid += `<div id="lb-modal-${name}" class="lb-modal">
+        <span class="lb-close" data-gallery="${name}" data-gallery-type="lb" data-action="close">&times;</span>
+        <div class="lb-container is-mobile"><div class="lb-modal-content">`;
+      images.forEach(img => {
+        grid += `<div class="lb-slides"><img class="lb-item center" alt="${img.description || ''}" src="${img.src}"></div>`;
+      });
+      grid += `<a class="lb-nav lb-prev" data-gallery="${name}" data-gallery-type="lb" data-action="prev">&#10094;</a>
+        <a class="lb-nav lb-next" data-gallery="${name}" data-gallery-type="lb" data-action="next">&#10095;</a>
+        </div><div class="yolo-caption"><p id="lb-caption-${name}"></p></div></div></div>`;
+    } else {
+      grid += `<div id="ig-target-${name}" class="no-display"><div class="ig-modal-content"><div class="ig-slides">`;
+      images.forEach((img, i) => {
+        grid += `<img id="${name}-image-${i}" class="image square" data-gallery="${name}" data-gallery-type="ig" data-action="close" alt="${img.description || ''}" src="${img.src}">
+          <div id="${name}-caption-${i}" class="yolo-caption"><p>${img.description || ''}</p></div>`;
+      });
+      grid += `</div>
+        <a class="ig-nav ig-prev" data-gallery="${name}" data-gallery-type="ig" data-action="prev">&#10094;</a>
+        <a class="ig-nav ig-next" data-gallery="${name}" data-gallery-type="ig" data-action="next">&#10095;</a>
+        </div></div>`;
+    }
 
-  // toc shortcode
-  eleventyConfig.addShortcode("toc", function(header = "h2", text = "Table of Contents") {
-    return `<${header} id="table-of-contents" class="no-toc">${text}</${header}>
-<div id="toc"></div>`;
-  });
+    return grid;
+  }
 
-  // video shortcode
+  eleventyConfig.addShortcode("arrow", link =>
+    `<a href="${link || '#'}" class="yolo-to-top"><span class="material-icons md-36">keyboard_double_arrow_up</span></a>`);
+
+  eleventyConfig.addShortcode("code", (label = "") =>
+    `<div class="yolo-code-header"><span class="code-label">${label}</span><span class="copy-icon material-icons md-24">copy_all</span></div>\n\n`);
+
+  eleventyConfig.addShortcode("toc", (header = "h2", text = "Table of Contents") =>
+    `<${header} id="table-of-contents" class="no-toc">${text}</${header}><div id="toc"></div>`);
+
   eleventyConfig.addShortcode("video", function() {
     const videos = this.ctx.videos || [];
-    let html = "";
-    if (videos[0]) {
-      html += `<div class="yolo-video">
-    <iframe src="${videos[0].src}"></iframe>
-    <p>${videos[0].description}</p>
-</div>`;
-    }
-    if (videos[1]) {
-      html += `\n<div class="yolo-video">
-    <iframe src="${videos[1].src}"></iframe>
-    <p>${videos[1].description}</p>
-</div>`;
-    }
-    return html;
+    return videos.slice(0, 2).map(v =>
+      `<div class="yolo-video"><iframe src="${v.src}"></iframe><p>${v.description}</p></div>`
+    ).join('\n');
   });
 
-  // prezo shortcode
-  eleventyConfig.addShortcode("prezo", function(title, dataFile = "prezos", aspectRatio = "is-16-by-9") {
-    const prezos = this.ctx[dataFile] || [];
-    for (const prezo of prezos) {
-      if (prezo.title === title) {
-        return `<strong>${prezo.description}</strong>
-<div class="yolo-prezo-container ${aspectRatio}">
-    <iframe class="yolo-prezo-iframe" src="${prezo.src}"></iframe>
-</div>`;
-      }
-    }
-    return "";
+  eleventyConfig.addShortcode("prezo", function(title, dataFile = "prezos", aspect = "is-16-by-9") {
+    const prezo = (this.ctx[dataFile] || []).find(p => p.title === title);
+    if (!prezo) return "";
+    return `<strong>${prezo.description}</strong>
+      <div class="yolo-prezo-container ${aspect}"><iframe class="yolo-prezo-iframe" src="${prezo.src}"></iframe></div>`;
   });
 
-  // image shortcode
   eleventyConfig.addShortcode("image", function(params = {}) {
-    const imageData = params["image-data"] || params.imageData || "images";
-    const images = this.ctx[imageData] || [];
-    const name = params.name;
-    const classes = params.classes || "";
-    const src = params.src || "";
-    const description = params.description || "";
+    const images = this.ctx[params.imageData || params["image-data"] || "images"] || [];
+    const img = params.name ? images.find(i => i.name === params.name) : null;
+    const src = img?.src || params.src || "";
+    const desc = img?.description || params.description || "";
+    const cls = params.classes || "";
 
-    let sourceImage = null;
-    if (name) {
-      for (const image of images) {
-        if (image.name === name) {
-          sourceImage = image;
-          break;
-        }
-      }
+    if (desc) {
+      return `<figure class="${cls}"><img class="image ${cls}" alt="${desc}" src="${src}"><figcaption>${desc}</figcaption></figure>`;
     }
-
-    if (sourceImage) {
-      if (sourceImage.description) {
-        return `<figure class="${classes}">
-  <img class="image ${classes}" alt="${sourceImage.description}" src="${sourceImage.src}">
-  <figcaption>${sourceImage.description}</figcaption>
-</figure>`;
-      } else {
-        return `<img class="image ${classes}" alt="${sourceImage.name}" src="${sourceImage.src}">`;
-      }
-    } else {
-      if (description) {
-        return `<figure>
-  <img class="image ${classes}" alt="${description}" src="${src}">
-  <figcaption>${description}</figcaption>
-</figure>`;
-      } else {
-        return `<img class="image ${classes}" alt="${src}" src="${src}">`;
-      }
-    }
+    return `<img class="image ${cls}" alt="${src}" src="${src}">`;
   });
 
-  // imageGrid shortcode
-  eleventyConfig.addShortcode("imageGrid", function(igData, igColumns) {
-    igData = igData || "ig-images";
-    igColumns = igColumns || 4;
-    const igImages = this.ctx[igData] || [];
-    const igNumImages = igImages.length;
-    const igImagesPerColumn = Math.floor(igNumImages / igColumns);
-
-    let html = `<!-- The image grid -->
-<div id="ig-${igData}">
-    <div class="columns is-mobile">`;
-
-    for (let i = 0; i < igColumns; i++) {
-      html += `\n        <div id="${igData}-${i}" class="column">`;
-      for (let j = 0; j < igImagesPerColumn; j++) {
-        const idx = i * igImagesPerColumn + j;
-        const igImage = igImages[idx];
-        if (igImage) {
-          html += `\n            <img class="image square"
-                 data-gallery="${igData}" data-gallery-type="ig" data-action="open" data-index="${idx}"
-                 alt="${igImage.description || ''}"
-                 src="${igImage.src}">`;
-        }
-      }
-      html += `\n        </div>`;
-    }
-
-    html += `\n    </div>
-</div>
-<div id="ig-target-${igData}" class="no-display">
-    <div class="ig-modal-content">
-        <div id="${igData}-target-column" class="ig-slides">`;
-
-    for (let i = 0; i < igNumImages; i++) {
-      const igImage = igImages[i];
-      if (igImage) {
-        html += `\n            <img id="${igData}-image-${i}" class="image square"
-                 data-gallery="${igData}" data-gallery-type="ig" data-action="close"
-                 alt="${igImage.description || ''}"
-                 src="${igImage.src}">
-            <div id="${igData}-caption-${i}" class="yolo-caption">
-                <p>${igImage.description || ''}</p>
-            </div>`;
-      }
-    }
-
-    html += `\n        </div>
-        <!-- Next/previous controls -->
-        <a class="ig-nav ig-prev" data-gallery="${igData}" data-gallery-type="ig" data-action="prev">&#10094;</a>
-        <a class="ig-nav ig-next" data-gallery="${igData}" data-gallery-type="ig" data-action="next">&#10095;</a>
-    </div>
-</div>`;
-
-    return html;
+  eleventyConfig.addShortcode("imageGrid", function(name = "ig-images", columns = 4) {
+    const images = this.ctx[name] || [];
+    return `<div id="ig-${name}">${galleryHtml('ig', name, images, columns)}</div>`;
   });
 
-  // lightbox shortcode
-  eleventyConfig.addShortcode("lightbox", function(lbData) {
-    lbData = lbData || "lb-images";
-    const lbImages = this.ctx[lbData] || [];
-    const lbNumImages = lbImages.length;
-    const lbImagesPerColumn = Math.floor(lbNumImages / 4);
-
-    let html = `<!-- The lb flexbox -->
-<div class="columns is-mobile">`;
-
-    for (let i = 0; i < 4; i++) {
-      html += `\n    <div class="column">`;
-      for (let j = 0; j < lbImagesPerColumn; j++) {
-        const idx = i * lbImagesPerColumn + j;
-        const lbImage = lbImages[idx];
-        if (lbImage) {
-          html += `\n        <img class="lb-square lb-hover-shadow"
-             data-gallery="${lbData}" data-gallery-type="lb" data-action="open" data-index="${idx}"
-             alt="${lbImage.description || ''}"
-             src="${lbImage.src}">`;
-        }
-      }
-      html += `\n    </div>`;
-    }
-
-    html += `\n</div>
-<!-- The lb-modal -->
-<div id="lb-modal-${lbData}" class="lb-modal">
-    <span class="lb-close" data-gallery="${lbData}" data-gallery-type="lb" data-action="close">&times;</span>
-    <div class="lb-container is-mobile">
-        <div class="lb-modal-content">`;
-
-    for (const lbImage of lbImages) {
-      html += `\n            <div class="lb-slides">
-                <img class="lb-item center"
-                     alt="${lbImage.description || ''}"
-                     src="${lbImage.src}">
-            </div>`;
-    }
-
-    html += `\n            <!-- Next/previous controls -->
-            <a class="lb-nav lb-prev" data-gallery="${lbData}" data-gallery-type="lb" data-action="prev">&#10094;</a>
-            <a class="lb-nav lb-next" data-gallery="${lbData}" data-gallery-type="lb" data-action="next">&#10095;</a>
-        </div>
-        <!-- Caption text -->
-        <div class="yolo-caption">
-            <p id="lb-caption-${lbData}"></p>
-        </div>
-    </div>
-</div>`;
-
-    return html;
+  eleventyConfig.addShortcode("lightbox", function(name = "lb-images") {
+    return galleryHtml('lb', name, this.ctx[name] || [], 4);
   });
 
-  // flexbox shortcode
-  eleventyConfig.addShortcode("flexbox", function(columns = 1, fill = "") {
+  eleventyConfig.addShortcode("flexbox", (columns = 1, fill = "") => {
     let html = '<div class="columns">';
     for (let i = 1; i <= columns; i++) {
-      html += '\n    <div class="column">';
-      if (fill) {
-        html += `\n        <div class="cell ${fill}">${fill}</div>`;
-      } else {
-        html += `\n        <div class="cell accent-color">${i}</div>`;
-      }
-      html += '\n    </div>';
+      const cls = fill || 'accent-color';
+      const content = fill || i;
+      html += `<div class="column"><div class="cell ${cls}">${content}</div></div>`;
     }
-    html += '\n</div>';
-    return html;
+    return html + '</div>';
   });
 
   // -------------------------------------------------------------------------
   // Directory Configuration
   // -------------------------------------------------------------------------
   return {
-    dir: {
-      input: "src",
-      output: "_site",
-      includes: "_includes",
-      data: "_data"
-    },
+    dir: { input: "src", output: "_site", includes: "_includes", data: "_data" },
     templateFormats: ["md", "njk", "html"],
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk"
