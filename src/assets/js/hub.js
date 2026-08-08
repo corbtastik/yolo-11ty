@@ -1,5 +1,5 @@
 /**
- * Yolo Hub - Search, filter, and pagination
+ * Yolo Hub - Search, filter, and pagination with keyboard navigation
  */
 (function() {
     'use strict';
@@ -8,13 +8,22 @@
     var filteredPosts = [];
     var postsPerPage = 25;
     var currentPage = 1;
+    var selectedIndex = -1;
+    var isSearching = false;
 
     var searchInput, postsContainer, noResults, paginationContainer;
 
+    function getCurrentPosts() {
+        var info = YoloUtils.paginate(currentPage, filteredPosts.length, postsPerPage);
+        return filteredPosts.slice(info.start, info.end);
+    }
+
     function handleSearch() {
-        var query = searchInput.value;
+        var query = searchInput.value.trim();
+        isSearching = query.length > 0;
         filteredPosts = YoloUtils.filterByQuery(allPosts, query, ['title', 'description', 'tags']);
         currentPage = 1;
+        selectedIndex = isSearching && filteredPosts.length > 0 ? 0 : -1;
         render();
     }
 
@@ -22,17 +31,66 @@
         var info = YoloUtils.paginate(page, filteredPosts.length, postsPerPage);
         if (page >= 1 && page <= info.totalPages) {
             currentPage = page;
+            selectedIndex = -1;
             render();
             postsContainer && postsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
-    function renderCard(post) {
+    function updateSelection() {
+        var cards = postsContainer.querySelectorAll('.hub-card');
+        cards.forEach(function(card, i) {
+            if (i === selectedIndex) {
+                card.classList.add('selected');
+                card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            } else {
+                card.classList.remove('selected');
+            }
+        });
+    }
+
+    function navigateToSelected() {
+        var posts = getCurrentPosts();
+        if (selectedIndex >= 0 && selectedIndex < posts.length) {
+            window.location.href = posts[selectedIndex].url;
+        }
+    }
+
+    function handleKeydown(e) {
+        if (!isSearching) return;
+
+        var posts = getCurrentPosts();
+        if (posts.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedIndex = (selectedIndex + 1) % posts.length;
+            updateSelection();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIndex = selectedIndex <= 0 ? posts.length - 1 : selectedIndex - 1;
+            updateSelection();
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            navigateToSelected();
+        } else if (e.key === 'Escape') {
+            searchInput.value = '';
+            searchInput.blur();
+            isSearching = false;
+            selectedIndex = -1;
+            filteredPosts = allPosts.slice();
+            render();
+        }
+    }
+
+    function renderCard(post, index) {
         var tags = (post.tags || []).map(function(tag) {
             return '<a href="#" class="yolo-pill hub-tag" data-tag="' + tag + '">#' + tag + '</a>';
         }).join('');
 
-        return '<article class="hub-card">' +
+        var selectedClass = index === selectedIndex ? ' selected' : '';
+
+        return '<article class="hub-card' + selectedClass + '" data-index="' + index + '">' +
             '<div class="hub-card-header">' +
                 '<h2 class="hub-card-title"><a href="' + post.url + '">' + post.title + '</a></h2>' +
                 '<span class="hub-card-date">' + YoloUtils.formatDate(post.date) + '</span>' +
@@ -48,18 +106,14 @@
 
         var buttons = [];
 
-        // Prev
         buttons.push('<button class="hub-page-btn" data-page="' + (currentPage - 1) + '"' +
             (info.hasPrev ? '' : ' disabled') + ' aria-label="Previous">&laquo;</button>');
 
-        // Page numbers (simplified: show first, current±1, last)
         var pages = [1];
         for (var i = currentPage - 1; i <= currentPage + 1; i++) {
             if (i > 1 && i < info.totalPages) pages.push(i);
         }
         if (info.totalPages > 1) pages.push(info.totalPages);
-
-        // Remove duplicates and sort
         pages = pages.filter(function(v, i, a) { return a.indexOf(v) === i; }).sort(function(a,b) { return a-b; });
 
         var lastPage = 0;
@@ -70,7 +124,6 @@
             lastPage = p;
         });
 
-        // Next
         buttons.push('<button class="hub-page-btn" data-page="' + (currentPage + 1) + '"' +
             (info.hasNext ? '' : ' disabled') + ' aria-label="Next">&raquo;</button>');
 
@@ -80,11 +133,12 @@
     }
 
     function render() {
-        var info = YoloUtils.paginate(currentPage, filteredPosts.length, postsPerPage);
-        var posts = filteredPosts.slice(info.start, info.end);
+        var posts = getCurrentPosts();
 
         if (postsContainer) {
-            postsContainer.innerHTML = posts.map(renderCard).join('');
+            postsContainer.innerHTML = posts.map(function(post, i) {
+                return renderCard(post, i);
+            }).join('');
             noResults && (noResults.style.display = posts.length ? 'none' : 'block');
         }
         if (paginationContainer) {
@@ -106,6 +160,7 @@
 
         if (searchInput) {
             searchInput.addEventListener('input', YoloUtils.debounce(handleSearch, 150));
+            searchInput.addEventListener('keydown', handleKeydown);
         }
 
         postsContainer.addEventListener('click', function(e) {
@@ -127,6 +182,5 @@
         render();
     }
 
-    // Support both new YoloHub() and YoloHub() calls
     window.YoloHub = function(config) { init(config); };
 })();
