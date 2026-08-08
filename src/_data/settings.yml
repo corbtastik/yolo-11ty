@@ -18,4 +18,4 @@ sidebar:
   position: left
   logo: assets/images/logo.png
 hub:
-  postsPerPage: 25
+  postsPerPage: 10

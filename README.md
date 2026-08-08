@@ -71,6 +71,27 @@ sidebar:
   logo: assets/images/logo.png
 ```
 
+### Yolo Hub
+
+The Hub is a card-based index page that displays all your posts with search, filtering, and pagination.
+
+**Features:**
+- **Card layout** - Each post displays as a card with title, description, date, and tags
+- **Live search** - Filter posts by title, description, or tags as you type
+- **Keyboard navigation** - Use Arrow keys to navigate results, Enter to open, Escape to clear
+- **Tag filtering** - Click any tag to filter posts by that tag
+- **Pagination** - Configurable posts per page with full navigation controls
+- **Seamless transitions** - Posts open with collapsed sidebar matching hub width
+
+**Configure** in `src/_data/settings.yml`:
+
+```yaml
+hub:
+  postsPerPage: 10
+```
+
+The hub automatically collects all posts from `src/posts/` and displays them sorted by date.
+
 ### Search
 
 Type-ahead search that filters page sections. Press:
@@ -194,7 +215,9 @@ yolo-11ty/
 │   ├── assets/
 │   │   ├── js/           # Core JavaScript
 │   │   └── ext/          # Extension CSS/JS
-│   └── index.md          # Main content page
+│   ├── css/
+│   │   └── hub.scss.njk  # Hub-specific styles
+│   └── index.njk         # Hub index page
 └── _site/                # Built output
 ```
 
@@ -258,12 +281,14 @@ brand:
 | File | Purpose |
 |------|---------|
 | `.eleventy.js` | Filters, shortcodes, markdown config |
-| `src/_data/settings.yml` | Site name, theme, sidebar config |
+| `src/_data/settings.yml` | Site name, theme, sidebar, hub config |
 | `src/_data/themes.json` | All theme color definitions |
-| `src/assets/js/utils.js` | Shared JS utilities |
+| `src/assets/js/utils.js` | Shared JS utilities (search, pagination, formatting) |
+| `src/assets/js/hub.js` | Hub: search, filter, pagination, keyboard nav |
 | `src/assets/js/theme.js` | Light/dark mode toggle |
-| `src/assets/js/yolo.js` | Core: lightbox, image grid, TOC |
+| `src/assets/js/yolo.js` | Core: lightbox, image grid, TOC, sidebar |
 | `src/assets/ext/js/theme-sampler.js` | Live theme switching |
+| `src/css/hub.scss.njk` | Hub card and pagination styles |
 
 ### Styling
 

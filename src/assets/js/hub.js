@@ -52,7 +52,7 @@
     function navigateToSelected() {
         var posts = getCurrentPosts();
         if (selectedIndex >= 0 && selectedIndex < posts.length) {
-            window.location.href = posts[selectedIndex].url;
+            window.location.href = posts[selectedIndex].url + '?from=hub';
         }
     }
 
@@ -92,7 +92,7 @@
 
         return '<article class="hub-card' + selectedClass + '" data-index="' + index + '">' +
             '<div class="hub-card-header">' +
-                '<h2 class="hub-card-title"><a href="' + post.url + '">' + post.title + '</a></h2>' +
+                '<h2 class="hub-card-title"><a href="' + post.url + '?from=hub">' + post.title + '</a></h2>' +
                 '<span class="hub-card-date">' + YoloUtils.formatDate(post.date) + '</span>' +
             '</div>' +
             '<p class="hub-card-description">' + post.description + '</p>' +

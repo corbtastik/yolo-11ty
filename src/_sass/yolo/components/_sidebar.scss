@@ -59,8 +59,8 @@
   transform: translateX(-100%);
 }
 
-
 .sidebar-left.sidebar-hidden .container {
+  max-width: 48rem;
   margin-left: auto;
 }
 
@@ -69,8 +69,8 @@
   transform: translateX(100%);
 }
 
-
 .sidebar-right.sidebar-hidden .container {
+  max-width: 48rem;
   margin-right: auto;
 }
 

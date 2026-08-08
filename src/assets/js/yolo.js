@@ -216,6 +216,12 @@
             var sidebar = document.getElementById('sidebar');
             var sidebarToggle = document.getElementById('sidebar-toggle');
             if (sidebar && sidebarToggle) {
+                // Collapse sidebar by default when coming from hub
+                if (window.location.search.indexOf('from=hub') !== -1) {
+                    document.body.classList.add('sidebar-hidden');
+                    sidebarToggle.textContent = 'menu_open';
+                }
+
                 sidebarToggle.addEventListener('click', function(e) {
                     e.stopPropagation();
                     var hidden = document.body.classList.toggle("sidebar-hidden");
