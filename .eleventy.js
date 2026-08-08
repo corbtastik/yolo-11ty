@@ -1,13 +1,21 @@
 const yaml = require("js-yaml");
 const markdownIt = require("markdown-it");
 const markdownItAttrs = require("markdown-it-attrs");
+const { execSync } = require("child_process");
 
 module.exports = function(eleventyConfig) {
   // -------------------------------------------------------------------------
-  // Global Data - Build Info
+  // Global Data - Build Info (git tag + build date)
   // -------------------------------------------------------------------------
   const buildDate = new Date();
+  let gitTag = "dev";
+  try {
+    gitTag = execSync("git describe --tags --abbrev=0", { encoding: "utf8" }).trim();
+  } catch (e) {
+    // No tags found, use default
+  }
   eleventyConfig.addGlobalData("build", {
+    version: gitTag,
     date: buildDate.toISOString().replace('T', ' ').substring(0, 16)
   });
 
