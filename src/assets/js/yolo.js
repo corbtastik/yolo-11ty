@@ -7,25 +7,6 @@
     'use strict';
 
     // ------------------------------------------------------------------------
-    // Console wrapper for debugging
-    // ------------------------------------------------------------------------
-    class Console {
-        static enabled = true;
-
-        static log(text) {
-            if (Console.enabled) {
-                console.log("YOLO LOG " + new Date().toUTCString() + ": " + text);
-            }
-        }
-
-        static error(text) {
-            if (Console.enabled) {
-                console.log("YOLO ERR " + new Date().toUTCString() + ": " + text);
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------------
     // Gallery base class - shared logic for ImageGrid and Lightbox
     // ------------------------------------------------------------------------
     class Gallery {
@@ -65,7 +46,7 @@
         }
 
         static create(name) {
-            Console.log("ImageGrid.create for name=" + name);
+            YoloUtils.log("ImageGrid.create for name=" + name);
             return new ImageGrid(name);
         }
 
@@ -86,7 +67,7 @@
         }
 
         open(index) {
-            Console.log("ImageGrid.open: " + this.name + " index=" + index);
+            YoloUtils.log("ImageGrid.open: " + this.name + " index=" + index);
             this.getGridElement().style.display = "none";
 
             const target = this.getTargetElement();
@@ -107,7 +88,7 @@
         }
 
         close() {
-            Console.log("ImageGrid.close: " + this.name);
+            YoloUtils.log("ImageGrid.close: " + this.name);
             const target = this.getTargetElement();
             const images = this.getImages();
 
@@ -126,7 +107,7 @@
         showItem(index) {
             index = this.wrapIndex(index);
             this.currentIndex = index;
-            Console.log("ImageGrid.showItem: " + this.name + " index=" + index);
+            YoloUtils.log("ImageGrid.showItem: " + this.name + " index=" + index);
 
             const images = this.getImages();
             for (let i = 0; i < images.length; i++) {
@@ -163,7 +144,7 @@
         }
 
         static create(name) {
-            Console.log("Lightbox.create for name=" + name);
+            YoloUtils.log("Lightbox.create for name=" + name);
             return new Lightbox(name);
         }
 
@@ -188,14 +169,14 @@
         }
 
         open(index = 0) {
-            Console.log("Lightbox.open: " + this.name);
+            YoloUtils.log("Lightbox.open: " + this.name);
             this.getModalElement().style.display = "block";
             this.isOpen = true;
             this.showItem(index);
         }
 
         close() {
-            Console.log("Lightbox.close: " + this.name);
+            YoloUtils.log("Lightbox.close: " + this.name);
             this.getModalElement().style.display = "none";
             this.isOpen = false;
         }
@@ -203,7 +184,7 @@
         showItem(index) {
             index = this.wrapIndex(index);
             this.currentIndex = index;
-            Console.log("Lightbox.showItem: " + this.name + " index=" + index);
+            YoloUtils.log("Lightbox.showItem: " + this.name + " index=" + index);
 
             const slides = this.getSlides();
             const caption = this.getCaptionElement();
@@ -396,7 +377,7 @@
         initThemeToggle() {
             const toggle = document.getElementById('theme-toggle');
             if (toggle) {
-                Console.log("Theme toggle enabled");
+                YoloUtils.log("Theme toggle enabled");
                 toggle.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const root = document.documentElement;
@@ -419,7 +400,7 @@
             const toggle = document.getElementById('sidebar-toggle');
 
             if (sidebar && toggle) {
-                Console.log("Sidebar enabled");
+                YoloUtils.log("Sidebar enabled");
                 toggle.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const hidden = document.body.classList.toggle("sidebar-hidden");
@@ -449,7 +430,7 @@
             const tabElement = document.getElementById(tabId);
 
             if (!tabElement) {
-                Console.error("Tab not found: " + tabId);
+                YoloUtils.error("Tab not found: " + tabId);
                 return;
             }
 

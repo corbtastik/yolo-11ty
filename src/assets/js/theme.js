@@ -1,37 +1,15 @@
 /**
- * Theme toggle - switch between light and dark mode
+ * Theme initialization - runs early to prevent flash of wrong theme
+ * Click handler is in yolo.js
  */
 (function() {
     'use strict';
 
-    function setTheme(mode) {
-        var isDark = mode === 'dark';
-        var themeToggle = document.getElementById('theme-toggle');
+    var theme = localStorage.getItem('theme') || 'light';
+    var toggle = document.getElementById('theme-toggle');
 
-        localStorage.setItem('theme', mode);
-        document.documentElement.removeAttribute(isDark ? 'light' : 'dark');
-        document.documentElement.setAttribute(mode, '');
-
-        if (themeToggle) {
-            themeToggle.innerText = isDark ? 'light_mode' : 'dark_mode';
-        }
+    document.documentElement.setAttribute(theme, '');
+    if (toggle) {
+        toggle.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
     }
-
-    function toggleTheme() {
-        var current = localStorage.getItem('theme');
-        setTheme(current === 'dark' ? 'light' : 'dark');
-    }
-
-    function init() {
-        var themeToggle = document.getElementById('theme-toggle');
-        var activeTheme = localStorage.getItem('theme') || 'light';
-
-        setTheme(activeTheme);
-
-        if (themeToggle) {
-            themeToggle.addEventListener('click', toggleTheme);
-        }
-    }
-
-    YoloUtils.domReady(init);
 })();
