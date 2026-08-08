@@ -7,7 +7,7 @@ const cssDir = path.join(siteDir, 'css');
 const sassDir = path.join(__dirname, '..', 'src', '_sass');
 
 // Files to compile
-const scssFiles = ['main.scss', 'brand.scss'];
+const scssFiles = ['main.scss', 'brand.scss', 'hub.scss'];
 
 function compileScss() {
   // Ensure directories exist

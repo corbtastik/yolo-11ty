@@ -81,10 +81,12 @@
 }
 
 .yolo-theme-toggle,
+.yolo-home-link,
 .yolo-sidebar-toggle {
   transition: color .25s ease;
   user-select: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 // back to top link

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" class="yolo-themed">
+{% include "components/head.njk" %}
+<body id="yolo-site">
+  <div class="yolo-sticky-controls">
+    <div class="yolo-sticky-top-right">
+      <div class="yolo-theme-toggle">
+        <span id="theme-toggle" class="material-icons md-36">light_mode</span>
+      </div>
+    </div>
+    <div class="yolo-sticky-bottom-right">
+      <a href="#" class="yolo-to-top">
+        <span class="material-icons md-36">keyboard_double_arrow_up</span>
+      </a>
+    </div>
+  </div>
+  <div id="yolo-container" class="container {{ settings.align | default('left') }}">
+    <main>
+      <div id="page-content" class="page-content">
+        {{ content | safe }}
+      </div>
+    </main>
+    <footer>
+      {% include "components/footer.njk" %}
+    </footer>
+  </div>
+  {% include "components/scripts.njk" %}
+</body>
+</html>

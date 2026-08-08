@@ -301,6 +301,7 @@
             const yolo = new Yolo();
             yolo.initEventDelegation();
             yolo.initKeyboardNavigation();
+            yolo.initThemeToggle();
             yolo.initSidebar();
             yolo.initToc();
             yolo.initTabs();
@@ -387,6 +388,27 @@
                     }
                 }
             });
+        }
+
+        // --------------------------------------------------------------------
+        // Theme toggle
+        // --------------------------------------------------------------------
+        initThemeToggle() {
+            const toggle = document.getElementById('theme-toggle');
+            if (toggle) {
+                Console.log("Theme toggle enabled");
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const root = document.documentElement;
+                    const isLight = root.getAttribute('light') !== null;
+                    const newMode = isLight ? 'dark' : 'light';
+
+                    root.removeAttribute(isLight ? 'light' : 'dark');
+                    root.setAttribute(newMode, '');
+                    localStorage.setItem('theme', newMode);
+                    toggle.textContent = newMode === 'dark' ? 'light_mode' : 'dark_mode';
+                });
+            }
         }
 
         // --------------------------------------------------------------------

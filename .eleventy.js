@@ -70,13 +70,26 @@ module.exports = function(eleventyConfig) {
     return cleanBase + cleanUrl;
   });
 
-  // date filter - strftime-style formatting
+  // date filter - supports both strftime and human-readable formats
   eleventyConfig.addFilter("date", function(date, format) {
     const d = date === "now" ? new Date() : new Date(date);
     if (!format) return d.toISOString();
 
-    // Common strftime patterns
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'];
     const pad = (n) => String(n).padStart(2, '0');
+
+    // Human-readable format (e.g., "MMMM D, YYYY")
+    if (format.includes('MMMM') || format.includes('YYYY')) {
+      return format
+        .replace(/YYYY/g, d.getFullYear())
+        .replace(/MMMM/g, months[d.getMonth()])
+        .replace(/MM/g, pad(d.getMonth() + 1))
+        .replace(/DD/g, pad(d.getDate()))
+        .replace(/D/g, d.getDate());
+    }
+
+    // Strftime-style patterns
     return format
       .replace(/%Y/g, d.getFullYear())
       .replace(/%m/g, pad(d.getMonth() + 1))

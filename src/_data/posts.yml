@@ -1,0 +1,70 @@
+# -----------------------------------------------------------------------------
+# Posts - Each entry represents a blog post
+# The first entry links to the actual yolo-demo post
+# Others are mock entries for demonstration
+# -----------------------------------------------------------------------------
+- title: "Yolo Demo"
+  description: "The official Yolo-11ty demo site showcasing all features."
+  url: "/posts/yolo-demo/"
+  date: 2026-01-15
+  tags:
+    - demo
+    - eleventy
+    - themes
+    - features
+
+- title: "Voyage AI Models by MongoDB: A Complete 101 Guide"
+  description: "A reference guide covering every Voyage AI model supported by MongoDB."
+  url: "#"
+  date: 2026-03-02
+  tags:
+    - mongodb
+    - voyage-ai
+    - embeddings
+    - rerankers
+    - vector-search
+    - rag
+
+- title: "AI Code Assistants"
+  description: "Reshaping Skills, Reducing Toil, and the Risks We're Not Ready For"
+  url: "#"
+  date: 2026-02-16
+  tags:
+    - ai
+    - genai
+    - copilot
+    - mongodb
+    - software-engineering
+    - mit
+
+- title: "Mongoball"
+  description: "Baseball and MongoDB, now that's a walkoff."
+  url: "#"
+  date: 2026-02-14
+  tags:
+    - baseball
+    - analytics
+    - data
+    - mongodb
+
+- title: "Theming & The Theme Builder"
+  description: "Discover 50+ color themes, slash commands for quick switching, and the interactive Theme Builder for creating your own custom palettes."
+  url: "#"
+  date: 2026-02-07
+  tags:
+    - features
+    - theme
+    - tutorial
+    - design
+
+- title: "Orbit AI Demo"
+  description: "From Prompt to Production with Orbit AI"
+  url: "#"
+  date: 2026-02-05
+  tags:
+    - ai
+    - reading-list
+    - openai
+    - google-deepmind
+    - llms
+    - genai

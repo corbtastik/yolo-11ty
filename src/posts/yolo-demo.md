@@ -1,5 +1,14 @@
 ---
-layout: layouts/default.njk
+layout: layouts/post.njk
+title: Yolo Demo
+description: The official Yolo-11ty demo site showcasing all features.
+date: 2026-01-15
+tags:
+  - demo
+  - eleventy
+  - themes
+  - features
+permalink: /posts/yolo-demo/
 links:
 - yolo,https://github.com/corbtastik/yolo
 - 11ty,https://www.11ty.dev

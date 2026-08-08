@@ -7,8 +7,9 @@
     <!-- Site title -->
     <title>{{ settings.title }}</title>
     <!-- Pre-body JavaScript files -->
-    <script src="assets/js/theme.js"></script>
-    <script src="assets/js/snippets.js"></script>
+    <script src="{{ '/assets/js/utils.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/theme.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/snippets.js' | relative_url }}"></script>
     <!-- Site styling resources including fonts -->
     {% include "components/styles.njk" %}
 </head>
