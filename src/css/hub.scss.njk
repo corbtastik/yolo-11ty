@@ -104,12 +104,15 @@ permalink: /css/hub.scss
 }
 
 .hub-page-btn {
-  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 1rem;
   font-size: 0.9rem;
   font-weight: 600;
   font-family: var(--font-family-secondary);
   border: none;
-  border-radius: 0.25rem;
+  border-radius: 3rem;
   background-color: var(--secondary-color);
   color: var(--on-secondary-color);
   cursor: pointer;
@@ -128,6 +131,10 @@ permalink: /css/hub.scss
   &[disabled] {
     opacity: 0.4;
     cursor: not-allowed;
+  }
+
+  &.hub-page-nav {
+    padding: 0.25rem 0.5rem;
   }
 }
 

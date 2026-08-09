@@ -33,7 +33,6 @@
             currentPage = page;
             selectedIndex = -1;
             render();
-            postsContainer && postsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
@@ -106,8 +105,8 @@
 
         var buttons = [];
 
-        buttons.push('<button class="hub-page-btn" data-page="' + (currentPage - 1) + '"' +
-            (info.hasPrev ? '' : ' disabled') + ' aria-label="Previous">&laquo;</button>');
+        buttons.push('<button class="hub-page-btn hub-page-nav" data-page="1"' +
+            (currentPage > 1 ? '' : ' disabled') + ' aria-label="First page"><span class="material-icons">keyboard_double_arrow_left</span></button>');
 
         var pages = [1];
         for (var i = currentPage - 1; i <= currentPage + 1; i++) {
@@ -124,8 +123,8 @@
             lastPage = p;
         });
 
-        buttons.push('<button class="hub-page-btn" data-page="' + (currentPage + 1) + '"' +
-            (info.hasNext ? '' : ' disabled') + ' aria-label="Next">&raquo;</button>');
+        buttons.push('<button class="hub-page-btn hub-page-nav" data-page="' + info.totalPages + '"' +
+            (currentPage < info.totalPages ? '' : ' disabled') + ' aria-label="Last page"><span class="material-icons">keyboard_double_arrow_right</span></button>');
 
         return '<nav class="hub-pagination-controls" aria-label="Pagination">' + buttons.join('') + '</nav>' +
             '<div class="hub-page-info">Showing ' + info.showing.from + '-' + info.showing.to +
