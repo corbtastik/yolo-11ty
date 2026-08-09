@@ -292,7 +292,7 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 > | Hank  | Aaron  | 755 |
 > | Babe  | Ruth   | 714 |
 >
-> ![Moonie Moonpie](assets/images/moonpie.png "Sweet Moonpie")
+> ![Moonie Moonpie](/assets/images/moonpie.png "Sweet Moonpie")
 
 
 ---
