@@ -7,8 +7,12 @@
       "hosting": {
         "yolo-11ty": [
           "yolo-11ty"
+        ],
+        "yolo-hub-11ty": [
+          "yolo-hub-11ty"
         ]
       }
     }
-  }
+  },
+  "etags": {}
 }
