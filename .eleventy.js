@@ -159,12 +159,15 @@ module.exports = function(eleventyConfig) {
     return `<img class="image ${cls}" alt="${src}" src="${src}">`;
   });
 
-  eleventyConfig.addShortcode("imageGrid", function(name = "ig-images", columns = 4) {
+  eleventyConfig.addShortcode("imageGrid", function(name, columns) {
+    name = name || "ig-images";
+    columns = columns || 4;
     const images = this.ctx[name] || [];
     return `<div id="ig-${name}">${galleryHtml('ig', name, images, columns)}</div>`;
   });
 
-  eleventyConfig.addShortcode("lightbox", function(name = "lb-images") {
+  eleventyConfig.addShortcode("lightbox", function(name) {
+    name = name || "lb-images";
     return galleryHtml('lb', name, this.ctx[name] || [], 4);
   });
 

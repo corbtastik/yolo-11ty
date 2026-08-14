@@ -1,7 +1,8 @@
 ---
-layout: layouts/hub.njk
+layout: layouts/index.njk
 ---
 
+{% if settings.hub.enabled %}
 <header>
   <div class="yolo-header">
     <div class="yolo-site-info">
@@ -39,3 +40,4 @@ layout: layouts/hub.njk
     });
   });
 </script>
+{% endif %}

@@ -3,7 +3,7 @@
         <div class="yolo-theme-toggle">
             <span id="theme-toggle" class="material-icons md-36">light_mode</span>
         </div>
-        {% if not isHub %}
+        {% if not isHub and settings.hub.enabled %}
         <a href="{{ '/' | relative_url }}" class="yolo-home-link">
             <span class="material-icons md-36">home</span>
         </a>

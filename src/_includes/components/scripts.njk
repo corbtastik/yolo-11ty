@@ -1,4 +1,6 @@
+{% if settings.hub.enabled %}
 <script src="{{ settings.baseurl }}{{ '/assets/js/hub.js' | relative_url }}"></script>
+{% endif %}
 <script src="{{ settings.baseurl }}{{ '/assets/ext/js/search.js' | relative_url }}"></script>
 {% if ext_js | size > 0 %}
 {% for js_name in ext_js %}
