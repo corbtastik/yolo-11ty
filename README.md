@@ -351,4 +351,4 @@ Usage:
 
 ## License
 
-MIT License - see source for details.
+License - see source for details.
