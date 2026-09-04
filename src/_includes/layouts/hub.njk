@@ -1,19 +1,5 @@
-<!DOCTYPE html>
-<html lang="en" class="yolo-themed">
-{% include "components/head.njk" %}
-{% set isHub = true %}
-<body id="yolo-site">
-  {% include "components/sticky-controls.njk" %}
-  <div id="yolo-container" class="container {{ settings.align | default('left') }}">
-    <main>
-      <div id="page-content" class="page-content">
-        {{ content | safe }}
-      </div>
-    </main>
-    <footer>
-      {% include "components/footer.njk" %}
-    </footer>
-  </div>
-  {% include "components/scripts.njk" %}
-</body>
-</html>
+---
+layout: layouts/base.njk
+isHub: true
+---
+{{ content | safe }}

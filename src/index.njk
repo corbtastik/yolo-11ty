@@ -32,7 +32,7 @@ layout: layouts/index.njk
 <script>
   // Pass posts data and config to Hub
   YoloUtils.domReady(function() {
-    var postsData = {{ posts | dump | safe }};
+    var postsData = {{ collections.hubPosts | dump | safe }};
     var postsPerPage = {{ settings.hub.postsPerPage | default(25) }};
     window.hub = new YoloHub({
       posts: postsData,

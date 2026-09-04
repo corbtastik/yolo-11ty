@@ -9,6 +9,7 @@ tags:
   - themes
   - features
 permalink: /posts/yolo-demo/
+pinned: true
 links:
 - yolo,https://github.com/corbtastik/yolo
 - 11ty,https://www.11ty.dev

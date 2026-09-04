@@ -1,25 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" class="yolo-themed">
-{% include "components/head.njk" %}
-<body id="yolo-site" class="{% if settings.sidebar %}sidebar-{{ settings.sidebar.position | default('left') }}{% endif %}">
-  {% if settings.sidebar %}
-  {% include "components/sidebar.njk" %}
-  {% endif %}
-  {% include "components/sticky-controls.njk" %}
-  <div id="yolo-container" class="container {{ settings.align | default('left') }}">
-    <header>
-      {% include "components/header.njk" %}
-    </header>
-    {% include "components/search.njk" %}
-    <main style="clear: both">
-      <div id="page-content" class="page-content">
-        {{ content | safe }}
-      </div>
-    </main>
-    <footer>
-      {% include "components/footer.njk" %}
-    </footer>
-  </div>
-  {% include "components/scripts.njk" %}
-</body>
-</html>
+---
+layout: layouts/base.njk
+---
+{{ content | safe }}

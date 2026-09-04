@@ -1,15 +1,13 @@
 /**
- * Theme initialization - runs early to prevent flash of wrong theme
- * Click handler is in yolo.js
+ * Theme initialization - runs early (in <head>) to prevent a flash of the
+ * wrong theme. Sets the light/dark attribute on <html> before first paint.
+ *
+ * The toggle button does not exist yet at this point, so its icon is set by
+ * yolo.js once the DOM is ready. Click handling also lives in yolo.js.
  */
 (function() {
     'use strict';
 
     var theme = localStorage.getItem('theme') || 'light';
-    var toggle = document.getElementById('theme-toggle');
-
     document.documentElement.setAttribute(theme, '');
-    if (toggle) {
-        toggle.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-    }
 })();

@@ -1,7 +1,13 @@
+const fs = require("fs");
+const path = require("path");
 const yaml = require("js-yaml");
+const sass = require("sass");
+const nunjucks = require("nunjucks");
 const markdownIt = require("markdown-it");
 const markdownItAttrs = require("markdown-it-attrs");
 const { execSync } = require("child_process");
+
+const SASS_INCLUDES = path.join(__dirname, "src", "_sass");
 
 module.exports = function(eleventyConfig) {
   // -------------------------------------------------------------------------
@@ -20,6 +26,30 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addDataExtension("yml,yaml", contents => yaml.load(contents));
 
   // -------------------------------------------------------------------------
+  // Collections
+  // -------------------------------------------------------------------------
+
+  // Post metadata for the hub index, derived from each post's own front matter
+  // so there is a single source of truth.
+  //
+  // Order: posts with `pinned: true` first (in date order among themselves),
+  // then everything else oldest-first - the reading order the docs are written
+  // in, which is Eleventy's natural collection order.
+  eleventyConfig.addCollection("hubPosts", collectionApi =>
+    collectionApi.getFilteredByTag("post")
+      .map(post => ({
+        pinned: post.data.pinned === true,
+        title: post.data.title || "",
+        description: post.data.description || "",
+        url: post.url,
+        date: post.date.toISOString().substring(0, 10),
+        tags: (post.data.tags || []).filter(tag => tag !== "post")
+      }))
+      .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0))
+      .map(({ pinned, ...post }) => post)
+  );
+
+  // -------------------------------------------------------------------------
   // Markdown Configuration
   // -------------------------------------------------------------------------
   const md = markdownIt({ html: true, breaks: false, linkify: true, typographer: false })
@@ -35,10 +65,49 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.setLibrary("md", md);
 
   // -------------------------------------------------------------------------
+  // SCSS Compilation
+  //
+  // Entry points in src/css are Nunjucks-templated (they interpolate the
+  // selected brand theme), then compiled to CSS in the same pass. Partials
+  // under src/_sass are pulled in via @use and must not be treated as
+  // templates themselves.
+  // -------------------------------------------------------------------------
+  eleventyConfig.addTemplateFormats("scss");
+  eleventyConfig.ignores.add("src/_sass/**");
+  eleventyConfig.addWatchTarget("src/_sass/");
+
+  eleventyConfig.addExtension("scss", {
+    outputFileExtension: "css",
+    compile: function(inputContent, inputPath) {
+      return function(data) {
+        // Resolve {{ settings.* }} before handing the result to sass.
+        const scss = nunjucks.renderString(inputContent, data);
+        const result = sass.compileString(scss, {
+          loadPaths: [SASS_INCLUDES, path.dirname(inputPath)],
+          style: "expanded",
+          sourceMap: true,
+          sourceMapIncludeSources: true
+        });
+
+        // Eleventy writes a single file per template, so emit the sibling
+        // .map ourselves rather than inlining it into the shipped CSS.
+        const outputPath = data.page && data.page.outputPath;
+        if (!outputPath || !result.sourceMap) return result.css;
+
+        const mapName = path.basename(outputPath) + ".map";
+        fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+        fs.writeFileSync(path.join(path.dirname(outputPath), mapName),
+          JSON.stringify(result.sourceMap));
+
+        return result.css + `\n/*# sourceMappingURL=${mapName} */\n`;
+      };
+    }
+  });
+
+  // -------------------------------------------------------------------------
   // Passthrough Copy
   // -------------------------------------------------------------------------
   eleventyConfig.addPassthroughCopy("src/assets");
-  eleventyConfig.addPassthroughCopy({ "src/_sass": "_sass" });
 
   // -------------------------------------------------------------------------
   // Filters
@@ -50,18 +119,33 @@ module.exports = function(eleventyConfig) {
     return base + (url.startsWith("/") ? url : "/" + url);
   });
 
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  // Single-pass token replacement. Chained .replace() calls corrupt output when
+  // an earlier substitution emits a character a later pattern matches - e.g.
+  // MMMM -> "December", then /D/g rewrites it to "15ecember".
+  const DATE_TOKENS = /YYYY|MMMM|MMM|MM|DD|D|%Y|%m|%d|%H|%M|%S/g;
+
   eleventyConfig.addFilter("date", function(date, format) {
     const d = date === "now" ? new Date() : new Date(date);
     if (!format) return d.toISOString();
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     const pad = n => String(n).padStart(2, '0');
-    const y = d.getUTCFullYear(), m = d.getUTCMonth(), day = d.getUTCDate();
-    const h = d.getUTCHours(), min = d.getUTCMinutes(), s = d.getUTCSeconds();
-
-    if (format.includes('MMMM') || format.includes('YYYY')) {
-      return format.replace(/YYYY/g, y).replace(/MMMM/g, months[m]).replace(/MM/g, pad(m+1)).replace(/DD/g, pad(day)).replace(/D/g, day);
-    }
-    return format.replace(/%Y/g, y).replace(/%m/g, pad(m+1)).replace(/%d/g, pad(day)).replace(/%H/g, pad(h)).replace(/%M/g, pad(min)).replace(/%S/g, pad(s));
+    const m = d.getUTCMonth();
+    const values = {
+      YYYY: d.getUTCFullYear(),
+      MMMM: MONTHS[m],
+      MMM: MONTHS[m].slice(0, 3),
+      MM: pad(m + 1),
+      DD: pad(d.getUTCDate()),
+      D: d.getUTCDate(),
+      '%Y': d.getUTCFullYear(),
+      '%m': pad(m + 1),
+      '%d': pad(d.getUTCDate()),
+      '%H': pad(d.getUTCHours()),
+      '%M': pad(d.getUTCMinutes()),
+      '%S': pad(d.getUTCSeconds())
+    };
+    return format.replace(DATE_TOKENS, token => values[token]);
   });
 
   eleventyConfig.addFilter("replace", (str, search, replace) => str ? str.split(search).join(replace) : "");
@@ -81,7 +165,10 @@ module.exports = function(eleventyConfig) {
   // Helper: generate gallery HTML
   function galleryHtml(type, name, images, columns) {
     const prefix = type === 'lb' ? 'lb' : 'ig';
-    const perCol = Math.floor(images.length / columns);
+    // ceil, not floor: with floor, a remainder that does not divide evenly across
+    // the columns drops the trailing images from the grid entirely (they stayed
+    // in the modal, so the data-index values went out of sync with the slides).
+    const perCol = Math.max(1, Math.ceil(images.length / columns));
     let grid = `<div class="columns is-mobile">`;
 
     for (let c = 0; c < columns; c++) {

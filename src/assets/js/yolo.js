@@ -197,18 +197,24 @@
                 }
             });
 
-            // Theme toggle
+            // Theme toggle. theme.js sets the <html> attribute in <head>, but the
+            // button does not exist that early - so seed its icon here.
             var toggle = document.getElementById('theme-toggle');
             if (toggle) {
+                // The icon shows the mode you would switch TO, not the current one.
+                var iconFor = function(mode) { return mode === 'dark' ? 'light_mode' : 'dark_mode'; };
+                var root = document.documentElement;
+
+                toggle.textContent = iconFor(root.getAttribute('dark') !== null ? 'dark' : 'light');
+
                 toggle.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    var root = document.documentElement;
                     var isLight = root.getAttribute('light') !== null;
                     var newMode = isLight ? 'dark' : 'light';
                     root.removeAttribute(isLight ? 'light' : 'dark');
                     root.setAttribute(newMode, '');
                     localStorage.setItem('theme', newMode);
-                    toggle.textContent = newMode === 'dark' ? 'light_mode' : 'dark_mode';
+                    toggle.textContent = iconFor(newMode);
                 });
             }
 
@@ -283,7 +289,7 @@
     };
 
     var yolo = new Yolo();
-    yolo.init();
     window.Yolo = yolo;
+    YoloUtils.domReady(function() { yolo.init(); });
 
 })(window);

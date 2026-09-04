@@ -138,10 +138,9 @@ async function main() {
     const filesToCopy = [
       '.eleventy.js',
       '.gitignore',
-      'scripts/build-scss.js',
       'scripts/generate-themes.js',
-      'src/css/main.scss.njk',
-      'src/css/brand.scss.njk',
+      'src/css/main.scss',
+      'src/css/brand.scss',
       'src/site.json.njk',
       'src/themes.json.njk'
     ];
@@ -255,10 +254,8 @@ The page you're looking for doesn't exist.
       description: description,
       main: '.eleventy.js',
       scripts: {
-        'build:11ty': 'eleventy',
-        'build:scss': 'node scripts/build-scss.js',
-        'build': 'npm run build:11ty && npm run build:scss',
-        'serve': 'npm run build && eleventy --serve',
+        'build': 'eleventy',
+        'serve': 'eleventy --serve',
         'clean': 'rm -rf _site',
         'generate:themes': 'node scripts/generate-themes.js'
       },
@@ -270,6 +267,7 @@ The page you're looking for doesn't exist.
         'js-yaml': '^4.1.0',
         'markdown-it': '^14.0.0',
         'markdown-it-attrs': '^4.1.6',
+        'nunjucks': '^3.2.4',
         'sass': '^1.69.0'
       }
     };

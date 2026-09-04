@@ -15,6 +15,8 @@
         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
 
+    var DATE_TOKENS = /YYYY|MMMM|MMM|MM|DD|D/g;
+
     window.YoloUtils = {
         /**
          * Execute callback when DOM is ready
@@ -38,17 +40,20 @@
             var d = new Date(dateStr);
             format = format || 'MMMM D, YYYY';
 
-            var year = d.getUTCFullYear();
             var month = d.getUTCMonth();
             var day = d.getUTCDate();
+            var values = {
+                YYYY: d.getUTCFullYear(),
+                MMMM: MONTH_NAMES[month],
+                MMM: MONTH_ABBREV[month],
+                MM: ('0' + (month + 1)).slice(-2),
+                DD: ('0' + day).slice(-2),
+                D: day
+            };
 
-            return format
-                .replace(/YYYY/g, year)
-                .replace(/MMMM/g, MONTH_NAMES[month])
-                .replace(/MMM/g, MONTH_ABBREV[month])
-                .replace(/MM/g, ('0' + (month + 1)).slice(-2))
-                .replace(/DD/g, ('0' + day).slice(-2))
-                .replace(/D/g, day);
+            // Single pass - chained replaces corrupt month names that contain a
+            // format character, e.g. MMMM -> "December" then /D/g -> "15ecember".
+            return format.replace(DATE_TOKENS, function(token) { return values[token]; });
         },
 
         /**
