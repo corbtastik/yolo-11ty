@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{#
+  Base page shell for every Yolo layout.
+
+  Two variants, selected by `bare`:
+    full - sidebar, site header and search (posts, single-page index)
+    bare - content only (hub index, hub post listing)
+
+  Leaf layouts pick a variant through front matter:
+    isHub: true        always bare        (layouts/hub.njk)
+    isIndexPage: true  bare in hub mode   (layouts/index.njk)
+    neither            always full        (layouts/post.njk)
+#}
+{% set bare = isHub or (isIndexPage and settings.hub.enabled) %}
+<html lang="en" class="yolo-themed">
+{% include "components/head.njk" %}
+<body id="yolo-site"{% if not bare and settings.sidebar %} class="sidebar-{{ settings.sidebar.position | default('left') }}"{% endif %}>
+  {% if not bare and settings.sidebar %}
+  {% include "components/sidebar.njk" %}
+  {% endif %}
+  {% include "components/sticky-controls.njk" %}
+  <div id="yolo-container" class="container {{ settings.align | default('left') }}">
+    {% if not bare %}
+    <header>
+      {% include "components/header.njk" %}
+    </header>
+    {% include "components/search.njk" %}
+    {% endif %}
+    <main{% if not bare %} style="clear: both"{% endif %}>
+      <div id="page-content" class="page-content">
+        {{ content | safe }}
+      </div>
+    </main>
+    <footer>
+      {% include "components/footer.njk" %}
+    </footer>
+  </div>
+  {% include "components/scripts.njk" %}
+</body>
+</html>

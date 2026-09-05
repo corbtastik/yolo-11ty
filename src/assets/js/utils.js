@@ -15,6 +15,8 @@
         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
 
+    var DATE_TOKENS = /YYYY|MMMM|MMM|MM|DD|D/g;
+
     window.YoloUtils = {
         /**
          * Execute callback when DOM is ready
@@ -38,17 +40,20 @@
             var d = new Date(dateStr);
             format = format || 'MMMM D, YYYY';
 
-            var year = d.getUTCFullYear();
             var month = d.getUTCMonth();
             var day = d.getUTCDate();
+            var values = {
+                YYYY: d.getUTCFullYear(),
+                MMMM: MONTH_NAMES[month],
+                MMM: MONTH_ABBREV[month],
+                MM: ('0' + (month + 1)).slice(-2),
+                DD: ('0' + day).slice(-2),
+                D: day
+            };
 
-            return format
-                .replace(/YYYY/g, year)
-                .replace(/MMMM/g, MONTH_NAMES[month])
-                .replace(/MMM/g, MONTH_ABBREV[month])
-                .replace(/MM/g, ('0' + (month + 1)).slice(-2))
-                .replace(/DD/g, ('0' + day).slice(-2))
-                .replace(/D/g, day);
+            // Single pass - chained replaces corrupt month names that contain a
+            // format character, e.g. MMMM -> "December" then /D/g -> "15ecember".
+            return format.replace(DATE_TOKENS, function(token) { return values[token]; });
         },
 
         /**
@@ -126,6 +131,51 @@
                     from: totalItems > 0 ? start + 1 : 0,
                     to: Math.min(start + perPage, totalItems),
                     total: totalItems
+                }
+            };
+        },
+
+        /**
+         * Arrow-key selection over a list of elements.
+         *
+         * Owns only the parts the hub and the page search share: the wrapping
+         * index, the 'selected' class, and scrolling the choice into view.
+         * Enter and Escape stay with each caller, because what they mean
+         * differs - the hub follows a post, the search jumps to a heading.
+         *
+         * @param {Function} items - Returns the current elements, live
+         * @param {Object} [opts] - {smooth: true} to animate scrolling
+         * @returns {Object} index getter, select/reset, and handleKey
+         */
+        selectionList: function(items, opts) {
+            var index = -1;
+            var smooth = opts && opts.smooth;
+
+            function paint() {
+                items().forEach(function(el, i) {
+                    el.classList.toggle('selected', i === index);
+                    if (i === index) {
+                        el.scrollIntoView(smooth ? { block: 'nearest', behavior: 'smooth' }
+                                                 : { block: 'nearest' });
+                    }
+                });
+            }
+
+            return {
+                get: function() { return index; },
+                select: function(i) { index = i; paint(); },
+                reset: function() { index = -1; paint(); },
+
+                /** Handles Up/Down only. Returns true if the key was consumed. */
+                handleKey: function(event) {
+                    var count = items().length;
+                    if (!count) return false;
+                    if (event.key === 'ArrowDown') index = (index + 1) % count;
+                    else if (event.key === 'ArrowUp') index = index <= 0 ? count - 1 : index - 1;
+                    else return false;
+                    event.preventDefault();
+                    paint();
+                    return true;
                 }
             };
         },

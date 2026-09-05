@@ -1,179 +1,95 @@
-// Theme Sampler - Dynamic theme switching for Yolo demo
+/**
+ * Theme Sampler - live theme switching for the Yolo demo pages.
+ *
+ * Applies a theme from themes.json by setting CSS custom properties on <html>,
+ * which override the theme compiled into brand.css. The variable set comes
+ * from YoloThemeVars (assets/js/theme-vars.js) - the same mapping the build
+ * uses - so a preview is a complete swap rather than an approximation.
+ */
 (function() {
     'use strict';
 
+    var STORAGE_KEY = 'yolo-sampler-theme';
+
     var themes = null;
-    var themesLoaded = false;
+    var applied = [];   // variables we have set, so they can be cleared
 
-    // CSS variable mapping - maps theme color keys to CSS custom properties
-    var cssVarMap = {
-        // Site theme variables
-        'bg': '--primary-color',
-        'text': '--on-primary-color',
-        'heading': '--secondary-color',
-        'surface': '--primary-container-color',
-        'border': '--secondary-container-color',
-        'primary': '--tertiary-color',
-        'link': '--link-color'
-    };
-
-    // Derived mappings (use same source color)
-    var derivedVarMap = {
-        '--on-secondary-color': 'bg',
-        '--on-tertiary-color': 'bg',
-        '--on-primary-container-color': 'heading',
-        '--on-secondary-container-color': 'text'
-    };
-
-    // Syntax theme variable mapping
-    var syntaxVarMap = {
-        'surface': '--syntax-container-color',
-        'text': '--syntax-text',
-        'shKeyword': '--syntax-keyword',
-        'shString': '--syntax-string',
-        'shFunction': '--syntax-name-function',
-        'shVariable': '--syntax-name-variable',
-        'shComment': '--syntax-comment'
-    };
-
-    // Extended syntax mappings (same source)
-    var syntaxExtendedMap = {
-        '--syntax-keyword-constant': 'shKeyword',
-        '--syntax-keyword-declaration': 'shKeyword',
-        '--syntax-keyword-namespace': 'shKeyword',
-        '--syntax-keyword-pseudo': 'shKeyword',
-        '--syntax-keyword-reserved': 'shKeyword',
-        '--syntax-keyword-type': 'shKeyword',
-        '--syntax-name-tag': 'shKeyword',
-        '--syntax-string-single': 'shString',
-        '--syntax-string-double': 'shString',
-        '--syntax-string-backtick': 'shString',
-        '--syntax-string-other': 'shString',
-        '--syntax-name-class': 'shFunction',
-        '--syntax-name-attribute': 'shFunction',
-        '--syntax-name-builtin': 'shVariable',
-        '--syntax-comment-single': 'shComment',
-        '--syntax-comment-multiline': 'shComment'
-    };
-
-    // Detect current mode (light/dark)
-    function getCurrentMode() {
-        var stored = localStorage.getItem('theme');
-        return stored === 'dark' ? 'dark' : 'light';
+    /** The light/dark mode currently rendered, per the attribute theme.js sets. */
+    function currentMode() {
+        return document.documentElement.getAttribute('dark') !== null ? 'dark' : 'light';
     }
 
-    // Get current sampler theme
-    function getCurrentSamplerTheme() {
-        return localStorage.getItem('yolo-sampler-theme');
-    }
-
-    // Apply theme colors to CSS variables using loop-based approach
-    function applyTheme(themeName) {
-        if (!themes || !themes[themeName]) {
-            console.error('Theme not found:', themeName);
+    function applyTheme(id) {
+        var theme = themes && themes[id];
+        if (!theme) {
+            YoloUtils.error('Unknown theme: ' + id);
             return;
         }
 
-        var theme = themes[themeName];
-        var mode = getCurrentMode();
-        var colors = theme[mode];
+        var mode = currentMode();
         var root = document.documentElement;
 
-        // Apply primary CSS variables
-        Object.keys(cssVarMap).forEach(function(colorKey) {
-            root.style.setProperty(cssVarMap[colorKey], colors[colorKey]);
+        // A theme supplies both the site colors and the syntax colors here;
+        // the build keeps them separate so a site can mix two themes.
+        var vars = YoloThemeVars.cssVars(theme[mode], theme[mode], mode);
+
+        applied = vars.map(function(pair) {
+            root.style.setProperty('--' + pair[0], pair[1]);
+            return pair[0];
         });
 
-        // Apply derived variables
-        Object.keys(derivedVarMap).forEach(function(cssVar) {
-            root.style.setProperty(cssVar, colors[derivedVarMap[cssVar]]);
-        });
-
-        // Apply syntax variables
-        Object.keys(syntaxVarMap).forEach(function(colorKey) {
-            root.style.setProperty(syntaxVarMap[colorKey], colors[colorKey]);
-        });
-
-        // Apply extended syntax variables
-        Object.keys(syntaxExtendedMap).forEach(function(cssVar) {
-            root.style.setProperty(cssVar, colors[syntaxExtendedMap[cssVar]]);
-        });
-
-        // Update active pill styling
         document.querySelectorAll('.theme-pill').forEach(function(pill) {
-            pill.classList.remove('active');
-            if (pill.dataset.theme === themeName) {
-                pill.classList.add('active');
-            }
+            pill.classList.toggle('active', pill.dataset.theme === id);
         });
 
-        // Store the selected theme
-        localStorage.setItem('yolo-sampler-theme', themeName);
+        localStorage.setItem(STORAGE_KEY, id);
+        YoloUtils.log('sampler applied ' + id + ' (' + mode + ', ' + vars.length + ' variables)');
     }
 
-    // Load themes from JSON
-    function loadThemes(callback) {
-        if (themesLoaded) {
-            callback();
-            return;
-        }
+    /** Drop the overrides, revealing the theme compiled into brand.css. */
+    function clearTheme() {
+        var root = document.documentElement;
+        applied.forEach(function(name) { root.style.removeProperty('--' + name); });
+        applied = [];
+        document.querySelectorAll('.theme-pill').forEach(function(pill) {
+            pill.classList.remove('active');
+        });
+        localStorage.removeItem(STORAGE_KEY);
+    }
 
-        fetch('/themes.json')
+    function loadThemes() {
+        return fetch('/themes.json')
             .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('Failed to load themes');
-                }
+                if (!response.ok) throw new Error('HTTP ' + response.status);
                 return response.json();
             })
             .then(function(data) {
-                // Convert grouped format to flat object
-                themes = {};
-                data.groups.forEach(function(group) {
-                    group.themes.forEach(function(theme) {
-                        themes[theme.id] = {
-                            dark: theme.dark,
-                            light: theme.light
-                        };
-                    });
-                });
-                themesLoaded = true;
-                callback();
-            })
-            .catch(function(error) {
-                console.error('Error loading themes:', error);
+                themes = YoloThemeVars.byId(data);
             });
     }
 
-    // Initialize theme sampler
     function init() {
-        loadThemes(function() {
-            // Add click listeners to theme pills
-            document.querySelectorAll('.theme-pill').forEach(function(pill) {
-                pill.addEventListener('click', function() {
-                    var themeName = this.dataset.theme;
-                    applyTheme(themeName);
-                });
+        if (!document.querySelector('.theme-pill')) return;
+
+        loadThemes().then(function() {
+            document.addEventListener('click', function(e) {
+                var pill = e.target.closest('.theme-pill');
+                if (!pill) return;
+                // Clicking the active pill returns to the site's own theme.
+                if (pill.classList.contains('active')) clearTheme();
+                else applyTheme(pill.dataset.theme);
             });
 
-            // Listen for light/dark toggle clicks to re-apply sampler theme
-            var themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', function() {
-                    // Small delay to let theme.js update localStorage first
-                    setTimeout(function() {
-                        var samplerTheme = getCurrentSamplerTheme();
-                        if (samplerTheme && themes[samplerTheme]) {
-                            applyTheme(samplerTheme);
-                        }
-                    }, 50);
-                });
-            }
+            // Light/dark is a separate axis - re-apply in the new mode.
+            document.addEventListener('yolo:themechange', function() {
+                var saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) applyTheme(saved);
+            });
 
-            // Apply saved theme if exists
-            var savedTheme = localStorage.getItem('yolo-sampler-theme');
-            if (savedTheme && themes[savedTheme]) {
-                applyTheme(savedTheme);
-            }
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (saved && themes[saved]) applyTheme(saved);
+        }).catch(function(error) {
+            YoloUtils.error('Could not load themes.json: ' + error.message);
         });
     }
 

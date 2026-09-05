@@ -132,16 +132,14 @@ async function main() {
     fs.mkdirSync(path.join(siteDir, 'src', 'assets'));
     fs.mkdirSync(path.join(siteDir, 'src', 'assets', 'images'));
     fs.mkdirSync(path.join(siteDir, 'src', 'css'));
-    fs.mkdirSync(path.join(siteDir, 'scripts'));
 
     // Copy core files
     const filesToCopy = [
       '.eleventy.js',
       '.gitignore',
-      'scripts/build-scss.js',
-      'scripts/generate-themes.js',
-      'src/css/main.scss.njk',
-      'src/css/brand.scss.njk',
+      'src/css/main.scss',
+      'src/css/brand.scss',
+      'src/css/hub.scss',
       'src/site.json.njk',
       'src/themes.json.njk'
     ];
@@ -185,6 +183,14 @@ async function main() {
     if (fs.existsSync(jsDir)) {
       copyDirSync(jsDir, path.join(siteDir, 'src', 'assets', 'js'));
       log.info('  Copied: src/assets/js/');
+    }
+
+    // Copy assets/ext: every layout loads ext/js/search.js unconditionally, and
+    // theme-vars.js lives here too, so a site without this directory 404s.
+    const extDir = path.join(yoloDir, 'src', 'assets', 'ext');
+    if (fs.existsSync(extDir)) {
+      copyDirSync(extDir, path.join(siteDir, 'src', 'assets', 'ext'));
+      log.info('  Copied: src/assets/ext/');
     }
 
     // Copy _data directory (except settings.yml which we'll create fresh)
@@ -255,21 +261,22 @@ The page you're looking for doesn't exist.
       description: description,
       main: '.eleventy.js',
       scripts: {
-        'build:11ty': 'eleventy',
-        'build:scss': 'node scripts/build-scss.js',
-        'build': 'npm run build:11ty && npm run build:scss',
-        'serve': 'npm run build && eleventy --serve',
-        'clean': 'rm -rf _site',
-        'generate:themes': 'node scripts/generate-themes.js'
+        'build': 'eleventy',
+        'serve': 'eleventy --serve',
+        'clean': 'rm -rf _site'
       },
       keywords: ['eleventy', '11ty', 'static-site', 'single-page'],
       author: author,
-      license: 'MIT',
+      // Generated sites embed Yolo's own code, which is not MIT. UNLICENSED is
+      // npm's marker for "no license granted" - change it to whatever you
+      // actually ship the site under.
+      license: 'UNLICENSED',
       dependencies: {
         '@11ty/eleventy': '^3.1.6',
         'js-yaml': '^4.1.0',
         'markdown-it': '^14.0.0',
         'markdown-it-attrs': '^4.1.6',
+        'nunjucks': '^3.2.4',
         'sass': '^1.69.0'
       }
     };

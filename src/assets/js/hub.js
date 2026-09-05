@@ -8,8 +8,8 @@
     var filteredPosts = [];
     var postsPerPage = 25;
     var currentPage = 1;
-    var selectedIndex = -1;
     var isSearching = false;
+    var selection;
 
     var searchInput, postsContainer, noResults, paginationContainer;
 
@@ -23,61 +23,40 @@
         isSearching = query.length > 0;
         filteredPosts = YoloUtils.filterByQuery(allPosts, query, ['title', 'description', 'tags']);
         currentPage = 1;
-        selectedIndex = isSearching && filteredPosts.length > 0 ? 0 : -1;
         render();
+        selection.select(isSearching && filteredPosts.length > 0 ? 0 : -1);
     }
 
     function goToPage(page) {
         var info = YoloUtils.paginate(page, filteredPosts.length, postsPerPage);
         if (page >= 1 && page <= info.totalPages) {
             currentPage = page;
-            selectedIndex = -1;
             render();
+            selection.reset();
         }
-    }
-
-    function updateSelection() {
-        var cards = postsContainer.querySelectorAll('.hub-card');
-        cards.forEach(function(card, i) {
-            if (i === selectedIndex) {
-                card.classList.add('selected');
-                card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            } else {
-                card.classList.remove('selected');
-            }
-        });
     }
 
     function navigateToSelected() {
         var posts = getCurrentPosts();
-        if (selectedIndex >= 0 && selectedIndex < posts.length) {
-            window.location.href = posts[selectedIndex].url + '?from=hub';
+        var index = selection.get();
+        if (index >= 0 && index < posts.length) {
+            window.location.href = posts[index].url + '?from=hub';
         }
     }
 
     function handleKeydown(e) {
         if (!isSearching) return;
+        if (selection.handleKey(e)) return;
 
-        var posts = getCurrentPosts();
-        if (posts.length === 0) return;
-
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            selectedIndex = (selectedIndex + 1) % posts.length;
-            updateSelection();
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            selectedIndex = selectedIndex <= 0 ? posts.length - 1 : selectedIndex - 1;
-            updateSelection();
-        } else if (e.key === 'Enter') {
+        if (e.key === 'Enter') {
             e.preventDefault();
             navigateToSelected();
         } else if (e.key === 'Escape') {
             searchInput.value = '';
             searchInput.blur();
             isSearching = false;
-            selectedIndex = -1;
             filteredPosts = allPosts.slice();
+            selection.reset();
             render();
         }
     }
@@ -87,9 +66,7 @@
             return '<a href="#" class="yolo-pill hub-tag" data-tag="' + tag + '">#' + tag + '</a>';
         }).join('');
 
-        var selectedClass = index === selectedIndex ? ' selected' : '';
-
-        return '<article class="hub-card' + selectedClass + '" data-index="' + index + '">' +
+        return '<article class="hub-card" data-index="' + index + '">' +
             '<div class="hub-card-header">' +
                 '<h2 class="hub-card-title"><a href="' + post.url + '?from=hub">' + post.title + '</a></h2>' +
                 '<span class="hub-card-date">' + YoloUtils.formatDate(post.date) + '</span>' +
@@ -162,6 +139,10 @@
             searchInput.addEventListener('keydown', handleKeydown);
         }
 
+        selection = YoloUtils.selectionList(function() {
+            return postsContainer.querySelectorAll('.hub-card');
+        }, { smooth: true });
+
         postsContainer.addEventListener('click', function(e) {
             var tag = e.target.closest('.hub-tag');
             if (tag) {
@@ -181,5 +162,5 @@
         render();
     }
 
-    window.YoloHub = function(config) { init(config); };
+    window.YoloHub = { init: init };
 })();

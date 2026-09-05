@@ -15,5 +15,5 @@ permalink: /posts/branding/
 Yolo uses themes for colors and fonts. Each theme has a matching syntax theme for code blocks.
 
 > **Theme files:**
-> * `src/_sass/yolo/brand/theme/` - color and font themes
-> * `src/_sass/yolo/brand/syntax/` - syntax highlighting themes
+> * `src/_data/themes.json` - every theme, colors for light and dark
+> * `src/assets/ext/js/theme-vars.js` - maps those colors to CSS variables

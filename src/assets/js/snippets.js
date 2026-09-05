@@ -1,34 +1,40 @@
 /**
- * On DOMContentLoaded setup click event listeners for each snippet header.
- * When clicked copy the code snippet to clipboard.
+ * Copy-to-clipboard for code snippets.
+ *
+ * Each {% code %} shortcode emits a .yolo-code-header immediately followed by
+ * the highlighted block. Clicking the header copies that block's text.
  */
-document.addEventListener("DOMContentLoaded", function() {
-  'use strict';
+(function() {
+    'use strict';
 
-  /**
-   * Selects the highlighter-rouge block that is a sibling of the preceding code-header element.
-   * @type {NodeListOf<Element>}
-   */
-  const snippetBlocks = document.querySelectorAll('.yolo-code-header + .highlighter-rouge');
-  /**
-   * Selects all code-header elements.
-   * @type {NodeListOf<Element>}
-   */
-  const snippetHeaders = document.querySelectorAll('.yolo-code-header');
+    function flash(header, message) {
+        if (header.classList.contains('copied')) return;
+        var original = header.innerHTML;
+        header.classList.add('copied');
+        header.innerHTML = original + ' ' + message;
+        setTimeout(function() {
+            header.innerHTML = original;
+            header.classList.remove('copied');
+        }, 2000);
+    }
 
-  snippetHeaders.forEach((element, index) => {
-    const code = snippetBlocks[index].innerText;
-    element.addEventListener('click', () => {
-      window.navigator.clipboard.writeText(code).then(r => {
-        console.log("snippets copy to clipboard.");
-      });
-      element.classList.add('copied');
-      const infoText = element.innerHTML.trim();
-      element.innerHTML = element.innerHTML + " copied!"
-      setTimeout(() => {
-        element.innerHTML = infoText;
-        element.classList.remove('copied');
-      }, 2000);
-    });
-  });
-});
+    function init() {
+        document.querySelectorAll('.yolo-code-header').forEach(function(header) {
+            // Walk to the adjacent block rather than pairing headers and blocks
+            // by index: one header without a block would shift every later pair.
+            var block = header.nextElementSibling;
+            if (!block || !block.classList.contains('highlighter-rouge')) return;
+
+            header.addEventListener('click', function() {
+                navigator.clipboard.writeText(block.innerText).then(function() {
+                    flash(header, 'copied!');
+                }, function(error) {
+                    YoloUtils.error('Copy failed: ' + error.message);
+                    flash(header, 'copy failed');
+                });
+            });
+        });
+    }
+
+    YoloUtils.domReady(init);
+})();

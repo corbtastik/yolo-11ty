@@ -9,11 +9,13 @@ tags:
   - themes
   - features
 permalink: /posts/yolo-demo/
+pinned: true
 links:
 - yolo,https://github.com/corbtastik/yolo
 - 11ty,https://www.11ty.dev
 ext_js:
 - custom
+- theme-vars
 - theme-sampler
 - search
 ext_css:
@@ -57,8 +59,8 @@ npm run serve
 Yolo uses themes for colors and fonts. Each theme has a matching syntax theme for code blocks.
 
 > **Theme files:**
-> * `src/_sass/yolo/brand/theme/` - color and font themes
-> * `src/_sass/yolo/brand/syntax/` - syntax highlighting themes
+> * `src/_data/themes.json` - every theme, colors for light and dark
+> * `src/assets/ext/js/theme-vars.js` - maps those colors to CSS variables
 
 
 ---
@@ -76,7 +78,7 @@ Click a pill to preview any theme. The site updates instantly. 🎭
 
 Create a custom theme in three steps:
 
-1. Add a new `.scss` file to `src/_sass/yolo/brand/theme/`.
+1. Add an entry to a group in `src/_data/themes.json`.
 2. Set colors for **light** and **dark** modes.
 3. Set `brand.theme` in `src/_data/settings.yml`.
 
@@ -134,8 +136,8 @@ Links get their own color. Pick something distinct and use it everywhere.
 Yolo highlights code with custom syntax themes. Each color theme includes a matching syntax theme.
 
 > **Syntax files:**
-> * `src/_sass/yolo/brand/theme/` - color themes
-> * `src/_sass/yolo/brand/syntax/` - syntax themes
+> * `src/_data/themes.json` - the `sh*` keys hold syntax colors
+> * `src/assets/ext/js/theme-vars.js` - expands them to syntax CSS variables
 
 Syntax themes map colors to code tokens like keywords, strings, and comments.
 
@@ -145,8 +147,8 @@ Syntax themes map colors to code tokens like keywords, strings, and comments.
 ### Custom Syntax Theme
 {:.no-toc}
 
-1. Add a `.scss` file to `src/_sass/yolo/brand/syntax/`.
-2. Set colors for **light** and **dark** modes.
+1. Add an entry to a group in `src/_data/themes.json`.
+2. Set the `sh*` colors for **light** and **dark** modes.
 3. Update `settings.yml`:
 
 {% code "settings.yml" %}

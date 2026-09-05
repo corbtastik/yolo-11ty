@@ -7,7 +7,7 @@
     var sections = [];
     var searchInput, resultsContainer, pageContent;
     var currentMatches = [];
-    var selectedIndex = -1;
+    var selection;
 
     function buildIndex() {
         var h2s = document.querySelectorAll('#page-content h2');
@@ -45,12 +45,14 @@
 
     function showResults(matches, query) {
         currentMatches = matches;
-        selectedIndex = matches.length > 0 ? 0 : -1;
 
         if (matches.length === 0 && query) {
             resultsContainer.innerHTML = '<div class="search-no-results">No matching sections</div>';
             resultsContainer.classList.add('visible');
             pageContent.style.display = 'none';
+            // Clear the index too, or Enter would still index into the now
+            // empty match list.
+            selection.reset();
             return;
         }
         if (matches.length === 0) { hideResults(); return; }
@@ -67,6 +69,7 @@
         resultsContainer.innerHTML = html;
         resultsContainer.classList.add('visible');
         pageContent.style.display = 'none';
+        selection.select(0);
     }
 
     function hideResults() {
@@ -74,7 +77,7 @@
         resultsContainer.classList.remove('visible');
         pageContent.style.display = '';
         currentMatches = [];
-        selectedIndex = -1;
+        selection.reset();
     }
 
     function navigate(id) {
@@ -86,14 +89,6 @@
         }, 50);
     }
 
-    function updateSelection() {
-        var items = resultsContainer.querySelectorAll('.search-result-item');
-        items.forEach(function(item, i) {
-            item.classList.toggle('selected', i === selectedIndex);
-            if (i === selectedIndex) item.scrollIntoView({ block: 'nearest' });
-        });
-    }
-
     function init() {
         searchInput = document.getElementById('search-input');
         resultsContainer = document.getElementById('search-results-container');
@@ -101,6 +96,9 @@
         if (!searchInput || !resultsContainer || !pageContent) return;
 
         buildIndex();
+        selection = YoloUtils.selectionList(function() {
+            return resultsContainer.querySelectorAll('.search-result-item');
+        });
 
         searchInput.addEventListener('input', function(e) {
             var q = e.target.value.trim();
@@ -109,20 +107,14 @@
         });
 
         searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') { searchInput.value = ''; searchInput.blur(); hideResults(); }
-            else if (e.key === 'ArrowDown' && currentMatches.length) {
+            if (selection.handleKey(e)) return;
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                searchInput.blur();
+                hideResults();
+            } else if (e.key === 'Enter' && selection.get() >= 0) {
                 e.preventDefault();
-                selectedIndex = (selectedIndex + 1) % currentMatches.length;
-                updateSelection();
-            }
-            else if (e.key === 'ArrowUp' && currentMatches.length) {
-                e.preventDefault();
-                selectedIndex = selectedIndex <= 0 ? currentMatches.length - 1 : selectedIndex - 1;
-                updateSelection();
-            }
-            else if (e.key === 'Enter' && currentMatches.length && selectedIndex >= 0) {
-                e.preventDefault();
-                navigate(currentMatches[selectedIndex].id);
+                navigate(currentMatches[selection.get()].id);
             }
         });
 

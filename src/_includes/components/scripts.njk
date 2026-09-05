@@ -1,13 +1,12 @@
+{# relative_url already applies settings.baseurl - do not prefix it again #}
 {% if settings.hub.enabled %}
-<script src="{{ settings.baseurl }}{{ '/assets/js/hub.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/hub.js' | relative_url }}"></script>
 {% endif %}
-<script src="{{ settings.baseurl }}{{ '/assets/ext/js/search.js' | relative_url }}"></script>
-{% if ext_js | size > 0 %}
+<script src="{{ '/assets/ext/js/search.js' | relative_url }}"></script>
 {% for js_name in ext_js %}
-<script src="{{ settings.baseurl }}/assets/ext/js/{{ js_name }}.js"></script>
+<script src="{{ ('/assets/ext/js/' + js_name + '.js') | relative_url }}"></script>
 {% endfor %}
-{% endif %}
-<script src="{{ settings.baseurl }}{{ '/assets/js/yolo.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/yolo.js' | relative_url }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -1,14 +1,15 @@
 <div class="yolo-sticky-controls">
     <div class="yolo-sticky-top-right">
         <div class="yolo-theme-toggle">
-            <span id="theme-toggle" class="material-icons md-36">light_mode</span>
+            {# Matches the default light theme; yolo.js re-seeds it from the stored theme. #}
+            <span id="theme-toggle" class="material-icons md-36">dark_mode</span>
         </div>
-        {% if not isHub and settings.hub.enabled %}
+        {% if not bare and settings.hub.enabled %}
         <a href="{{ '/' | relative_url }}" class="yolo-home-link">
             <span class="material-icons md-36">home</span>
         </a>
         {% endif %}
-        {% if settings.sidebar and not isHub %}
+        {% if settings.sidebar and not bare %}
         <div class="yolo-sidebar-toggle">
             <span id="sidebar-toggle" class="material-icons md-36">menu</span>
         </div>

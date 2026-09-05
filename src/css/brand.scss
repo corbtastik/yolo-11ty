@@ -1,0 +1,28 @@
+---
+permalink: /css/brand.css
+---
+@charset "utf-8";
+@use "yolo/brand/all" as *;
+// ----------------------------------------------------------------------------
+// Brand variables for the selected theme.
+//
+// The declarations below are expanded at build time by the `brandVars` filter
+// (see .eleventy.js), which reads the chosen theme from _data/themes.json and
+// runs it through assets/js/theme-vars.js - the same mapping the demo's live
+// theme sampler uses in the browser.
+//
+// settings.brand.theme and settings.brand.syntax are separate on purpose: a
+// site can pair one theme's colors with another theme's syntax highlighting.
+// ----------------------------------------------------------------------------
+:root[light] {
+{{ settings.brand | brandVars('light') }}
+}
+:root[dark] {
+{{ settings.brand | brandVars('dark') }}
+}
+
+// ----------------------------------------------------------------------------
+// One swatch class per syntax token, for the demo colour grid. Generated from
+// the same token list as the variables above - see .eleventy.js.
+// ----------------------------------------------------------------------------
+{{ syntaxSwatchCss() }}
