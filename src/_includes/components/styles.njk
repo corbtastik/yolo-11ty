@@ -13,6 +13,6 @@
 <link rel="stylesheet" href="{{ '/css/hub.css' | relative_url }}" />
 {% endif %}
 <!-- Add custom css if ext_css front-matter exists -->
-{% for css_name in ext_css %}
+{% for css_name in pageExtCss %}
 <link rel="stylesheet" href="{{ ('/assets/ext/css/' + css_name + '.css') | relative_url }}" />
 {% endfor %}

@@ -12,6 +12,18 @@
     neither            always full        (layouts/post.njk)
 #}
 {% set bare = isHub or (isIndexPage and settings.hub.enabled) %}
+{#
+  Opt-in CSS/JS for this page. Single-page mode renders another post's body as
+  the home page, and front matter does not travel with the body, so take that
+  post's ext_css/ext_js too - otherwise its demos render but stay inert.
+#}
+{% set pageExtCss = ext_css %}
+{% set pageExtJs = ext_js %}
+{% if isIndexPage and not settings.hub.enabled %}
+  {% set headline = collections.postsRanked | first %}
+  {% set pageExtCss = headline.data.ext_css %}
+  {% set pageExtJs = headline.data.ext_js %}
+{% endif %}
 <html lang="en" class="yolo-themed">
 {% include "components/head.njk" %}
 <body id="yolo-site"{% if not bare and settings.sidebar %} class="sidebar-{{ settings.sidebar.position | default('left') }}"{% endif %}>

@@ -38,24 +38,33 @@ module.exports = function(eleventyConfig) {
   // Collections
   // -------------------------------------------------------------------------
 
-  // Post metadata for the hub index, derived from each post's own front matter
-  // so there is a single source of truth.
+  // Posts in presentation order: anything marked `pinned: true` first, then
+  // everything else oldest-first - the reading order the docs are written in,
+  // which is Eleventy's natural collection order. The sort is stable, so
+  // unpinned posts keep that order.
   //
-  // Order: posts with `pinned: true` first (in date order among themselves),
-  // then everything else oldest-first - the reading order the docs are written
-  // in, which is Eleventy's natural collection order.
-  eleventyConfig.addCollection("hubPosts", collectionApi =>
+  // Both the hub listing and single-page mode read this, so "the headline post"
+  // means the same thing in both. slice() first: the array getFilteredByTag
+  // returns is Eleventy's, not ours to reorder.
+  const rankPosts = collectionApi =>
     collectionApi.getFilteredByTag("post")
-      .map(post => ({
-        pinned: post.data.pinned === true,
-        title: post.data.title || "",
-        description: post.data.description || "",
-        url: post.url,
-        date: post.date.toISOString().substring(0, 10),
-        tags: (post.data.tags || []).filter(tag => tag !== "post")
-      }))
-      .sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0))
-      .map(({ pinned, ...post }) => post)
+      .slice()
+      .sort((a, b) => (b.data.pinned === true ? 1 : 0) - (a.data.pinned === true ? 1 : 0));
+
+  // Full post objects. Single-page mode (hub.enabled: false) renders the first
+  // of these as the home page.
+  eleventyConfig.addCollection("postsRanked", rankPosts);
+
+  // The same posts trimmed to what the hub's client-side listing needs, derived
+  // from each post's own front matter so there is a single source of truth.
+  eleventyConfig.addCollection("hubPosts", collectionApi =>
+    rankPosts(collectionApi).map(post => ({
+      title: post.data.title || "",
+      description: post.data.description || "",
+      url: post.url,
+      date: post.date.toISOString().substring(0, 10),
+      tags: (post.data.tags || []).filter(tag => tag !== "post")
+    }))
   );
 
   // -------------------------------------------------------------------------

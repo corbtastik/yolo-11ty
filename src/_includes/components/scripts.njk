@@ -3,7 +3,7 @@
 <script src="{{ '/assets/js/hub.js' | relative_url }}"></script>
 {% endif %}
 <script src="{{ '/assets/ext/js/search.js' | relative_url }}"></script>
-{% for js_name in ext_js %}
+{% for js_name in pageExtJs %}
 <script src="{{ ('/assets/ext/js/' + js_name + '.js') | relative_url }}"></script>
 {% endfor %}
 <script src="{{ '/assets/js/yolo.js' | relative_url }}"></script>
