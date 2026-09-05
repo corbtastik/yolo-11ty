@@ -6,6 +6,11 @@ Yolo builds beautiful single-page sites. It works for writers, developers, and p
 
 **Demo:** https://yolo-11ty.web.app
 
+> **Upgrading from 1.x?** Themes now live only in `src/_data/themes.json`.
+> The generated SCSS under `src/_sass/yolo/brand/theme/` and `.../syntax/` is
+> gone, along with the `build:scss` and `generate:themes` scripts - `npm run
+> build` does everything in one pass.
+
 ## Quick Start
 
 ### Create a New Site
@@ -90,7 +95,9 @@ hub:
   postsPerPage: 10
 ```
 
-The hub automatically collects all posts from `src/posts/` and displays them sorted by date.
+The hub collects posts from `src/posts/` using each post's own front matter, so
+there is nothing to keep in sync. Posts marked `pinned: true` come first,
+then the rest in date order.
 
 ### Search
 
@@ -194,31 +201,30 @@ Files load from:
 
 ```
 yolo-11ty/
-├── .eleventy.js          # Eleventy config, filters, shortcodes
+├── .eleventy.js            # Eleventy config: filters, shortcodes, SCSS build
 ├── scripts/
-│   ├── build-scss.js     # SCSS compilation
-│   └── generate-themes.js # Generate theme SCSS from JSON
+│   └── create-site.js      # Site generator (npm run create)
 ├── src/
-│   ├── _data/            # Global data files (YAML/JSON)
-│   │   ├── settings.yml  # Site configuration
-│   │   └── themes.json   # Theme color definitions
+│   ├── _data/
+│   │   ├── settings.yml    # Site configuration
+│   │   ├── themes.json     # All 67 themes, colors for light and dark
+│   │   └── syntaxTokens.yml # Token catalog for the demo swatch grid
 │   ├── _includes/
-│   │   ├── components/   # Reusable Nunjucks partials
-│   │   └── layouts/      # Page layouts
-│   ├── _sass/
-│   │   └── yolo/
-│   │       ├── base/     # Reset, variables
-│   │       ├── brand/    # Theme & syntax SCSS
-│   │       ├── components/ # UI components
-│   │       ├── core/     # Layout, typography
-│   │       └── utilities/ # Helpers
+│   │   ├── components/     # Reusable Nunjucks partials
+│   │   ├── demo/           # Demo-only partials
+│   │   └── layouts/        # base.njk plus thin per-type layouts
+│   ├── _sass/yolo/
+│   │   ├── base/           # Reset, variables
+│   │   ├── brand/          # Color utilities, syntax and theme rules
+│   │   ├── components/     # UI components
+│   │   ├── core/           # Layout, typography
+│   │   └── utilities/      # Helpers
 │   ├── assets/
-│   │   ├── js/           # Core JavaScript
-│   │   └── ext/          # Extension CSS/JS
-│   ├── css/
-│   │   └── hub.scss.njk  # Hub-specific styles
-│   └── index.njk         # Hub index page
-└── _site/                # Built output
+│   │   ├── js/             # Core JavaScript
+│   │   └── ext/            # Opt-in CSS/JS, loaded via front matter
+│   ├── css/                # Stylesheet entry points (.scss)
+│   └── index.njk           # Hub index page
+└── _site/                  # Built output
 ```
 
 ### NPM Scripts
@@ -226,19 +232,19 @@ yolo-11ty/
 | Command | Description |
 |---------|-------------|
 | `npm run create` | Create a new site from template |
-| `npm run build` | Build site + compile SCSS |
-| `npm run serve` | Build and serve with hot reload |
+| `npm run build` | Build to `_site/` |
+| `npm run serve` | Serve with hot reload |
 | `npm run clean` | Remove `_site` directory |
-| `npm run generate:themes` | Regenerate theme SCSS from JSON |
 
 ### Build Process
 
-1. **Eleventy** processes templates → `_site/`
-2. **SCSS compiler** processes `_site/css/*.scss` → CSS
+Eleventy does everything in one pass. Files in `src/css/` are Nunjucks
+templates that compile to CSS through a custom extension, so editing any
+partial under `src/_sass/` rebuilds the stylesheet while the server runs.
 
 ### Adding a Theme
 
-1. Edit `src/_data/themes.json` - add your theme to a group:
+`themes.json` is the only place theme colors live. Add an entry to a group:
 
 ```json
 {
@@ -262,13 +268,7 @@ yolo-11ty/
 }
 ```
 
-2. Generate SCSS files:
-
-```bash
-npm run generate:themes
-```
-
-3. Set in `settings.yml`:
+2. Set in `settings.yml`:
 
 ```yaml
 brand:
@@ -283,17 +283,21 @@ brand:
 | `.eleventy.js` | Filters, shortcodes, markdown config |
 | `src/_data/settings.yml` | Site name, theme, sidebar, hub config |
 | `src/_data/themes.json` | All theme color definitions |
+| `src/_data/syntaxTokens.yml` | Token catalog for the demo swatch grid |
 | `src/assets/js/utils.js` | Shared JS utilities (search, pagination, formatting) |
 | `src/assets/js/hub.js` | Hub: search, filter, pagination, keyboard nav |
 | `src/assets/js/theme.js` | Light/dark mode toggle |
 | `src/assets/js/yolo.js` | Core: lightbox, image grid, TOC, sidebar |
+| `src/assets/ext/js/theme-vars.js` | Theme colors to CSS variables, shared by build and browser |
 | `src/assets/ext/js/theme-sampler.js` | Live theme switching |
-| `src/css/hub.scss.njk` | Hub card and pagination styles |
+| `src/css/brand.scss` | Theme variables and syntax swatch classes |
+| `src/css/hub.scss` | Hub card and pagination styles |
 
 ### Styling
 
-- **SCSS variables** - Defined in theme files, compiled to CSS custom properties
-- **CSS custom properties** - Used at runtime for theming
+- **CSS custom properties** - Every theme color is a variable, set on `:root`
+- **One mapping** - `theme-vars.js` turns a theme's twelve colors into the full
+  variable set, and is used by both the build and the demo's theme sampler
 - **BEM-ish naming** - `.yolo-{component}`, `.yolo-{component}-{element}`
 
 Key CSS custom properties:
@@ -306,13 +310,14 @@ Key CSS custom properties:
 --link-color             /* Links */
 --syntax-keyword         /* Code: keywords */
 --syntax-string          /* Code: strings */
---syntax-function        /* Code: functions */
+--syntax-name-function   /* Code: functions */
 ```
 
 ### JavaScript Architecture
 
 - **IIFE pattern** - Each file is self-contained
-- **YoloUtils** - Shared utilities (domReady)
+- **YoloUtils** - Shared helpers: `domReady`, `debounce`, `formatDate`,
+  `filterByQuery`, `paginate`, `selectionList`
 - **No build step** - Plain ES5 for browser compatibility
 
 ### Adding a Shortcode
@@ -351,4 +356,4 @@ Usage:
 
 ## License
 
-License - see source for details.
+CORBS Commercial License v1.0 - see [LICENSE](LICENSE).
