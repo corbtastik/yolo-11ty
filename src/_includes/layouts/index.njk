@@ -5,7 +5,10 @@ isIndexPage: true
 {% if settings.hub.enabled %}
 {{ content | safe }}
 {% else %}
-{# Single-page mode: the home page shows the first post's content. #}
-{% set mainPost = collections.post | first %}
+{# Single-page mode: the home page shows the headline post - the one marked
+   `pinned: true`, falling back to the oldest if a site pins nothing. Using
+   collections.post here instead would pick the oldest post, which is how the
+   full demo stopped being the single-page home page. #}
+{% set mainPost = collections.postsRanked | first %}
 {{ (mainPost.content if mainPost else content) | safe }}
 {% endif %}
