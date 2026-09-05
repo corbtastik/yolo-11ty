@@ -994,12 +994,12 @@ AND price <= 10000
 {% code "YAML" %}
 ```yaml
 name: Yolo
-version: v1.5
+version: v2.0
 title: Yolo on my friend
 description: Loveable single pages
 brand:
-  theme: corbs
-  syntax: corbs
+  theme: star-lord
+  syntax: star-lord
 sidebar:
   logo: assets/images/logo.png
 ```
