@@ -4,7 +4,12 @@ Loveable single pages - Eleventy edition.
 
 Yolo builds beautiful single-page sites. It works for writers, developers, and photographers.
 
-**Demo:** https://yolo-11ty.web.app
+**Live demos** - the same content, the same build, one setting apart:
+
+| | | |
+|---|---|---|
+| **Single page** | [yolo-11ty.web.app](https://yolo-11ty.web.app) | everything on one scrolling page |
+| **Multi page** | [yolo-hub-11ty.web.app](https://yolo-hub-11ty.web.app) | a searchable card index over separate posts |
 
 > **Upgrading from 1.x?** Themes now live only in `src/_data/themes.json`.
 > The generated SCSS under `src/_sass/yolo/brand/theme/` and `.../syntax/` is
@@ -76,6 +81,37 @@ sidebar:
   logo: assets/images/logo.png
 ```
 
+### Single Page or Multi Page
+
+One setting decides the shape of the whole site:
+
+```yaml
+hub:
+  enabled: false   # single page: the home page is your headline post
+  postsPerPage: 10
+```
+
+**`enabled: false`** - the home page renders the post marked `pinned: true` in
+full, so the site is one long scrolling page. Everything else still builds at
+its own URL. This is [yolo-11ty.web.app](https://yolo-11ty.web.app).
+
+**`enabled: true`** - the home page becomes the Hub, a searchable card index,
+and each post is its own page. This is
+[yolo-hub-11ty.web.app](https://yolo-hub-11ty.web.app).
+
+Mark the headline post in its front matter:
+
+```yaml
+---
+title: Yolo Demo
+pinned: true
+---
+```
+
+`pinned` means the same thing in both modes: the post that leads. In single-page
+mode it is the page; in hub mode it is the first card. Pin nothing and the
+oldest post leads.
+
 ### Yolo Hub
 
 The Hub is a card-based index page that displays all your posts with search, filtering, and pagination.
@@ -92,6 +128,7 @@ The Hub is a card-based index page that displays all your posts with search, fil
 
 ```yaml
 hub:
+  enabled: true
   postsPerPage: 10
 ```
 
@@ -335,6 +372,35 @@ Usage in markdown:
 ```nunjucks
 {% myShortcode "Hello" %}
 ```
+
+### Deploying
+
+`npm run build` writes a static site to `_site/`, which any static host will
+serve. This repo ships a Firebase config with two hosting targets, because the
+demo publishes both modes from the same source:
+
+| Target | Site | `hub.enabled` |
+|--------|------|---------------|
+| `yolo-11ty` | [yolo-11ty.web.app](https://yolo-11ty.web.app) | `false` |
+| `yolo-hub-11ty` | [yolo-hub-11ty.web.app](https://yolo-hub-11ty.web.app) | `true` |
+
+Both targets publish `_site`, so the mode is whatever `settings.yml` said at
+build time. Build and deploy one at a time:
+
+```bash
+# single page
+# set hub.enabled: false in src/_data/settings.yml
+npm run build
+firebase deploy --only hosting:yolo-11ty
+
+# multi page
+# set hub.enabled: true in src/_data/settings.yml
+npm run build
+firebase deploy --only hosting:yolo-hub-11ty
+```
+
+For your own site you only need one target - drop the other from
+`firebase.json` and `.firebaserc`.
 
 ### Adding a Filter
 
