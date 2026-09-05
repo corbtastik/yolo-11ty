@@ -316,6 +316,15 @@ Open http://localhost:8080 in your browser.
 
 - [Yolo Documentation](https://github.com/corbtastik/yolo-11ty)
 - [Eleventy](https://www.11ty.dev/)
+
+## License
+
+Built with Yolo, licensed under the CORBS Commercial License v1.0.
+
+You may use and modify this site for personal or commercial projects,
+including work for clients. You may not redistribute, republish or resell
+Yolo itself, or ship a theme, template or starter kit based substantially
+on it. Ownership of Yolo remains with CORBS.
 `;
     fs.writeFileSync(path.join(siteDir, 'README.md'), readme);
     log.info('  Created: README.md');

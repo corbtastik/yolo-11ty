@@ -1010,26 +1010,34 @@ sidebar:
 ## License
 
 ```text
-MIT License
+CORBS Commercial License v1.0
 
-Copyright (c) 2023 Corbs
+Copyright (c) 2026 CORBS
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is granted to the purchaser of this software to use, modify, and deploy the software for personal or commercial websites and applications.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+You may:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+* Use the software for personal or commercial projects.
+* Modify the source code to fit your needs.
+* Use the software for websites or applications you create for yourself, your company, or your clients.
+* Keep and use your modified copies of the software.
+
+You may not:
+
+* Sell, redistribute, publish, sublicense, or give away the software or its source code.
+* Make the software publicly available in a repository or downloadable package.
+* Sell or distribute a theme, template, starter kit, framework, or similar product based substantially on this software.
+* Claim the original software as your own work.
+
+Ownership of the original software remains with CORBS.
+
+This license is granted to the purchaser and may not be transferred to another person or organization without permission.
+
+The software is provided "as is", without warranty of any kind. CORBS is not responsible for any damages, losses, or other issues resulting from use of the software.
+
+If you violate these terms, your license to use the software is terminated.
+
+By purchasing, downloading, or using the software, you agree to these terms.
 ```
 
