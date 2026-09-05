@@ -169,7 +169,12 @@ module.exports = function(eleventyConfig) {
     // the columns drops the trailing images from the grid entirely (they stayed
     // in the modal, so the data-index values went out of sync with the slides).
     const perCol = Math.max(1, Math.ceil(images.length / columns));
-    let grid = `<div class="columns is-mobile">`;
+
+    // ImageGrid.open() hides #ig-<name> to reveal the expanded view, so the
+    // wrapper must enclose ONLY the thumbnail grid - if it also contains
+    // #ig-target-<name>, hiding it hides the expanded view along with it.
+    let grid = type === 'ig' ? `<div id="ig-${name}">` : '';
+    grid += `<div class="columns is-mobile">`;
 
     for (let c = 0; c < columns; c++) {
       grid += `<div class="column">`;
@@ -184,6 +189,7 @@ module.exports = function(eleventyConfig) {
       grid += `</div>`;
     }
     grid += `</div>`;
+    if (type === 'ig') grid += `</div>`;  // close #ig-<name> before the target
 
     if (type === 'lb') {
       grid += `<div id="lb-modal-${name}" class="lb-modal">
@@ -250,7 +256,8 @@ module.exports = function(eleventyConfig) {
     name = name || "ig-images";
     columns = columns || 4;
     const images = this.ctx[name] || [];
-    return `<div id="ig-${name}">${galleryHtml('ig', name, images, columns)}</div>`;
+    // galleryHtml emits the #ig-<name> wrapper itself, around the grid only.
+    return galleryHtml('ig', name, images, columns);
   });
 
   eleventyConfig.addShortcode("lightbox", function(name) {
