@@ -1,6 +1,6 @@
 {
   "name": "yolo-11ty",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Loveable single pages - Eleventy edition",
   "main": ".eleventy.js",
   "scripts": {
