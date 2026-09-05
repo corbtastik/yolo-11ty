@@ -17,7 +17,7 @@ Yolo highlights code with custom syntax themes. Each color theme includes a matc
 
 > **Syntax files:**
 > * `src/_data/themes.json` - the `sh*` keys hold syntax colors
-> * `src/assets/js/theme-vars.js` - expands them to syntax CSS variables
+> * `src/assets/ext/js/theme-vars.js` - expands them to syntax CSS variables
 
 Syntax themes map colors to code tokens like keywords, strings, and comments.
 

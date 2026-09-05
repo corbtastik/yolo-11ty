@@ -15,6 +15,7 @@ links:
 - 11ty,https://www.11ty.dev
 ext_js:
 - custom
+- theme-vars
 - theme-sampler
 - search
 ext_css:
@@ -59,7 +60,7 @@ Yolo uses themes for colors and fonts. Each theme has a matching syntax theme fo
 
 > **Theme files:**
 > * `src/_data/themes.json` - every theme, colors for light and dark
-> * `src/assets/js/theme-vars.js` - maps those colors to CSS variables
+> * `src/assets/ext/js/theme-vars.js` - maps those colors to CSS variables
 
 
 ---
@@ -136,7 +137,7 @@ Yolo highlights code with custom syntax themes. Each color theme includes a matc
 
 > **Syntax files:**
 > * `src/_data/themes.json` - the `sh*` keys hold syntax colors
-> * `src/assets/js/theme-vars.js` - expands them to syntax CSS variables
+> * `src/assets/ext/js/theme-vars.js` - expands them to syntax CSS variables
 
 Syntax themes map colors to code tokens like keywords, strings, and comments.
 

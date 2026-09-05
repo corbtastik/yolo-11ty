@@ -16,4 +16,4 @@ Yolo uses themes for colors and fonts. Each theme has a matching syntax theme fo
 
 > **Theme files:**
 > * `src/_data/themes.json` - every theme, colors for light and dark
-> * `src/assets/js/theme-vars.js` - maps those colors to CSS variables
+> * `src/assets/ext/js/theme-vars.js` - maps those colors to CSS variables

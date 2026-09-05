@@ -34,7 +34,7 @@ layout: layouts/index.njk
   YoloUtils.domReady(function() {
     var postsData = {{ collections.hubPosts | dump | safe }};
     var postsPerPage = {{ settings.hub.postsPerPage | default(25) }};
-    window.hub = new YoloHub({
+    YoloHub.init({
       posts: postsData,
       postsPerPage: postsPerPage
     });

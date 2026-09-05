@@ -20,3 +20,9 @@ permalink: /css/brand.css
 :root[dark] {
 {{ settings.brand | brandVars('dark') }}
 }
+
+// ----------------------------------------------------------------------------
+// One swatch class per syntax token, for the demo colour grid. Generated from
+// the same token list as the variables above - see .eleventy.js.
+// ----------------------------------------------------------------------------
+{{ syntaxSwatchCss() }}

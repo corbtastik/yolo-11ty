@@ -12,6 +12,7 @@ permalink: /posts/themes/
 ext_css:
   - custom
 ext_js:
+  - theme-vars
   - theme-sampler
 ---
 

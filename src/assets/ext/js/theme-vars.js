@@ -9,7 +9,8 @@
  *   - the build, via .eleventy.js, which bakes the selected theme into
  *     brand.css
  *   - the browser, via assets/ext/js/theme-sampler.js, which previews any
- *     theme live on the demo pages
+ *     theme live. Both are listed in the ext_js front matter of the demo
+ *     posts, this file first, so only those pages pay for it.
  *
  * They are deliberately not allowed to drift. Each used to carry its own copy
  * of this mapping: the build's was complete, the sampler's covered only 34 of

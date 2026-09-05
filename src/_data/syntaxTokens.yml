@@ -1,0 +1,115 @@
+# Syntax token catalog for the demo swatch grid.
+#
+# Rendered by _includes/demo/syntax-theme-swatches.njk. Each token names the
+# CSS class that paints it (defined in _sass/yolo/brand/_colors.scss) and the
+# Rouge abbreviation the highlighter emits for it.
+tabs:
+  - id: nameTokens
+    label: Name
+    heading: "Name Tokens"
+    tokens:
+      - { class: syntax-name-color, label: "name", abbr: "n" }
+      - { class: syntax-name-attribute-color, label: "name-attribute", abbr: "na" }
+      - { class: syntax-name-builtin-pseudo-color, label: "name-builtin-pseudo", abbr: "bq" }
+      - { class: syntax-name-builtin-color, label: "name-builtin", abbr: "nb" }
+      - { class: syntax-name-class-color, label: "name-class", abbr: "nc" }
+      - { class: syntax-name-constant-color, label: "name-constant", abbr: "no" }
+      - { class: syntax-name-decorator-color, label: "name-decorator", abbr: "nd" }
+      - { class: syntax-name-entity-color, label: "name-entity", abbr: "ni" }
+      - { class: syntax-name-exception-color, label: "name-exception", abbr: "ne" }
+      - { class: syntax-name-function-magic-color, label: "name-function-magic", abbr: "fm" }
+      - { class: syntax-name-function-color, label: "name-function", abbr: "nf" }
+      - { class: syntax-name-label-color, label: "name-label", abbr: "nl" }
+      - { class: syntax-name-namespace-color, label: "name-namespace", abbr: "nn" }
+      - { class: syntax-name-other-color, label: "name-other", abbr: "nx" }
+      - { class: syntax-name-property-color, label: "name-property", abbr: "py" }
+      - { class: syntax-name-tag-color, label: "name-tag", abbr: "nt" }
+      - { class: syntax-name-variable-color, label: "name-variable", abbr: "nv" }
+      - { class: syntax-name-variable-class-color, label: "name-variable-class", abbr: "vc" }
+      - { class: syntax-name-variable-global-color, label: "name-variable-global", abbr: "vg" }
+      - { class: syntax-name-variable-instance-color, label: "name-variable-instance", abbr: "vi" }
+      - { class: syntax-name-variable-magic-color, label: "name-variable-magic", abbr: "vm" }
+  - id: stringTokens
+    label: String
+    heading: "String Tokens"
+    tokens:
+      - { class: syntax-string-color, label: "string", abbr: "s" }
+      - { class: syntax-string-single-color, label: "string-single", abbr: "s1" }
+      - { class: syntax-string-double-color, label: "string-double", abbr: "s2" }
+      - { class: syntax-string-affix-color, label: "string-affix", abbr: "sa" }
+      - { class: syntax-string-backtick-color, label: "string-backtick", abbr: "sb" }
+      - { class: syntax-string-char-color, label: "string-char", abbr: "sc" }
+      - { class: syntax-string-doc-color, label: "string-doc", abbr: "sd" }
+      - { class: syntax-string-escape-color, label: "string-escape", abbr: "se" }
+      - { class: syntax-string-heredoc-color, label: "string-heredoc", abbr: "sh" }
+      - { class: syntax-string-interpol-color, label: "string-interpol", abbr: "si" }
+      - { class: syntax-string-regex-color, label: "string-regex", abbr: "sr" }
+      - { class: syntax-string-symbol-color, label: "string-symbol", abbr: "ss" }
+      - { class: syntax-string-other-color, label: "string-other", abbr: "sx" }
+  - id: commentTokens
+    label: Comment
+    heading: "Comment Tokens"
+    tokens:
+      - { class: syntax-comment-color, label: "comment", abbr: "c" }
+      - { class: syntax-comment-hashbang-color, label: "comment-hashbang", abbr: "ch" }
+      - { class: syntax-comment-multiline-color, label: "comment-multiline", abbr: "cm" }
+      - { class: syntax-comment-preproc-color, label: "comment-preproc", abbr: "cp" }
+      - { class: syntax-comment-preprocfile-color, label: "comment-preprocfile", abbr: "cpf" }
+      - { class: syntax-comment-single-color, label: "comment-single", abbr: "c1" }
+      - { class: syntax-comment-special-color, label: "comment-special", abbr: "cs" }
+  - id: genericTokens
+    label: Generic
+    heading: "Generic Tokens"
+    tokens:
+      - { class: syntax-generic-deleted-color, label: "generic-deleted", abbr: "gd" }
+      - { class: syntax-generic-emph-color, label: "generic-emph", abbr: "ge" }
+      - { class: syntax-generic-error-color, label: "generic-error", abbr: "gr" }
+      - { class: syntax-generic-heading-color, label: "generic-heading", abbr: "gh" }
+      - { class: syntax-generic-inserted-color, label: "generic-inserted", abbr: "gi" }
+      - { class: syntax-generic-output-color, label: "generic-output", abbr: "go" }
+      - { class: syntax-generic-prompt-color, label: "generic-prompt", abbr: "gp" }
+      - { class: syntax-generic-strong-color, label: "generic-strong", abbr: "gs" }
+      - { class: syntax-generic-subheading-color, label: "generic-subheading", abbr: "gu" }
+      - { class: syntax-generic-traceback-color, label: "generic-traceback", abbr: "gt" }
+  - id: keywordTokens
+    label: Keyword
+    heading: "Keyword Tokens"
+    tokens:
+      - { class: syntax-keyword-color, label: "keyword", abbr: "k" }
+      - { class: syntax-keyword-constant-color, label: "keyword-constant", abbr: "kc" }
+      - { class: syntax-keyword-declaration-color, label: "keyword-declaration", abbr: "kd" }
+      - { class: syntax-keyword-namespace-color, label: "keyword-namespace", abbr: "kn" }
+      - { class: syntax-keyword-pseudo-color, label: "keyword-pseudo", abbr: "kp" }
+      - { class: syntax-keyword-reserved-color, label: "keyword-reserved", abbr: "kr" }
+      - { class: syntax-keyword-type-color, label: "keyword-type", abbr: "kt" }
+  - id: numberTokens
+    label: Number
+    heading: "Number Tokens"
+    tokens:
+      - { class: syntax-number-color, label: "number", abbr: "n" }
+      - { class: syntax-number-bin-color, label: "number-bin", abbr: "mb" }
+      - { class: syntax-number-float-color, label: "number-float", abbr: "mf" }
+      - { class: syntax-number-hex-color, label: "number-hex", abbr: "mh" }
+      - { class: syntax-number-integer-long-color, label: "number-integer-long", abbr: "il" }
+      - { class: syntax-number-integer-color, label: "number-integer", abbr: "mi" }
+      - { class: syntax-number-oct-color, label: "number-oct", abbr: "mo" }
+  - id: miscTokens
+    label: Misc
+    heading: "Misc Tokens"
+    tokens:
+      - { class: syntax-error-color, label: "error", abbr: "err" }
+      - { class: syntax-punctuation-color, label: "punctuation", abbr: "p" }
+      - { class: syntax-text-whitespace-color, label: "whitespace", abbr: "w" }
+      - { class: syntax-highlight-line-color, label: "highlight-line", abbr: "hll" }
+  - id: literalTokens
+    label: Literal
+    heading: "Literal and Date Tokens"
+    tokens:
+      - { class: syntax-literal-color, label: "literal", abbr: "l" }
+      - { class: syntax-literal-date-color, label: "literal-date", abbr: "ld" }
+  - id: operatorTokens
+    label: Operator
+    heading: "Operator Tokens"
+    tokens:
+      - { class: syntax-operator-color, label: "operator", abbr: "o" }
+      - { class: syntax-operator-word-color, label: "operator-word", abbr: "ow" }

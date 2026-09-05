@@ -7,8 +7,8 @@ const markdownIt = require("markdown-it");
 const markdownItAttrs = require("markdown-it-attrs");
 const { execSync } = require("child_process");
 
-// Shared with the browser - see the header of src/assets/js/theme-vars.js.
-const themeVars = require("./src/assets/js/theme-vars.js");
+// Shared with the browser - see the header of src/assets/ext/js/theme-vars.js.
+const themeVars = require("./src/assets/ext/js/theme-vars.js");
 const themesById = themeVars.byId(require("./src/_data/themes.json"));
 
 const SASS_INCLUDES = path.join(__dirname, "src", "_sass");
@@ -108,6 +108,22 @@ module.exports = function(eleventyConfig) {
     return themeVars.cssVars(themeColors, syntaxColors, mode)
       .map(([name, value]) => `  --${name}: ${value};`)
       .join("\n");
+  });
+
+  // Swatch classes for the demo's colour grid, one per syntax token. Generated
+  // from the same list that defines the --syntax-* properties so a new token
+  // cannot end up with a variable but no class to paint it.
+  scssEnv.addGlobal("syntaxSwatchCss", function() {
+    return themeVars.SYNTAX_VARS.map(([name]) => {
+      // Most names are like "syntax-keyword" and take a "-color" suffix for the
+      // class. "syntax-container-color" already ends in -color; it also backs a
+      // container rather than a token, so its text defaults light, not dark.
+      const isContainer = name.endsWith("-color");
+      const cls = isContainer ? name : `${name}-color`;
+      const onColor = isContainer ? `${name.replace(/-color$/, "")}-on-color, #fff`
+                                  : `${name}-on-color, #000`;
+      return `.${cls} {\n  background-color: var(--${name});\n  color: var(--${onColor});\n}`;
+    }).join("\n");
   });
 
   eleventyConfig.addExtension("scss", {
