@@ -7,14 +7,23 @@ const markdownIt = require("markdown-it");
 const markdownItAttrs = require("markdown-it-attrs");
 const { execSync } = require("child_process");
 
+// Shared with the browser - see the header of src/assets/js/theme-vars.js.
+const themeVars = require("./src/assets/js/theme-vars.js");
+const themesById = themeVars.byId(require("./src/_data/themes.json"));
+
 const SASS_INCLUDES = path.join(__dirname, "src", "_sass");
+const DEFAULT_THEME = "yolo";
 
 module.exports = function(eleventyConfig) {
   // -------------------------------------------------------------------------
   // Global Data - Build Info
   // -------------------------------------------------------------------------
+  // Match only version tags, so working tags (checkpoints, anchors) never end
+  // up displayed as the site version in the footer.
   let gitTag = "dev";
-  try { gitTag = execSync("git describe --tags --abbrev=0", { encoding: "utf8" }).trim(); } catch (e) {}
+  try {
+    gitTag = execSync("git describe --tags --abbrev=0 --match 'v[0-9]*'", { encoding: "utf8" }).trim();
+  } catch (e) {}
   eleventyConfig.addGlobalData("build", {
     version: gitTag,
     date: new Date().toISOString().replace('T', ' ').substring(0, 16)
@@ -67,21 +76,46 @@ module.exports = function(eleventyConfig) {
   // -------------------------------------------------------------------------
   // SCSS Compilation
   //
-  // Entry points in src/css are Nunjucks-templated (they interpolate the
-  // selected brand theme), then compiled to CSS in the same pass. Partials
-  // under src/_sass are pulled in via @use and must not be treated as
-  // templates themselves.
+  // Entry points in src/css are Nunjucks-templated (brand.scss expands the
+  // selected theme), then compiled to CSS in the same pass. Partials under
+  // src/_sass are pulled in via @use and must not be treated as templates
+  // themselves.
   // -------------------------------------------------------------------------
   eleventyConfig.addTemplateFormats("scss");
   eleventyConfig.ignores.add("src/_sass/**");
   eleventyConfig.addWatchTarget("src/_sass/");
+
+  // These templates render outside Eleventy's own Nunjucks environment, so
+  // filters they need are registered here. Autoescaping is off because the
+  // output is stylesheet text, not markup.
+  const scssEnv = new nunjucks.Environment(null, { autoescape: false });
+
+  // Expand the selected theme into CSS custom property declarations for one
+  // mode. `brand` is settings.brand; theme and syntax may name different
+  // themes, so each is resolved independently.
+  scssEnv.addFilter("brandVars", function(brand, mode) {
+    const pick = id => {
+      const theme = themesById[id];
+      if (!theme) throw new Error(
+        `Unknown brand theme "${id}". Add it to src/_data/themes.json or pick one of: ` +
+        Object.keys(themesById).slice(0, 5).join(", ") + ", ...");
+      return theme;
+    };
+    brand = brand || {};
+    const themeColors = pick(brand.theme || DEFAULT_THEME)[mode];
+    const syntaxColors = pick(brand.syntax || DEFAULT_THEME)[mode];
+
+    return themeVars.cssVars(themeColors, syntaxColors, mode)
+      .map(([name, value]) => `  --${name}: ${value};`)
+      .join("\n");
+  });
 
   eleventyConfig.addExtension("scss", {
     outputFileExtension: "css",
     compile: function(inputContent, inputPath) {
       return function(data) {
         // Resolve {{ settings.* }} before handing the result to sass.
-        const scss = nunjucks.renderString(inputContent, data);
+        const scss = scssEnv.renderString(inputContent, data);
         const result = sass.compileString(scss, {
           loadPaths: [SASS_INCLUDES, path.dirname(inputPath)],
           style: "expanded",

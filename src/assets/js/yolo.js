@@ -215,6 +215,12 @@
                     root.setAttribute(newMode, '');
                     localStorage.setItem('theme', newMode);
                     toggle.textContent = iconFor(newMode);
+                    // The demo's theme sampler re-applies its overrides for the
+                    // new mode; an event keeps it from having to guess when the
+                    // switch has landed.
+                    document.dispatchEvent(new CustomEvent('yolo:themechange', {
+                        detail: { mode: newMode }
+                    }));
                 });
             }
 

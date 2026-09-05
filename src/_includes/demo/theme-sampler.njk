@@ -1,84 +1,16 @@
+{# Theme pills, generated from _data/themes.json so adding a theme there is the
+   only edit needed. Clicks are handled by assets/ext/js/theme-sampler.js.
+
+   The loop tags trim preceding whitespace ({%-) so the output carries no blank
+   lines: this include lands inside Markdown, and a blank line would end the raw
+   HTML block, leaving Markdown to wrap the rest in <p> tags. #}
 <div id="theme-sampler" class="theme-sampler">
-    <h4 class="no-toc">Material Themes</h4>
+{%- for group in themes.groups %}
+    <h4 class="no-toc">{{ group.label }}</h4>
     <div class="theme-pills">
-        <span class="yolo-pill theme-pill" data-theme="material-pink">material-pink</span>
-        <span class="yolo-pill theme-pill" data-theme="material-purple">material-purple</span>
-        <span class="yolo-pill theme-pill" data-theme="material-indigo">material-indigo</span>
-        <span class="yolo-pill theme-pill" data-theme="material-blue">material-blue</span>
-        <span class="yolo-pill theme-pill" data-theme="material-light-blue">material-light-blue</span>
-        <span class="yolo-pill theme-pill" data-theme="material-cyan">material-cyan</span>
-        <span class="yolo-pill theme-pill" data-theme="material-teal">material-teal</span>
-        <span class="yolo-pill theme-pill" data-theme="material-brown">material-brown</span>
-        <span class="yolo-pill theme-pill" data-theme="material-gray">material-gray</span>
-        <span class="yolo-pill theme-pill" data-theme="material-blue-gray">material-blue-gray</span>
+{%- for theme in group.themes %}
+        <span class="yolo-pill theme-pill" data-theme="{{ theme.id }}">{{ theme.id }}</span>
+{%- endfor %}
     </div>
-    <h4 class="no-toc">Matrix Themes</h4>
-    <div class="theme-pills">
-        <span class="yolo-pill theme-pill" data-theme="matrix-green">matrix-green</span>
-        <span class="yolo-pill theme-pill" data-theme="matrix-red">matrix-red</span>
-        <span class="yolo-pill theme-pill" data-theme="matrix-orange">matrix-orange</span>
-        <span class="yolo-pill theme-pill" data-theme="matrix-yellow">matrix-yellow</span>
-        <span class="yolo-pill theme-pill" data-theme="matrix-blue">matrix-blue</span>
-        <span class="yolo-pill theme-pill" data-theme="matrix-indigo">matrix-indigo</span>
-        <span class="yolo-pill theme-pill" data-theme="matrix-violet">matrix-violet</span>
-        <span class="yolo-pill theme-pill" data-theme="matrix-neon">matrix-neon</span>
-    </div>
-    <h4 class="no-toc">Chroma Themes</h4>
-    <div class="theme-pills">
-        <span class="yolo-pill theme-pill" data-theme="chroma-red">chroma-red</span>
-        <span class="yolo-pill theme-pill" data-theme="chroma-orange">chroma-orange</span>
-        <span class="yolo-pill theme-pill" data-theme="chroma-yellow">chroma-yellow</span>
-        <span class="yolo-pill theme-pill" data-theme="chroma-green">chroma-green</span>
-        <span class="yolo-pill theme-pill" data-theme="chroma-blue">chroma-blue</span>
-        <span class="yolo-pill theme-pill" data-theme="chroma-indigo">chroma-indigo</span>
-        <span class="yolo-pill theme-pill" data-theme="chroma-violet">chroma-violet</span>
-    </div>
-    <h4 class="no-toc">Corbs Themes</h4>
-    <div class="theme-pills">
-        <span class="yolo-pill theme-pill" data-theme="star-lord">star-lord</span>
-        <span class="yolo-pill theme-pill" data-theme="corbs-cosmic">corbs-cosmic</span>
-        <span class="yolo-pill theme-pill" data-theme="abyssal">abyssal</span>
-        <span class="yolo-pill theme-pill" data-theme="amethyst">amethyst</span>
-        <span class="yolo-pill theme-pill" data-theme="berry">berry</span>
-        <span class="yolo-pill theme-pill" data-theme="bluebonnet">bluebonnet</span>
-        <span class="yolo-pill theme-pill" data-theme="cotton-candy">cotton-candy</span>
-        <span class="yolo-pill theme-pill" data-theme="cyan-pulse">cyan-pulse</span>
-        <span class="yolo-pill theme-pill" data-theme="glacial">glacial</span>
-        <span class="yolo-pill theme-pill" data-theme="graphite-bloom">graphite-bloom</span>
-        <span class="yolo-pill theme-pill" data-theme="horizon">horizon</span>
-        <span class="yolo-pill theme-pill" data-theme="mongo">mongo</span>
-        <span class="yolo-pill theme-pill" data-theme="monochrome">monochrome</span>
-        <span class="yolo-pill theme-pill" data-theme="neon-reef">neon-reef</span>
-        <span class="yolo-pill theme-pill" data-theme="news">news</span>
-        <span class="yolo-pill theme-pill" data-theme="orbit">orbit</span>
-        <span class="yolo-pill theme-pill" data-theme="reef">reef</span>
-        <span class="yolo-pill theme-pill" data-theme="reveal-redux">reveal-redux</span>
-        <span class="yolo-pill theme-pill" data-theme="snazzy">snazzy</span>
-        <span class="yolo-pill theme-pill" data-theme="solar-pop">solar-pop</span>
-        <span class="yolo-pill theme-pill" data-theme="stock">stock</span>
-        <span class="yolo-pill theme-pill" data-theme="sunset">sunset</span>
-        <span class="yolo-pill theme-pill" data-theme="tideglass">tideglass</span>
-        <span class="yolo-pill theme-pill" data-theme="vice">vice</span>
-        <span class="yolo-pill theme-pill" data-theme="winter-is-coming">winter-is-coming</span>
-        <span class="yolo-pill theme-pill" data-theme="yolo-flux">yolo-flux</span>
-    </div>
-    <h4 class="no-toc">Original Yolo Themes</h4>
-    <div class="theme-pills">
-        <span class="yolo-pill theme-pill" data-theme="corbs">corbs</span>
-        <span class="yolo-pill theme-pill" data-theme="yolo">yolo</span>
-        <span class="yolo-pill theme-pill" data-theme="reveal">reveal</span>
-        <span class="yolo-pill theme-pill" data-theme="grape">grape</span>
-        <span class="yolo-pill theme-pill" data-theme="pentax">pentax</span>
-        <span class="yolo-pill theme-pill" data-theme="bleu">bleu</span>
-        <span class="yolo-pill theme-pill" data-theme="neon">neon</span>
-        <span class="yolo-pill theme-pill" data-theme="dusk">dusk</span>
-        <span class="yolo-pill theme-pill" data-theme="cream">cream</span>
-        <span class="yolo-pill theme-pill" data-theme="meemaw">meemaw</span>
-        <span class="yolo-pill theme-pill" data-theme="newspaper">newspaper</span>
-        <span class="yolo-pill theme-pill" data-theme="summer">summer</span>
-        <span class="yolo-pill theme-pill" data-theme="domino">domino</span>
-        <span class="yolo-pill theme-pill" data-theme="zoot">zoot</span>
-        <span class="yolo-pill theme-pill" data-theme="term">term</span>
-        <span class="yolo-pill theme-pill" data-theme="mini">mini</span>
-    </div>
+{%- endfor %}
 </div>

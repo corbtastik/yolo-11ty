@@ -7,7 +7,6 @@
     "build": "eleventy",
     "serve": "eleventy --serve",
     "clean": "rm -rf _site",
-    "generate:themes": "node scripts/generate-themes.js",
     "create": "node scripts/create-site.js"
   },
   "keywords": [

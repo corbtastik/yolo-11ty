@@ -16,8 +16,8 @@ permalink: /posts/syntax-themes/
 Yolo highlights code with custom syntax themes. Each color theme includes a matching syntax theme.
 
 > **Syntax files:**
-> * `src/_sass/yolo/brand/theme/` - color themes
-> * `src/_sass/yolo/brand/syntax/` - syntax themes
+> * `src/_data/themes.json` - the `sh*` keys hold syntax colors
+> * `src/assets/js/theme-vars.js` - expands them to syntax CSS variables
 
 Syntax themes map colors to code tokens like keywords, strings, and comments.
 
@@ -26,8 +26,8 @@ Syntax themes map colors to code tokens like keywords, strings, and comments.
 ### Custom Syntax Theme
 {:.no-toc}
 
-1. Add a `.scss` file to `src/_sass/yolo/brand/syntax/`.
-2. Set colors for **light** and **dark** modes.
+1. Add an entry to a group in `src/_data/themes.json`.
+2. Set the `sh*` colors for **light** and **dark** modes.
 3. Update `settings.yml`:
 
 {% code "settings.yml" %}

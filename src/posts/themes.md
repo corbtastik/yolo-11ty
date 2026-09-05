@@ -28,7 +28,7 @@ Click a pill to preview any theme. The site updates instantly. 🎭
 
 Create a custom theme in three steps:
 
-1. Add a new `.scss` file to `src/_sass/yolo/brand/theme/`.
+1. Add an entry to a group in `src/_data/themes.json`.
 2. Set colors for **light** and **dark** modes.
 3. Set `brand.theme` in `src/_data/settings.yml`.
 
