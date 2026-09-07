@@ -171,10 +171,58 @@
     // Named openExternal, not open, so it cannot be mistaken for window.open.
     function openExternal(url) { if (url) window.open(url, '_blank', 'noopener'); }
 
-    /** Render every available code into whichever palette is on the page. */
-    function showAll() {
-        var palette = document.querySelector('.yolo-palette');
-        if (palette) renderPalette(palette, available());
+    /**
+     * Every registered code, whether or not it applies here.
+     *
+     * The palette only ever offers what will work on this page, but the
+     * reference page has to show the whole set, including the codes that
+     * need an index of posts. Each entry says which it is.
+     */
+    function listAll() {
+        return registry.map(function(c) {
+            return {
+                name: c.name,
+                arg: c.arg || '',
+                describe: c.describe,
+                context: c.context || 'anywhere',
+                availableHere: !c.when || c.when()
+            };
+        });
+    }
+
+    /**
+     * Fill an element with the full reference. Used by the /commands page, so
+     * the page can never drift from the registry the way a hand-written list
+     * would.
+     */
+    function renderReference(el) {
+        if (!el) return;
+        var groups = {};
+        listAll().filter(function(c) {
+            // Index codes are listed even though this page has no index -
+            // they exist, they just work elsewhere. A profile code that has
+            // no profile configured does not exist on this site at all, so
+            // listing it would be advertising something that does nothing.
+            return c.availableHere || c.context === 'index';
+        }).forEach(function(c) {
+            (groups[c.context] = groups[c.context] || []).push(c);
+        });
+
+        el.innerHTML = Object.keys(groups).map(function(context) {
+            var rows = groups[context].map(function(c) {
+                return '<tr>' +
+                    '<td><code>/' + c.name + (c.arg ? ' &lt;' + c.arg + '&gt;' : '') + '</code></td>' +
+                    '<td>' + c.describe + '</td>' +
+                '</tr>';
+            }).join('');
+
+            return '<h3 class="no-toc">' +
+                (context === 'index' ? 'On the index' : 'Anywhere') + '</h3>' +
+                (context === 'index'
+                    ? '<p>These need a list of posts, so they work on the index page.</p>'
+                    : '') +
+                '<table class="command-reference"><tbody>' + rows + '</tbody></table>';
+        }).join('');
     }
 
     function setMode(mode) {
@@ -190,15 +238,9 @@
     register({ name: 'home', describe: 'Go to the home page', run: function() { go(config.home || '/'); } });
 
     register({
-        name: 'themes',
-        describe: 'Open the theme builder',
-        run: function() { go(config.themesUrl || '/posts/themes/'); }
-    });
-
-    register({
         name: 'commands',
-        describe: 'List every function code',
-        run: function() { showAll(); }
+        describe: 'Open the function code reference',
+        run: function() { go(config.commandsUrl || '/commands/'); }
     });
 
     ['github', 'linkedin', 'instagram'].forEach(function(site) {
@@ -227,53 +269,6 @@
         run: function() { document.body.classList.remove('yolo-focus'); }
     });
 
-    register({
-        name: 'egg',
-        describe: 'Apply a theme at random',
-        run: function() {
-            randomTheme();
-            return 'Rolling…';
-        }
-    });
-
-    /**
-     * Paint a random theme from themes.json.
-     *
-     * theme-vars.js is the mapping the build and the sampler share. It is not
-     * loaded on most pages, so it is fetched on demand: nobody pays 7KB for a
-     * code they never type.
-     */
-    function randomTheme() {
-        withThemeVars(function(ThemeVars) {
-            fetch(config.themesJson || '/themes.json')
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    var themes = ThemeVars.byId(data);
-                    var ids = Object.keys(themes);
-                    var pick = ids[Math.floor(Math.random() * ids.length)];
-                    var mode = document.documentElement.getAttribute('dark') !== null ? 'dark' : 'light';
-                    var colors = themes[pick][mode];
-                    var root = document.documentElement;
-
-                    ThemeVars.cssVars(colors, colors, mode).forEach(function(pair) {
-                        root.style.setProperty('--' + pair[0], pair[1]);
-                    });
-
-                    announce('/egg → ' + pick);
-                })
-                .catch(function(err) { YoloUtils.error('/egg failed: ' + err.message); });
-        });
-    }
-
-    function withThemeVars(callback) {
-        if (window.YoloThemeVars) return callback(window.YoloThemeVars);
-        var script = document.createElement('script');
-        script.src = config.themeVarsUrl || '/assets/ext/js/theme-vars.js';
-        script.onload = function() { callback(window.YoloThemeVars); };
-        script.onerror = function() { YoloUtils.error('Could not load theme-vars.js'); };
-        document.head.appendChild(script);
-    }
-
     // Transient line under the input, for codes that act rather than navigate.
     function announce(message) {
         var palette = document.querySelector('.yolo-palette');
@@ -290,10 +285,12 @@
         list: available,
         attach: attach,
         announce: announce,
-        showAll: showAll
+        listAll: listAll,
+        renderReference: renderReference
     };
 
     YoloUtils.domReady(function() {
         document.querySelectorAll('.search-input').forEach(attach);
+        renderReference(document.getElementById('command-reference'));
     });
 })();

@@ -4,9 +4,7 @@
 <script>
   window.YoloConfig = {
     home: {{ ('/' | relative_url) | dump | safe }},
-    themesUrl: {{ ('/posts/themes/' | relative_url) | dump | safe }},
-    themesJson: {{ ('/themes.json' | relative_url) | dump | safe }},
-    themeVarsUrl: {{ ('/assets/ext/js/theme-vars.js' | relative_url) | dump | safe }},
+    commandsUrl: {{ ('/commands/' | relative_url) | dump | safe }},
     profiles: {{ (settings.profiles | default({})) | dump | safe }}
   };
 </script>

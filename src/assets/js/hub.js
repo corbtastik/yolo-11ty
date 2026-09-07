@@ -165,22 +165,27 @@
             });
         }
 
-        registerCommands();
         render();
     }
 
     /**
-     * Function codes that only mean something over a list of posts. They are
-     * registered from here, so they never show up in the palette on a page
-     * that has no index to sort or page through.
+     * Function codes that only mean something over a list of posts.
+     *
+     * Registered when the script loads rather than from init, so the
+     * reference page can list them even though it has no index of its own.
+     * Each one is gated on the index actually being present, so the palette
+     * still never offers a code that cannot run where you are.
      */
     function registerCommands() {
         if (!window.YoloCommands) return;
         var C = window.YoloCommands;
+        var onIndex = function() { return !!document.getElementById('hub-posts'); };
 
         C.register({
             name: 'sort',
             arg: 'old|new',
+            context: 'index',
+            when: onIndex,
             describe: 'Sort posts oldest or newest first',
             run: function(arg) {
                 var oldest = arg.toLowerCase().indexOf('old') === 0;
@@ -197,6 +202,8 @@
         C.register({
             name: 'tag',
             arg: 'value',
+            context: 'index',
+            when: onIndex,
             describe: 'Filter posts by tag',
             run: function(arg) {
                 searchInput.value = arg;
@@ -210,18 +217,20 @@
             return YoloUtils.paginate(currentPage, filteredPosts.length, postsPerPage);
         };
 
-        C.register({ name: 'first', describe: 'Go to the first page',
-                     run: function() { goToPage(1); } });
-        C.register({ name: 'last', describe: 'Go to the last page',
-                     run: function() { goToPage(pageInfo().totalPages); } });
-        C.register({ name: 'next', describe: 'Go to the next page',
-                     run: function() { goToPage(currentPage + 1); } });
-        C.register({ name: 'prev', describe: 'Go to the previous page',
-                     run: function() { goToPage(currentPage - 1); } });
+        [['first', 'Go to the first page', function() { goToPage(1); }],
+         ['last',  'Go to the last page',  function() { goToPage(pageInfo().totalPages); }],
+         ['next',  'Go to the next page',  function() { goToPage(currentPage + 1); }],
+         ['prev',  'Go to the previous page', function() { goToPage(currentPage - 1); }]
+        ].forEach(function(spec) {
+            C.register({ name: spec[0], describe: spec[1], context: 'index',
+                         when: onIndex, run: spec[2] });
+        });
 
         C.register({
             name: 'page',
             arg: 'n',
+            context: 'index',
+            when: onIndex,
             describe: 'Go to a page by number',
             run: function(arg) {
                 var n = parseInt(arg, 10);
@@ -232,6 +241,8 @@
             }
         });
     }
+
+    registerCommands();
 
     window.YoloHub = { init: init };
 })();
