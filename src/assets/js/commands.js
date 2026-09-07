@@ -289,8 +289,45 @@
         renderReference: renderReference
     };
 
+    /**
+     * The command line's own shortcut.
+     *
+     * Pressing / anywhere focuses the search box and starts a code, the way
+     * / opens search on sites people already use. It puts the slash in the
+     * field itself rather than letting the keystroke through, so the palette
+     * opens on the first press instead of needing a second one.
+     *
+     * The key is only taken when it would otherwise do nothing: never while
+     * someone is typing into a field, and never with a modifier held, where
+     * it may belong to the browser.
+     */
+    function isTyping(el) {
+        if (!el) return false;
+        if (el.isContentEditable) return true;
+        var tag = el.tagName;
+        return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+    }
+
+    function bindSlashShortcut() {
+        document.addEventListener('keydown', function(e) {
+            if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+            if (isTyping(document.activeElement)) return;
+
+            // The index's own box first, then the page search.
+            var input = document.getElementById('hub-search') ||
+                        document.getElementById('search-input');
+            if (!input) return;
+
+            e.preventDefault();
+            input.focus();
+            input.value = '/';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+    }
+
     YoloUtils.domReady(function() {
         document.querySelectorAll('.search-input').forEach(attach);
         renderReference(document.getElementById('command-reference'));
+        bindSlashShortcut();
     });
 })();

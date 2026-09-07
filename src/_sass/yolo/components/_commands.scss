@@ -71,6 +71,18 @@
   opacity: 0.8;
 }
 
+// The way in to the reference, for anyone who has not discovered that the
+// search box takes commands.
+.yolo-footer-commands {
+  margin-left: 0.6rem;
+  font-family: var(--font-family-monospace);
+  font-size: 0.85em;
+  opacity: 0.7;
+
+  &:hover,
+  &:focus-visible { opacity: 1; }
+}
+
 // ----------------------------------------------------------------------------
 // /focus
 //
