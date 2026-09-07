@@ -1,0 +1,12 @@
+{#- Settings the browser needs. Function codes read this for where "home" is
+    and which profiles exist; a code for a profile you have not configured is
+    hidden rather than dead. -#}
+<script>
+  window.YoloConfig = {
+    home: {{ ('/' | relative_url) | dump | safe }},
+    themesUrl: {{ ('/posts/themes/' | relative_url) | dump | safe }},
+    themesJson: {{ ('/themes.json' | relative_url) | dump | safe }},
+    themeVarsUrl: {{ ('/assets/ext/js/theme-vars.js' | relative_url) | dump | safe }},
+    profiles: {{ (settings.profiles | default({})) | dump | safe }}
+  };
+</script>

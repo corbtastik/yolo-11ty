@@ -20,6 +20,12 @@
 
     function handleSearch() {
         var query = searchInput.value.trim();
+
+        // A leading slash means the box is a command line, not a search box.
+        // Without this the index filters on "/dark" and empties itself behind
+        // the palette that is offering the command.
+        if (query.charAt(0) === '/') return;
+
         isSearching = query.length > 0;
         filteredPosts = YoloUtils.filterByQuery(allPosts, query, ['title', 'description', 'tags']);
         currentPage = 1;
@@ -159,7 +165,72 @@
             });
         }
 
+        registerCommands();
         render();
+    }
+
+    /**
+     * Function codes that only mean something over a list of posts. They are
+     * registered from here, so they never show up in the palette on a page
+     * that has no index to sort or page through.
+     */
+    function registerCommands() {
+        if (!window.YoloCommands) return;
+        var C = window.YoloCommands;
+
+        C.register({
+            name: 'sort',
+            arg: 'old|new',
+            describe: 'Sort posts oldest or newest first',
+            run: function(arg) {
+                var oldest = arg.toLowerCase().indexOf('old') === 0;
+                filteredPosts.sort(function(a, b) {
+                    var cmp = String(a.date).localeCompare(String(b.date));
+                    return oldest ? cmp : -cmp;
+                });
+                currentPage = 1;
+                render();
+                C.announce('Sorted ' + (oldest ? 'oldest' : 'newest') + ' first');
+            }
+        });
+
+        C.register({
+            name: 'tag',
+            arg: 'value',
+            describe: 'Filter posts by tag',
+            run: function(arg) {
+                searchInput.value = arg;
+                handleSearch();
+                C.announce(filteredPosts.length + ' post' +
+                           (filteredPosts.length === 1 ? '' : 's') + ' tagged ' + arg);
+            }
+        });
+
+        var pageInfo = function() {
+            return YoloUtils.paginate(currentPage, filteredPosts.length, postsPerPage);
+        };
+
+        C.register({ name: 'first', describe: 'Go to the first page',
+                     run: function() { goToPage(1); } });
+        C.register({ name: 'last', describe: 'Go to the last page',
+                     run: function() { goToPage(pageInfo().totalPages); } });
+        C.register({ name: 'next', describe: 'Go to the next page',
+                     run: function() { goToPage(currentPage + 1); } });
+        C.register({ name: 'prev', describe: 'Go to the previous page',
+                     run: function() { goToPage(currentPage - 1); } });
+
+        C.register({
+            name: 'page',
+            arg: 'n',
+            describe: 'Go to a page by number',
+            run: function(arg) {
+                var n = parseInt(arg, 10);
+                if (isNaN(n)) return C.announce('/page needs a number');
+                var total = pageInfo().totalPages;
+                if (n < 1 || n > total) return C.announce('There are ' + total + ' pages');
+                goToPage(n);
+            }
+        });
     }
 
     window.YoloHub = { init: init };

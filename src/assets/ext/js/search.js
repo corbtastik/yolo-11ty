@@ -103,6 +103,9 @@
         searchInput.addEventListener('input', function(e) {
             var q = e.target.value.trim();
             if (!q) { hideResults(); return; }
+            // A leading slash is a function code; the palette handles it and
+            // the section search stays out of the way.
+            if (q.charAt(0) === '/') { hideResults(); return; }
             showResults(filter(q), q);
         });
 
