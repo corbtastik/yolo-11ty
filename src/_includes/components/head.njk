@@ -7,6 +7,7 @@
     <!-- Site title -->
     <title>{{ settings.title }}</title>
     <!-- Pre-body JavaScript files -->
+    {% include "components/config.njk" %}
     <script src="{{ '/assets/js/utils.js' | relative_url }}"></script>
     <script src="{{ '/assets/js/theme.js' | relative_url }}"></script>
     <script src="{{ '/assets/js/snippets.js' | relative_url }}"></script>

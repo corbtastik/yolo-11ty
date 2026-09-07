@@ -1,4 +1,5 @@
 {# relative_url already applies settings.baseurl - do not prefix it again #}
+<script src="{{ '/assets/js/commands.js' | relative_url }}"></script>
 {% if settings.hub.enabled %}
 <script src="{{ '/assets/js/hub.js' | relative_url }}"></script>
 {% endif %}

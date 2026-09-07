@@ -1,4 +1,9 @@
 <div class="yolo-footer">
     <hr/>
-    <p>{{ settings.name }} {{ build.version }} built {{ build.date }}</p>
+    <p>
+        {{ settings.name }} {{ build.version }} built {{ build.date }}
+        {#- The reference is otherwise only reachable by typing a code, which
+            is circular for the page that explains the codes. -#}
+        <a class="yolo-footer-commands" href="{{ '/commands/' | relative_url }}">/commands</a>
+    </p>
 </div>

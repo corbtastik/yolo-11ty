@@ -20,6 +20,12 @@
 
     function handleSearch() {
         var query = searchInput.value.trim();
+
+        // A leading slash means the box is a command line, not a search box.
+        // Without this the index filters on "/dark" and empties itself behind
+        // the palette that is offering the command.
+        if (query.charAt(0) === '/') return;
+
         isSearching = query.length > 0;
         filteredPosts = YoloUtils.filterByQuery(allPosts, query, ['title', 'description', 'tags']);
         currentPage = 1;
@@ -161,6 +167,82 @@
 
         render();
     }
+
+    /**
+     * Function codes that only mean something over a list of posts.
+     *
+     * Registered when the script loads rather than from init, so the
+     * reference page can list them even though it has no index of its own.
+     * Each one is gated on the index actually being present, so the palette
+     * still never offers a code that cannot run where you are.
+     */
+    function registerCommands() {
+        if (!window.YoloCommands) return;
+        var C = window.YoloCommands;
+        var onIndex = function() { return !!document.getElementById('hub-posts'); };
+
+        C.register({
+            name: 'sort',
+            arg: 'old|new',
+            context: 'index',
+            when: onIndex,
+            describe: 'Sort posts oldest or newest first',
+            run: function(arg) {
+                var oldest = arg.toLowerCase().indexOf('old') === 0;
+                filteredPosts.sort(function(a, b) {
+                    var cmp = String(a.date).localeCompare(String(b.date));
+                    return oldest ? cmp : -cmp;
+                });
+                currentPage = 1;
+                render();
+                C.announce('Sorted ' + (oldest ? 'oldest' : 'newest') + ' first');
+            }
+        });
+
+        C.register({
+            name: 'tag',
+            arg: 'value',
+            context: 'index',
+            when: onIndex,
+            describe: 'Filter posts by tag',
+            run: function(arg) {
+                searchInput.value = arg;
+                handleSearch();
+                C.announce(filteredPosts.length + ' post' +
+                           (filteredPosts.length === 1 ? '' : 's') + ' tagged ' + arg);
+            }
+        });
+
+        var pageInfo = function() {
+            return YoloUtils.paginate(currentPage, filteredPosts.length, postsPerPage);
+        };
+
+        [['first', 'Go to the first page', function() { goToPage(1); }],
+         ['last',  'Go to the last page',  function() { goToPage(pageInfo().totalPages); }],
+         ['next',  'Go to the next page',  function() { goToPage(currentPage + 1); }],
+         ['prev',  'Go to the previous page', function() { goToPage(currentPage - 1); }]
+        ].forEach(function(spec) {
+            C.register({ name: spec[0], describe: spec[1], context: 'index',
+                         when: onIndex, run: spec[2] });
+        });
+
+        C.register({
+            name: 'page',
+            arg: 'n',
+            context: 'index',
+            when: onIndex,
+            describe: 'Go to a page by number',
+            run: function(arg) {
+                var n = parseInt(arg, 10);
+                if (isNaN(n)) return C.announce('/page needs a number');
+                var total = pageInfo().totalPages;
+                if (n < 1 || n > total) return C.announce('There are ' + total + ' pages');
+                goToPage(n);
+            }
+        });
+    }
+
+    registerCommands();
 
     window.YoloHub = { init: init };
 })();

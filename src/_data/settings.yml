@@ -13,6 +13,10 @@ brand:
   theme: star-lord
   syntax: star-lord
   emoji: true
+# Profiles reachable with /github, /linkedin and /instagram.
+# A code is hidden unless its profile is set here.
+profiles:
+  github: https://github.com/corbtastik
 align: left
 sidebar:
   position: left

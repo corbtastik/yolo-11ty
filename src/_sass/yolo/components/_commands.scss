@@ -1,0 +1,136 @@
+// ----------------------------------------------------------------------------
+// Function codes
+//
+// The palette that appears under a search box once a slash is typed, and the
+// distraction-free mode /focus turns on.
+//
+// Colours come from the theme variables, so this works across every theme and
+// both modes without knowing anything about either.
+// ----------------------------------------------------------------------------
+
+// The palette hangs under whichever box it belongs to. It has to be taken out
+// of flow to do that: .hub-search is a flex container, so a plain sibling
+// becomes a flex item and lands beside the input instead of below it.
+.hub-search,
+.yolo-search { position: relative; }
+
+.yolo-palette {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  z-index: 40;
+  padding: 0.35rem 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14);
+
+  background-color: var(--primary-container-color);
+  color: var(--on-primary-container-color);
+  border-radius: 0.35rem;
+
+  font-family: var(--font-family-monospace);
+  font-size: 0.85rem;
+  line-height: 1.5;
+
+  max-height: 60vh;
+  overflow-y: auto;
+
+  &[hidden] { display: none; }
+}
+
+.yolo-palette-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  padding: 0.3rem 0.85rem;
+
+  // The first row is what Enter will run, so it should look like it.
+  &.is-first {
+    background-color: var(--secondary-container-color);
+    color: var(--on-secondary-container-color);
+  }
+}
+
+.yolo-palette-code {
+  flex: 0 0 auto;
+  min-width: 9rem;
+  font-weight: 700;
+  background: none;
+  padding: 0;
+}
+
+.yolo-palette-desc {
+  font-family: var(--font-family-primary);
+  font-size: 0.82rem;
+  opacity: 0.75;
+}
+
+.yolo-palette-note {
+  margin: 0;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.82rem;
+  opacity: 0.8;
+}
+
+// The way in to the reference, for anyone who has not discovered that the
+// search box takes commands.
+.yolo-footer-commands {
+  margin-left: 0.6rem;
+  font-family: var(--font-family-monospace);
+  font-size: 0.85em;
+  opacity: 0.7;
+
+  &:hover,
+  &:focus-visible { opacity: 1; }
+}
+
+// ----------------------------------------------------------------------------
+// /focus
+//
+// Everything that is not the writing gets out of the way: sidebar, sticky
+// controls, masthead, search, footer. The column also narrows, because a
+// distraction-free mode that leaves the measure alone has not done much.
+//
+// Nothing is removed from the DOM, so /unfocus is instant and the page state
+// is untouched.
+// ----------------------------------------------------------------------------
+body.yolo-focus {
+  .sidebar,
+  .yolo-sticky-controls,
+  .yolo-header,
+  .yolo-search,
+  .search-results-container,
+  .yolo-footer { display: none; }
+
+  // The sidebar offset goes with the sidebar.
+  &.sidebar-left,
+  &.sidebar-right { margin: 0; }
+
+  .container {
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 3rem;
+  }
+
+  // One way back for anyone who typed /focus and cannot now reach the box
+  // they typed it into.
+  &::after {
+    content: "/unfocus";
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.3rem;
+
+    background-color: var(--primary-container-color);
+    color: var(--on-primary-container-color);
+    font-family: var(--font-family-monospace);
+    font-size: 0.72rem;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yolo-palette { transition: none; }
+}
