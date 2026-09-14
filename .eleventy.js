@@ -39,9 +39,10 @@ module.exports = function(eleventyConfig) {
   // -------------------------------------------------------------------------
 
   // Posts in presentation order: anything marked `pinned: true` first, then
-  // everything else oldest-first - the reading order the docs are written in,
-  // which is Eleventy's natural collection order. The sort is stable, so
-  // unpinned posts keep that order.
+  // everything else newest first.
+  //
+  // `pinned` still wins, because it is an explicit instruction about what
+  // should lead; date decides everything after it.
   //
   // Both the hub listing and single-page mode read this, so "the headline post"
   // means the same thing in both. slice() first: the array getFilteredByTag
@@ -49,7 +50,10 @@ module.exports = function(eleventyConfig) {
   const rankPosts = collectionApi =>
     collectionApi.getFilteredByTag("post")
       .slice()
-      .sort((a, b) => (b.data.pinned === true ? 1 : 0) - (a.data.pinned === true ? 1 : 0));
+      .sort((a, b) => {
+        const byPin = (b.data.pinned === true ? 1 : 0) - (a.data.pinned === true ? 1 : 0);
+        return byPin || b.date - a.date;
+      });
 
   // Full post objects. Single-page mode (hub.enabled: false) renders the first
   // of these as the home page.
