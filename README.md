@@ -11,6 +11,11 @@ Yolo builds beautiful single-page sites. It works for writers, developers, and p
 | **Single page** | [yolo-11ty.web.app](https://yolo-11ty.web.app) | everything on one scrolling page |
 | **Multi page** | [yolo-hub-11ty.web.app](https://yolo-hub-11ty.web.app) | a searchable card index over separate posts |
 
+**Every theme, as a slide deck** -
+[yolo-themes-showcase.web.app](https://yolo-themes-showcase.web.app) walks
+through the colors, typefaces and components of each theme in
+`src/_data/themes.json`, painted in that theme's own palette.
+
 > **Upgrading from 1.x?** Themes now live only in `src/_data/themes.json`.
 > The generated SCSS under `src/_sass/yolo/brand/theme/` and `.../syntax/` is
 > gone, along with the `build:scss` and `generate:themes` scripts - `npm run
