@@ -26,8 +26,32 @@
 {% endif %}
 <html lang="en" class="yolo-themed">
 {% include "components/head.njk" %}
-<body id="yolo-site"{% if not bare and settings.sidebar %} class="sidebar-{{ settings.sidebar.position | default('left') }}"{% endif %}>
-  {% if not bare and settings.sidebar %}
+{#
+  The sidebar is not part of the bare/full split. A site that configures one
+  gets it everywhere, the hub index included - same width, same style, same
+  toggle. What differs is what it holds: the hub has no headings worth an
+  index, so there it carries the logo alone (see components/sidebar.njk).
+#}
+<body id="yolo-site"{% if settings.sidebar %} class="sidebar-{{ settings.sidebar.position | default('left') }}"{% endif %}>
+  {% if settings.sidebar %}
+  {#
+    The sidebar is open or collapsed because you last left it that way, the
+    hub and every page alike. Posts used to arrive collapsed on a ?from=hub
+    flag instead, which fought the hub's own sidebar and shifted the column
+    on every link.
+
+    This runs here, before the sidebar is parsed, for the same reason
+    theme.js runs in <head>: settle it ahead of the first paint and there is
+    nothing to animate and nothing to see. Deciding it on DOMContentLoaded
+    paints the sidebar open and then yanks it away.
+  #}
+  <script>
+    try {
+      if (localStorage.getItem('yolo-sidebar') === 'hidden') {
+        document.body.classList.add('sidebar-hidden');
+      }
+    } catch (e) {}
+  </script>
   {% include "components/sidebar.njk" %}
   {% endif %}
   {% include "components/sticky-controls.njk" %}

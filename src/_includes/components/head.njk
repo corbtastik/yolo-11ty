@@ -10,6 +10,13 @@
     {% include "components/config.njk" %}
     <script src="{{ '/assets/js/utils.js' | relative_url }}"></script>
     <script src="{{ '/assets/js/theme.js' | relative_url }}"></script>
+    {#- The palette picker runs here, not at the end of <body>, so a stored
+        theme is applied before the first paint instead of flashing the one
+        compiled into brand.css. That means its data has to be inline, and
+        theme-vars.js has to come before it. -#}
+    <script>window.YoloPalettes = {{ themes | dump | safe }};</script>
+    <script src="{{ '/assets/ext/js/theme-vars.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/palette.js' | relative_url }}"></script>
     <script src="{{ '/assets/js/snippets.js' | relative_url }}"></script>
     <!-- Site styling resources including fonts -->
     {% include "components/styles.njk" %}

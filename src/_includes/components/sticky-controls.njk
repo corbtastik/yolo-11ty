@@ -4,12 +4,23 @@
             {# Matches the default light theme; yolo.js re-seeds it from the stored theme. #}
             <span id="theme-toggle" class="material-icons md-36">dark_mode</span>
         </div>
+        {# Colour themes, the other axis from light/dark. The list is built by
+           palette.js from the same themes.json the build reads, so this stays
+           a button and an empty box. #}
+        <div id="theme-picker" class="yolo-theme-picker">
+            <button type="button" id="palette-toggle" class="yolo-palette-toggle"
+                    aria-label="Color theme" aria-expanded="false"
+                    aria-controls="palette-menu" title="Color theme">
+                <span class="material-icons md-36" aria-hidden="true">palette</span>
+            </button>
+            <ul id="palette-menu" class="yolo-themes-menu" hidden></ul>
+        </div>
         {% if not bare and settings.hub.enabled %}
         <a href="{{ '/' | relative_url }}" class="yolo-home-link">
             <span class="material-icons md-36">home</span>
         </a>
         {% endif %}
-        {% if settings.sidebar and not bare %}
+        {% if settings.sidebar %}
         <div class="yolo-sidebar-toggle">
             <span id="sidebar-toggle" class="material-icons md-36">menu</span>
         </div>

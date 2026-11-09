@@ -9,5 +9,22 @@
         </a>
     </div>
     {% endif %}
+    {#
+      A page indexes itself; the hub indexes the site.
+
+      On a page, yolo.js fills #toc-sidebar with that page's headings. The
+      hub's headings are post titles inside cards, so a contents list there
+      would just repeat the page back at you. It gets site links instead.
+
+      Both use .nav-menu, so they share one style.
+    #}
+    {% if bare %}
+    <nav class="sidebar-nav nav-menu">
+        <ul>
+            <li><a href="{{ '/tags/' | relative_url }}">Tags</a></li>
+        </ul>
+    </nav>
+    {% else %}
     <div id="toc-sidebar"></div>
+    {% endif %}
 </div>

@@ -1,0 +1,16 @@
+---
+layout: layouts/default.njk
+title: Tags
+description: Every tag in use, and how many posts carry it.
+permalink: /tags/
+---
+
+{% if collections.allTags | size %}
+<div class="yolo-tag-cloud">
+  {%- for tag in collections.allTags %}
+  <a href="{{ ('/?tag=' + tag.name) | relative_url }}" class="yolo-pill">#{{ tag.name }}<span class="yolo-pill-count">{{ tag.count }}</span></a>
+  {%- endfor %}
+</div>
+{% else %}
+<p>No tags yet. Add a <code>tags</code> list to a post's front matter.</p>
+{% endif %}

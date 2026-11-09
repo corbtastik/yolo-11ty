@@ -46,7 +46,7 @@
         var posts = getCurrentPosts();
         var index = selection.get();
         if (index >= 0 && index < posts.length) {
-            window.location.href = posts[index].url + '?from=hub';
+            window.location.href = posts[index].url;
         }
     }
 
@@ -74,7 +74,7 @@
 
         return '<article class="hub-card" data-index="' + index + '">' +
             '<div class="hub-card-header">' +
-                '<h2 class="hub-card-title"><a href="' + post.url + '?from=hub">' + post.title + '</a></h2>' +
+                '<h2 class="hub-card-title"><a href="' + post.url + '">' + post.title + '</a></h2>' +
                 '<span class="hub-card-date">' + YoloUtils.formatDate(post.date) + '</span>' +
             '</div>' +
             '<p class="hub-card-description">' + post.description + '</p>' +
@@ -166,6 +166,15 @@
         }
 
         render();
+
+        // Arriving from /tags with ?tag=photos lands on that tag already
+        // filtered. The box shows the tag, so it is clear why the list is
+        // short and Escape clears it like any other search.
+        var fromTagsPage = /[?&]tag=([^&]*)/.exec(window.location.search);
+        if (fromTagsPage && searchInput) {
+            searchInput.value = decodeURIComponent(fromTagsPage[1].replace(/\+/g, ' '));
+            handleSearch();
+        }
     }
 
     /**

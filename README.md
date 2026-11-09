@@ -2,7 +2,7 @@
 
 Loveable single pages - Eleventy edition.
 
-Yolo builds beautiful single-page sites. It works for writers, developers, and photographers.
+Yolo builds single-page sites. It works for writers, developers and photographers.
 
 **Live demos** - the same content, the same build, one setting apart:
 
@@ -13,19 +13,19 @@ Yolo builds beautiful single-page sites. It works for writers, developers, and p
 
 **Every theme, as a slide deck** -
 [yolo-themes-showcase.web.app](https://yolo-themes-showcase.web.app) walks
-through the colors, typefaces and components of each theme in
-`src/_data/themes.json`, painted in that theme's own palette.
+through the colors, typefaces and components of every theme in
+`src/_data/themes.json`. Each deck wears the palette it describes.
 
 > **Upgrading from 1.x?** Themes now live only in `src/_data/themes.json`.
 > The generated SCSS under `src/_sass/yolo/brand/theme/` and `.../syntax/` is
-> gone, along with the `build:scss` and `generate:themes` scripts - `npm run
-> build` does everything in one pass.
+> gone. So are the `build:scss` and `generate:themes` scripts. `npm run build`
+> does the whole job in one pass.
 
 ## Quick Start
 
 ### Create a New Site
 
-The fastest way to start is to generate a new site from the template:
+Generate a new site from the template. That is the fastest way to start.
 
 ```bash
 # Clone yolo-11ty
@@ -37,7 +37,7 @@ npm install
 npm run create
 ```
 
-This creates a new site directory at the same level as yolo-11ty with your chosen settings.
+You get a new site folder beside yolo-11ty, built with the settings you chose.
 
 ### Run the Demo
 
@@ -50,13 +50,15 @@ npm install
 npm run serve
 ```
 
-Open http://localhost:8080 to view your site.
+Open http://localhost:8080 to see your site.
 
 ## Features
 
 ### Themes
 
-Yolo includes **67 themes** with matching syntax highlighting. Switch themes instantly using the theme sampler on the demo page.
+Yolo ships **67 themes**, each with matching syntax highlighting. Click the
+palette icon in the top right to switch themes on any page. Yolo remembers
+your pick as you move around the site.
 
 **Configure your theme** in `src/_data/settings.yml`:
 
@@ -68,23 +70,31 @@ brand:
 
 Theme categories:
 - **Material** - Google Material Design colors
-- **Matrix** - Terminal/hacker aesthetics
-- **Chroma** - Vibrant single-color themes
+- **Matrix** - Terminal and hacker looks
+- **Chroma** - Vivid single-color themes
 - **Corbs** - Custom artistic themes
+- **Original Yolo** - The themes Yolo started with
 
 ### Light/Dark Mode
 
-Click the sun/moon icon (top right) to toggle between light and dark modes. Your preference is saved in localStorage.
+Click the sun or moon icon in the top right to switch between light and dark.
+Yolo remembers your choice. Mode and theme are separate axes. Every theme
+carries both a light and a dark palette.
 
 ### Sidebar
 
-Optional sidebar navigation. Configure in `src/_data/settings.yml`:
+An optional sidebar. It carries your logo, and on a post it carries that
+post's contents too. Configure it in `src/_data/settings.yml`:
 
 ```yaml
 sidebar:
   position: left  # or 'right'
   logo: assets/images/logo.png
 ```
+
+The sidebar shows on the hub and on every page, at one width. Click the menu
+icon to collapse it. Yolo remembers that too, so following a link moves
+nothing.
 
 ### Single Page or Multi Page
 
@@ -97,7 +107,7 @@ hub:
 ```
 
 **`enabled: false`** - the home page renders the post marked `pinned: true` in
-full, so the site is one long scrolling page. Everything else still builds at
+full. The site becomes one long scrolling page. Everything else still builds at
 its own URL. This is [yolo-11ty.web.app](https://yolo-11ty.web.app).
 
 **`enabled: true`** - the home page becomes the Hub, a searchable card index,
@@ -113,21 +123,22 @@ pinned: true
 ---
 ```
 
-`pinned` means the same thing in both modes: the post that leads. In single-page
-mode it is the page; in hub mode it is the first card. Pin nothing and the
-oldest post leads.
+`pinned` means the same thing in both modes: the post that leads. In
+single-page mode it is the page. In hub mode it is the first card. Pin nothing
+and the oldest post leads.
 
 ### Yolo Hub
 
-The Hub is a card-based index page that displays all your posts with search, filtering, and pagination.
+The Hub is a card index of every post. It has search, tag filters and
+pagination.
 
 **Features:**
-- **Card layout** - Each post displays as a card with title, description, date, and tags
-- **Live search** - Filter posts by title, description, or tags as you type
-- **Keyboard navigation** - Use Arrow keys to navigate results, Enter to open, Escape to clear
-- **Tag filtering** - Click any tag to filter posts by that tag
-- **Pagination** - Configurable posts per page with full navigation controls
-- **Seamless transitions** - Posts open with collapsed sidebar matching hub width
+- **Card layout** - Each post gets a card with title, description, date and tags
+- **Live search** - Filter by title, description or tag as you type
+- **Keyboard navigation** - Arrow keys move, Enter opens, Escape clears
+- **Tag filtering** - Click a tag to filter by it
+- **Pagination** - Set posts per page, with full navigation controls
+- **Seamless transitions** - The hub and its posts share one column width, and the sidebar stays as you left it
 
 **Configure** in `src/_data/settings.yml`:
 
@@ -137,20 +148,21 @@ hub:
   postsPerPage: 10
 ```
 
-The hub collects posts from `src/posts/` using each post's own front matter, so
-there is nothing to keep in sync. Posts marked `pinned: true` come first,
-then the rest in date order.
+The hub reads `src/posts/` and takes what it needs from each post's front
+matter. There is no list to keep in sync. Posts marked `pinned: true` come
+first, then the rest by date.
 
 ### Search
 
-Type-ahead search that filters page sections. Press:
+Type-ahead search filters the page by section. Press:
 - **Arrow keys** - Navigate results
 - **Enter** - Jump to section
 - **Escape** - Close search
 
 ### Sortable Tables
 
-Click any column header to sort. Click again to reverse. Numbers sort numerically, text sorts alphabetically.
+Click any column header to sort. Click again to reverse. Numbers sort as
+numbers, text as text.
 
 ### Shortcodes
 
@@ -165,7 +177,7 @@ console.log("Hello!");
 ```
 
 #### Table of Contents
-Auto-generates TOC from H2 headings:
+Builds a table of contents from the H2 headings:
 
 ```nunjucks
 {% toc %}
@@ -181,7 +193,7 @@ Display images with optional captions:
 Size classes: `thumbnail`, `is-16` to `is-640`, `is-circle-16` to `is-circle-640`
 
 #### Image Grid
-Displays images in a grid with click-to-expand:
+Shows images in a grid. Click one to expand it:
 
 ```nunjucks
 {% imageGrid "ig-images", 4 %}
@@ -190,7 +202,7 @@ Displays images in a grid with click-to-expand:
 Data file: `src/_data/ig-images.yml`
 
 #### Lightbox
-Modal image gallery with navigation:
+A full-screen gallery with arrow navigation:
 
 ```nunjucks
 {% lightbox "lb-images" %}
@@ -281,12 +293,14 @@ yolo-11ty/
 ### Build Process
 
 Eleventy does everything in one pass. Files in `src/css/` are Nunjucks
-templates that compile to CSS through a custom extension, so editing any
-partial under `src/_sass/` rebuilds the stylesheet while the server runs.
+templates, and a custom extension compiles them to CSS. Edit any partial under
+`src/_sass/` and the stylesheet rebuilds while the server runs.
 
 ### Adding a Theme
 
-`themes.json` is the only place theme colors live. Add an entry to a group:
+`themes.json` is the only place theme colors live.
+
+1. Add an entry to a group:
 
 ```json
 {
@@ -310,7 +324,7 @@ partial under `src/_sass/` rebuilds the stylesheet while the server runs.
 }
 ```
 
-2. Set in `settings.yml`:
+2. Point `settings.yml` at it:
 
 ```yaml
 brand:
@@ -328,7 +342,9 @@ brand:
 | `src/_data/syntaxTokens.yml` | Token catalog for the demo swatch grid |
 | `src/assets/js/utils.js` | Shared JS utilities (search, pagination, formatting) |
 | `src/assets/js/hub.js` | Hub: search, filter, pagination, keyboard nav |
-| `src/assets/js/theme.js` | Light/dark mode toggle |
+| `src/assets/js/theme.js` | Sets light or dark before the first paint |
+| `src/assets/js/palette.js` | Theme palette picker, on every page |
+| `src/assets/js/commands.js` | Function codes typed into any search box |
 | `src/assets/js/yolo.js` | Core: lightbox, image grid, TOC, sidebar |
 | `src/assets/ext/js/theme-vars.js` | Theme colors to CSS variables, shared by build and browser |
 | `src/assets/ext/js/theme-sampler.js` | Live theme switching |
@@ -338,8 +354,8 @@ brand:
 ### Styling
 
 - **CSS custom properties** - Every theme color is a variable, set on `:root`
-- **One mapping** - `theme-vars.js` turns a theme's twelve colors into the full
-  variable set, and is used by both the build and the demo's theme sampler
+- **One mapping** - `theme-vars.js` turns a theme's twelve colors into the
+  full variable set. The build and the browser both call it
 - **BEM-ish naming** - `.yolo-{component}`, `.yolo-{component}-{element}`
 
 Key CSS custom properties:
@@ -380,16 +396,16 @@ Usage in markdown:
 
 ### Deploying
 
-`npm run build` writes a static site to `_site/`, which any static host will
-serve. This repo ships a Firebase config with two hosting targets, because the
-demo publishes both modes from the same source:
+`npm run build` writes a static site to `_site/`. Any static host will serve
+it. This repo ships a Firebase config with two hosting targets, because the
+demo publishes both modes from one source:
 
 | Target | Site | `hub.enabled` |
 |--------|------|---------------|
 | `yolo-11ty` | [yolo-11ty.web.app](https://yolo-11ty.web.app) | `false` |
 | `yolo-hub-11ty` | [yolo-hub-11ty.web.app](https://yolo-hub-11ty.web.app) | `true` |
 
-Both targets publish `_site`, so the mode is whatever `settings.yml` said at
+Both targets publish `_site`. The mode is whatever `settings.yml` said at
 build time. Build and deploy one at a time:
 
 ```bash
@@ -404,8 +420,8 @@ npm run build
 firebase deploy --only hosting:yolo-hub-11ty
 ```
 
-For your own site you only need one target - drop the other from
-`firebase.json` and `.firebaserc`.
+For your own site you need one target. Drop the other from `firebase.json`
+and `.firebaserc`.
 
 ### Adding a Filter
 

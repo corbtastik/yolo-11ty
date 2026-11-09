@@ -59,6 +59,21 @@ module.exports = function(eleventyConfig) {
   // of these as the home page.
   eleventyConfig.addCollection("postsRanked", rankPosts);
 
+  // Every tag in use, with how many posts carry it, A to Z. Read by the /tags
+  // page. Derived from the same ranked posts as the hub, so a tag cannot show
+  // up here that the hub has no post for.
+  eleventyConfig.addCollection("allTags", collectionApi => {
+    const counts = {};
+    rankPosts(collectionApi).forEach(post => {
+      (post.data.tags || [])
+        .filter(tag => tag !== "post")
+        .forEach(tag => { counts[tag] = (counts[tag] || 0) + 1; });
+    });
+    return Object.keys(counts)
+      .sort((a, b) => a.localeCompare(b))
+      .map(name => ({ name, count: counts[name] }));
+  });
+
   // The same posts trimmed to what the hub's client-side listing needs, derived
   // from each post's own front matter so there is a single source of truth.
   eleventyConfig.addCollection("hubPosts", collectionApi =>

@@ -228,9 +228,11 @@
             var sidebar = document.getElementById('sidebar');
             var sidebarToggle = document.getElementById('sidebar-toggle');
             if (sidebar && sidebarToggle) {
-                // Collapse sidebar by default when coming from hub
-                if (window.location.search.indexOf('from=hub') !== -1) {
-                    document.body.classList.add('sidebar-hidden');
+                // Whether the sidebar starts collapsed was settled before the
+                // first paint, by the inline script in layouts/base.njk. Doing
+                // it here instead paints the sidebar open and then pulls it
+                // away. All that is left is to label the toggle to match.
+                if (document.body.classList.contains('sidebar-hidden')) {
                     sidebarToggle.textContent = 'menu_open';
                 }
 
@@ -238,6 +240,12 @@
                     e.stopPropagation();
                     var hidden = document.body.classList.toggle("sidebar-hidden");
                     sidebarToggle.textContent = hidden ? "menu_open" : "menu";
+                    // Remembered so the next page opens the way you left this
+                    // one. The inline script in layouts/base.njk reads it back
+                    // before the sidebar is parsed.
+                    try {
+                        localStorage.setItem('yolo-sidebar', hidden ? 'hidden' : 'open');
+                    } catch (e) {}
                 });
             }
 

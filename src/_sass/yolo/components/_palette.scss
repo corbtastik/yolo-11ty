@@ -1,0 +1,140 @@
+@charset "utf-8";
+// ----------------------------------------------------------------------------
+// Theme palette picker
+//
+// The palette button sits in .yolo-sticky-top-right, directly under the
+// light/dark toggle - that container is already a flex column with a gap, so
+// stacking needs no extra rules here.
+//
+// Class names are deliberately .yolo-themes-*, not .yolo-palette-*: the
+// command line in commands.js already owns .yolo-palette and its rows.
+// ----------------------------------------------------------------------------
+
+.yolo-theme-picker {
+  position: relative;
+  line-height: 1;
+}
+
+// The light/dark toggle is a bare <span>; this is a real button, so strip the
+// chrome a button brings and inherit the icon color the way the span does.
+.yolo-palette-toggle {
+  display: block;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  user-select: none;
+  transition: color .25s ease;
+  -webkit-appearance: none;
+  appearance: none;
+
+  .material-icons {
+    display: block;
+    line-height: 1;
+  }
+}
+
+// One left edge for everything in the menu: the category label and each
+// swatch start here, and the names line up in a column of their own.
+$palette-gutter: 0.9rem;
+
+.yolo-themes-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1;
+  min-width: 13rem;
+  // 67 themes will not fit on a phone, so the list scrolls rather than
+  // running off the viewport.
+  max-height: min(60vh, 24rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0.4rem 0 0;
+  padding: 0.5rem 0 0.6rem;
+  list-style: none;
+  text-align: left;
+  background-color: var(--primary-container-color);
+  color: var(--on-primary-color);
+  border: 1px solid var(--secondary-container-color);
+  // The same 0.3em curve the code headers use.
+  border-radius: 0.3em;
+
+  &[hidden] { display: none; }
+
+  // Scoped to direct children. A bare `li` rule here outranks
+  // .yolo-themes-group on specificity and flattens its padding, which is
+  // what pulled the category labels out of line with the rest.
+  > li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.yolo-themes-menu > .yolo-themes-group {
+  // Room above to separate it from the group before, little below so the
+  // label reads as attached to the themes under it.
+  padding: 0.9rem $palette-gutter 0.3rem;
+  font-family: var(--font-family-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--tertiary-color);
+
+  &:first-child { padding-top: 0.1rem; }
+}
+
+.yolo-themes-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.3rem $palette-gutter;
+  font-family: var(--font-family-secondary);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-align: left;
+  white-space: nowrap;
+  color: var(--on-primary-color);
+  background: none;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: var(--secondary-container-color);
+    color: var(--on-secondary-container-color);
+  }
+
+  &[aria-pressed="true"] {
+    font-weight: 700;
+    color: var(--link-color);
+  }
+}
+
+// Two-tone dot: the theme's page background outside, its link color inside.
+// Enough to tell 67 themes apart at a glance.
+.yolo-themes-swatch {
+  position: relative;
+  flex: none;
+  width: 0.85rem;
+  height: 0.85rem;
+  margin-right: 0.6rem;
+  border: 1px solid var(--secondary-container-color);
+  border-radius: 50%;
+  background: var(--sw-bg, transparent);
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 25%;
+    right: 25%;
+    bottom: 25%;
+    left: 25%;
+    border-radius: 50%;
+    background: var(--sw-link, transparent);
+  }
+}

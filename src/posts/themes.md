@@ -18,7 +18,7 @@ ext_js:
 
 ## Themes
 
-Click a pill to preview any theme. The site updates instantly. 🎭
+Click a pill to preview any theme. The site changes as you click. 🎭
 
 {% include "demo/theme-sampler.njk" %}
 

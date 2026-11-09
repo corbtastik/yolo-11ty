@@ -220,6 +220,29 @@
   font-family: var(--font-family-secondary);
 }
 
+// The /tags page. Pills wrap and keep an even gap, rather than relying on the
+// margins .yolo-pill carries for inline use.
+.yolo-tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+
+  .yolo-pill {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+// How many posts carry the tag. Sits inside the pill, in the pill's own ink
+// at reduced strength, so it reads as a detail rather than a second label.
+.yolo-pill-count {
+  margin-left: $spacing-sm;
+  font-size: $size-7;
+  font-weight: normal;
+  opacity: 0.75;
+}
+
 .yolo-syntax-theme-swatches {
   .column {
     padding-top: 0;

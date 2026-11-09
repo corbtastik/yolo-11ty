@@ -12,7 +12,7 @@ permalink: /posts/headers/
 
 ## Headers
 
-> H1 is reserved for the site title.
+> Yolo keeps H1 for the site title.
 
 ## H2 Heading
 {:.no-toc}

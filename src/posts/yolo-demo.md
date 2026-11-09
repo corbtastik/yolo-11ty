@@ -67,7 +67,7 @@ Yolo uses themes for colors and fonts. Each theme has a matching syntax theme fo
 
 ## Themes
 
-Click a pill to preview any theme. The site updates instantly. 🎭
+Click a pill to preview any theme. The site changes as you click. 🎭
 
 {% include "demo/theme-sampler.njk" %}
 
@@ -223,7 +223,7 @@ Customize fonts in your theme file. See [Themes](#themes) for details.
 
 ## Headers
 
-> H1 is reserved for the site title.
+> Yolo keeps H1 for the site title.
 
 ## H2 Heading
 {:.no-toc}
